@@ -4,6 +4,8 @@ import claygminx.common.entity.ScriptureNumberEntity;
 import claygminx.components.ScriptureService;
 import claygminx.exception.ScriptureNumberException;
 import claygminx.util.ScriptureUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.poi.xslf.usermodel.*;
 
 import java.util.List;
@@ -12,6 +14,8 @@ import java.util.List;
  * 赦罪经文阶段
  */
 public class ForgiveSinsScriptureStep extends AbstractWorshipStep {
+
+    private final static Logger logger = LogManager.getLogger(ForgiveSinsScriptureStep.class);
 
     private final String scriptureNumber;
 
@@ -49,5 +53,6 @@ public class ForgiveSinsScriptureStep extends AbstractWorshipStep {
             }
         }
 
+        logger.info("认罪经文幻灯片制作完成");
     }
 }

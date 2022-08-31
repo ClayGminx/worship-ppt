@@ -1,5 +1,7 @@
 package claygminx.components.impl;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.poi.xslf.usermodel.XMLSlideShow;
 import org.apache.poi.xslf.usermodel.XSLFSlide;
 import org.apache.poi.xslf.usermodel.XSLFSlideLayout;
@@ -9,6 +11,8 @@ import org.apache.poi.xslf.usermodel.XSLFTextShape;
  * 诗歌标题阶段
  */
 public class PoetryTitleStep extends AbstractWorshipStep {
+
+    private final static Logger logger = LogManager.getLogger(PoetryTitleStep.class);
 
     private final String slideName;
 
@@ -28,6 +32,8 @@ public class PoetryTitleStep extends AbstractWorshipStep {
 
         fillPlaceholder(slide, 0, slideName);
         fillPlaceholder(slide, 1, poetryName);
+
+        logger.info("诗歌标题幻灯片制作完成");
     }
 
     private void fillPlaceholder(XSLFSlide slide, int idx, String text) {

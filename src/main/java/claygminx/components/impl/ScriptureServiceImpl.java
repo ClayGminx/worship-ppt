@@ -2,6 +2,7 @@ package claygminx.components.impl;
 
 import claygminx.common.Dict;
 import claygminx.common.config.FreeMarkerConfig;
+import claygminx.common.config.SystemConfig;
 import claygminx.common.entity.*;
 import claygminx.components.ScriptureService;
 import claygminx.exception.ScriptureNumberException;
@@ -22,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static claygminx.common.Dict.*;
+
 /**
  * 经文服务实体
  */
@@ -33,13 +36,19 @@ public class ScriptureServiceImpl implements ScriptureService {
         } catch (ClassNotFoundException e) {
             throw new SystemException("无法加载org.sqlite.JDBC！");
         }
+
+        String bibleVersion = SystemConfig.properties.getProperty(Dict.System.BIBLE_VERSION);
+        if (bibleVersion == null) {
+            throw new SystemException("未设置圣经版本！");
+        }
+        BIBLE_VERSION = bibleVersion;
     }
 
     private final static Logger logger = LogManager.getLogger(ScriptureService.class);
 
     private static ScriptureService scriptureService;
 
-    private final String version = "新标点和合本";
+    private final static String BIBLE_VERSION;
 
     private ScriptureServiceImpl() {
     }
@@ -58,7 +67,7 @@ public class ScriptureServiceImpl implements ScriptureService {
 
     @Override
     public int getIdFromBookName(String fullName, String shortName) {
-        try (Connection connection = getConnection(version)) {
+        try (Connection connection = getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT BookId FROM BookNames WHERE FullName=? OR AbbrName=?");
             preparedStatement.setString(1, fullName);
             preparedStatement.setString(2, shortName);
@@ -76,7 +85,7 @@ public class ScriptureServiceImpl implements ScriptureService {
 
     @Override
     public String[] getBookNameFromId(int bookId) {
-        try (Connection connection = getConnection(version)) {
+        try (Connection connection = getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT FullName,AbbrName FROM BookNames WHERE BookId=?");
             preparedStatement.setInt(1, bookId);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -111,7 +120,7 @@ public class ScriptureServiceImpl implements ScriptureService {
     }
 
     @Override
-    public ScriptureEntity getScriptureWithFormat(String scriptureNumber, Dict.ScriptureFormat format) throws ScriptureNumberException {
+    public ScriptureEntity getScriptureWithFormat(String scriptureNumber, ScriptureFormat format) throws ScriptureNumberException {
         ScriptureNumberEntity scriptureNumberEntity = ScriptureUtil.parseNumber(scriptureNumber);
         boolean flag = validateNumber(scriptureNumberEntity);
         if (flag) {
@@ -122,12 +131,12 @@ public class ScriptureServiceImpl implements ScriptureService {
     }
 
     @Override
-    public ScriptureEntity getScriptureWithFormat(ScriptureNumberEntity scriptureNumber, Dict.ScriptureFormat format) {
+    public ScriptureEntity getScriptureWithFormat(ScriptureNumberEntity scriptureNumber, ScriptureFormat format) {
         checkScriptureNumber(scriptureNumber);
 
         List<ScriptureSectionEntity> scriptureSections = scriptureNumber.getScriptureSections();
         List<ScriptureVerseEntity> scriptureVerseEntityList = new ArrayList<>();
-        try (Connection connection = getConnection(version)) {
+        try (Connection connection = getConnection()) {
             for (ScriptureSectionEntity scriptureSection : scriptureSections) {
                 List<Integer> verses = scriptureSection.getVerses();
                 if (verses == null || verses.isEmpty()) {
@@ -215,15 +224,14 @@ public class ScriptureServiceImpl implements ScriptureService {
 
     /**
      * 获取SQLite获取连接
-     * @param resourceId 资源ID
      * @return 数据库连接，记得要关闭该连接
      */
-    private Connection getConnection(String resourceId) {
+    private Connection getConnection() {
         try {
-            URL url = Thread.currentThread().getContextClassLoader().getResource("assets/sqlite/" + resourceId + ".db");
+            URL url = Thread.currentThread().getContextClassLoader().getResource("assets/sqlite/" + BIBLE_VERSION + ".db");
             return DriverManager.getConnection("jdbc:sqlite:" + url);
         } catch (SQLException e) {
-            throw new SystemException("从" + resourceId + "获取连接失败！");
+            throw new SystemException("从" + BIBLE_VERSION + "获取连接失败！");
         }
     }
 

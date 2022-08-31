@@ -3,6 +3,8 @@ package claygminx.components.impl;
 import claygminx.common.entity.ScriptureNumberEntity;
 import claygminx.components.ScriptureService;
 import claygminx.util.ScriptureUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.poi.xslf.usermodel.XMLSlideShow;
 
 import java.util.List;
@@ -11,6 +13,8 @@ import java.util.List;
  * 认罪经文阶段
  */
 public class ConfessScriptureStep extends AbstractWorshipStep {
+
+    private final static Logger logger = LogManager.getLogger(ConfessScriptureStep.class);
 
     private final String scriptureNumber;
 

@@ -15,7 +15,8 @@ import java.awt.*;
  */
 public class ReadingScriptureStep extends AbstractWorshipStep {
 
-    private final static Logger logger = LogManager.getLogger(AbstractWorshipStep.class);
+    private final static Logger logger = LogManager.getLogger(ReadingScriptureStep.class);
+
     private final static int BEST_LINE_COUNT = 4;
     private final static int BEST_HEIGHT = 207;
     private final static int MAX_CHAR_COUNT = 32;

@@ -48,6 +48,7 @@ public class InputServiceImpl implements InputService {
         DeclarationEntity declarationEntity = readDeclaration(wini);
         PreachEntity preachEntity = readPreach(wini);
         List<String> familyReports = readFamilyReport(wini);
+        HolyCommunionEntity holyCommunion = readHolyCommunion(wini);
 
         WorshipEntity worshipEntity = new WorshipEntity();
         worshipEntity.setCover(coverEntity);
@@ -56,6 +57,7 @@ public class InputServiceImpl implements InputService {
         worshipEntity.setDeclaration(declarationEntity);
         worshipEntity.setPreach(preachEntity);
         worshipEntity.setFamilyReports(familyReports);
+        worshipEntity.setHolyCommunion(holyCommunion);
 
         logger.info("读取完成");
         return worshipEntity;
@@ -244,6 +246,21 @@ public class InputServiceImpl implements InputService {
                 familyReports.add(item);
             }
             return familyReports;
+        }
+        return null;
+    }
+
+    private HolyCommunionEntity readHolyCommunion(Wini wini) {
+        logger.debug("开始读取圣餐信息");
+        Profile.Section section = wini.get(InputSection.HOLY_COMMUNION);
+        if (section != null && !section.isEmpty()) {
+            HolyCommunionEntity result = new HolyCommunionEntity();
+            String nameList = section.get(HolyCommunionKey.NAME_LIST);
+            if (nameList != null && !nameList.isEmpty()) {
+                String[] split = nameList.split(",");
+                result.setNameList(Arrays.asList(split));
+            }
+            return result;
         }
         return null;
     }

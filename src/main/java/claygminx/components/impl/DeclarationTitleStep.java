@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class DeclarationTitleStep extends AbstractWorshipStep {
 
-    private final static Logger logger = LogManager.getLogger(AbstractWorshipStep.class);
+    private final static Logger logger = LogManager.getLogger(DeclarationTitleStep.class);
 
     private final DeclarationEntity declarationEntity;
 

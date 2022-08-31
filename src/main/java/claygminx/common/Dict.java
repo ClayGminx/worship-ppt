@@ -6,6 +6,13 @@ package claygminx.common;
 public class Dict {
 
     /**
+     * 系统属性
+     */
+    public static class System {
+        public final static String BIBLE_VERSION = "BibleVersion";
+    }
+
+    /**
      * 输入参数中的部分
      */
     public static class InputSection {
@@ -84,6 +91,7 @@ public class Dict {
      * 圣餐属性
      */
     public static class HolyCommunionKey {
+        public final static String NAME_LIST = "名单";
     }
 
 }

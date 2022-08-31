@@ -37,6 +37,11 @@ public class WorshipEntity {
      */
     private List<String> familyReports;
 
+    /**
+     * 圣餐
+     */
+    private HolyCommunionEntity holyCommunion;
+
     public CoverEntity getCover() {
         return cover;
     }
@@ -83,5 +88,13 @@ public class WorshipEntity {
 
     public void setFamilyReports(List<String> familyReports) {
         this.familyReports = familyReports;
+    }
+
+    public HolyCommunionEntity getHolyCommunion() {
+        return holyCommunion;
+    }
+
+    public void setHolyCommunion(HolyCommunionEntity holyCommunion) {
+        this.holyCommunion = holyCommunion;
     }
 }

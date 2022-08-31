@@ -6,6 +6,8 @@ import claygminx.common.entity.ScriptureNumberEntity;
 import claygminx.components.ScriptureService;
 import claygminx.exception.ScriptureServiceException;
 import claygminx.util.ScriptureUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.poi.xslf.usermodel.*;
 
 import java.awt.*;
@@ -14,6 +16,8 @@ import java.awt.*;
  * 宣召阶段
  */
 public class SummonStep extends AbstractWorshipStep {
+
+    private final static Logger logger = LogManager.getLogger(SummonStep.class);
 
     private final String scriptureNumber;
 
@@ -58,5 +62,7 @@ public class SummonStep extends AbstractWorshipStep {
         span.setBold(true);
         span.setUnderlined(true);
         span.setFontColor(Color.BLUE);
+
+        logger.info("宣召幻灯片制作完成");
     }
 }

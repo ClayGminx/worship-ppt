@@ -4,6 +4,8 @@ import claygminx.common.entity.PoetryAlbumEntity;
 import claygminx.common.entity.PoetryContentEntity;
 import claygminx.common.entity.PoetryEntity;
 import claygminx.util.SizeUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.poi.common.usermodel.fonts.FontGroup;
 import org.apache.poi.xslf.usermodel.*;
 
@@ -14,6 +16,8 @@ import java.util.List;
  * 诗歌清单阶段
  */
 public class PoetryContentStep extends AbstractWorshipStep {
+
+    private final static Logger logger = LogManager.getLogger(PoetryContentStep.class);
 
     private final PoetryContentEntity poetryContentEntity;
 
@@ -48,6 +52,8 @@ public class PoetryContentStep extends AbstractWorshipStep {
 
         table.setColumnWidth(0, 320);
         table.setColumnWidth(1, 320);
+
+        logger.info("诗歌清单幻灯片制作完成");
     }
 
     private void makeTwoRows(XSLFTable table,

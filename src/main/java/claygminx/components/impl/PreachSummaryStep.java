@@ -1,6 +1,8 @@
 package claygminx.components.impl;
 
 import claygminx.common.entity.PreachEntity;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.poi.xslf.usermodel.XMLSlideShow;
 import org.apache.poi.xslf.usermodel.XSLFSlide;
 import org.apache.poi.xslf.usermodel.XSLFSlideLayout;
@@ -10,6 +12,8 @@ import org.apache.poi.xslf.usermodel.XSLFTextShape;
  * 证道摘要阶段
  */
 public class PreachSummaryStep extends AbstractWorshipStep {
+
+    private final static Logger logger = LogManager.getLogger(PreachSummaryStep.class);
 
     private final PreachEntity preachEntity;
 
@@ -32,6 +36,6 @@ public class PreachSummaryStep extends AbstractWorshipStep {
         text = placeholder.getText();
         placeholder.setText(text.replace(getCustomPlaceholder(), preachEntity.getScriptureNumber()));
 
-
+        logger.info("证道摘要幻灯片制作完成");
     }
 }

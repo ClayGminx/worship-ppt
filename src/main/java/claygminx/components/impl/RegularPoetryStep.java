@@ -4,6 +4,8 @@ import claygminx.common.entity.PoetryEntity;
 import claygminx.exception.SystemException;
 import claygminx.util.PictureUtil;
 import claygminx.util.SizeUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.poi.xslf.usermodel.*;
 
 import java.awt.geom.Rectangle2D;
@@ -18,15 +20,11 @@ import java.util.List;
  */
 public class RegularPoetryStep extends AbstractWorshipStep {
 
+    private final static Logger logger = LogManager.getLogger(RegularPoetryStep.class);
+
     private final List<PoetryEntity> poetryList;
 
     private String fileExtensionName = ".png";
-
-    private double pictureLength = 24.3;
-
-    private double top = 0.0;
-
-    private double left = 0.0;
 
     public RegularPoetryStep(XMLSlideShow ppt, String layout, List<PoetryEntity> poetryList) {
         super(ppt, layout);
@@ -35,6 +33,7 @@ public class RegularPoetryStep extends AbstractWorshipStep {
 
     @Override
     public void execute() throws Exception {
+        List<PoetryEntity> poetryList = getPoetryList();
         for (PoetryEntity poetry : poetryList) {
             File directory = poetry.getDirectory();
             checkDirectory(directory);
@@ -47,10 +46,27 @@ public class RegularPoetryStep extends AbstractWorshipStep {
             // 下面开始一张张地制作幻灯片
             makeSlides(files);
         }
+        logger.info("诗歌幻灯片制作完成");
     }
 
     public void setFileExtensionName(String fileExtensionName) {
         this.fileExtensionName = fileExtensionName;
+    }
+
+    public double getLeft() {
+        return 0d;
+    }
+
+    public double getTop() {
+        return 0d;
+    }
+
+    public double getPictureLength() {
+        return 24.3;
+    }
+
+    public List<PoetryEntity> getPoetryList() {
+        return poetryList;
     }
 
     /**
@@ -72,7 +88,9 @@ public class RegularPoetryStep extends AbstractWorshipStep {
             XSLFPictureData picData = ppt.addPicture(file, pictureType);
             XSLFPictureShape picture = slide.createPicture(picData);
             resizePicture(picture);
-            setPageNumber(slide, files.length, i + 1, picture.getAnchor().getHeight());
+            Rectangle2D anchor = picture.getAnchor();
+            double top = anchor.getMaxY();
+            setPageNumber(slide, files.length, i + 1, top);
         }
     }
 
@@ -123,7 +141,9 @@ public class RegularPoetryStep extends AbstractWorshipStep {
      * @param picture 简谱图片
      */
     private void resizePicture(XSLFPictureShape picture) {
-        double width = SizeUtil.convertToPoints(pictureLength);
+        double width = SizeUtil.convertToPoints(getPictureLength());
+        double left = SizeUtil.convertToPoints(getLeft());
+        double top = SizeUtil.convertToPoints(getTop());
         Rectangle2D anchor = picture.getAnchor();
         double ratio = anchor.getHeight() / anchor.getWidth();// 保持宽高比
         picture.setAnchor(new Rectangle2D.Double(left, top, width, width * ratio));

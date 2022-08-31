@@ -1,6 +1,8 @@
 package claygminx.components.impl;
 
 import claygminx.common.entity.CoverEntity;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.poi.xslf.usermodel.XMLSlideShow;
 import org.apache.poi.xslf.usermodel.XSLFSlide;
 import org.apache.poi.xslf.usermodel.XSLFSlideLayout;
@@ -10,6 +12,8 @@ import org.apache.poi.xslf.usermodel.XSLFTextShape;
  * 封面阶段
  */
 public class CoverStep extends AbstractWorshipStep {
+
+    private final static Logger logger = LogManager.getLogger(CoverStep.class);
 
     private final CoverEntity coverEntity;
 
@@ -31,5 +35,7 @@ public class CoverStep extends AbstractWorshipStep {
         placeholder = coverSlide.getPlaceholder(1);
         placeholder.clearText();
         placeholder.setText(coverEntity.getChurchName());
+
+        logger.info("封面幻灯片制作完成");
     }
 }

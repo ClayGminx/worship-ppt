@@ -6,6 +6,9 @@ import claygminx.exception.ScriptureNumberException;
 
 import static claygminx.common.Dict.*;
 
+/**
+ * 经文服务
+ */
 public interface ScriptureService {
 
     /**

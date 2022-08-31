@@ -74,7 +74,17 @@ public class WorshipPPTServiceImpl implements WorshipPPTService {
         // 4.保存
         try (FileOutputStream fos = new FileOutputStream(pptFile)) {
             ppt.write(fos);
+            logger.info("\n"
+            + "************************************\n"
+            + "  PPT制作完成！\n"
+            + "  文件位于：{}\n"
+            + "  你还需要做一些检查工作：\n"
+            + "  1.看看文本框里的文字是否符合排版规范；\n"
+            + "  2.宣信和证道内容需要手动制作；\n"
+            + "  3.圣餐诗歌需要手动调整以符合圣礼需要；\n"
+            + "  4.还有更多需要细心检查的细节。", pptFile.getAbsolutePath());
         } catch (IOException e) {
+            logger.error(e);
         }
     }
 
