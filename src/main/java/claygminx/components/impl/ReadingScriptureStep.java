@@ -85,11 +85,11 @@ public class ReadingScriptureStep extends AbstractWorshipStep {
              * 允许再多一些经文，最好不要超过6行，文本框高度最大为312.68603827073，
              * 幻灯片里至少2节经文。
              */
-            if (i < scriptureArray.length - 2) {
-                int currentHeight = (int) Math.ceil(contentPlaceholder.getTextHeight());
-                int n = (int) Math.ceil((double) trimScriptureItem.length() / MAX_CHAR_COUNT);
-                lineCount += n;
-                if (currentHeight >= BEST_HEIGHT || lineCount >= BEST_LINE_COUNT) {
+            int currentHeight = (int) Math.ceil(contentPlaceholder.getTextHeight());
+            int n = (int) Math.ceil((double) trimScriptureItem.length() / MAX_CHAR_COUNT);
+            lineCount += n;
+            if (currentHeight >= BEST_HEIGHT || lineCount >= BEST_LINE_COUNT) {
+                if (i < scriptureArray.length - 1) {
                     logger.debug("当前幻灯片有{}个段落，应该有{}行", contentPlaceholder.getTextParagraphs().size(), lineCount);
                     lineCount = 0;
                 }

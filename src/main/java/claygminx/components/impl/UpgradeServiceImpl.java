@@ -6,6 +6,7 @@ import claygminx.components.UpgradeService;
 import claygminx.exception.SystemException;
 import com.google.gson.Gson;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
@@ -17,6 +18,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 import static claygminx.common.Dict.General.*;
 
@@ -48,6 +50,12 @@ public class UpgradeServiceImpl implements UpgradeService {
             logger.debug("GET " + url);
             HttpGet httpGet = new HttpGet(url);
             httpGet.setHeader("Accept", "application/vnd.github+json");
+            RequestConfig requestConfig = RequestConfig.custom()
+                    .setConnectTimeout(5, TimeUnit.SECONDS)
+                    .setConnectionRequestTimeout(30, TimeUnit.SECONDS)
+                    .setResponseTimeout(30, TimeUnit.SECONDS)
+                    .build();
+            httpGet.setConfig(requestConfig);
             CloseableHttpResponse response = client.execute(httpGet);
             logger.debug("请求成功");
             if (HttpStatus.SC_NOT_FOUND == response.getCode()) {

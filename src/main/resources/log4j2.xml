@@ -2,7 +2,7 @@
 <configuration>
     <properties>
         <!--日志输出位置-->
-        <property name="LOG_HOME">D:/resource/default</property>
+        <property name="LOG_HOME">logs</property>
     </properties>
 
     <Appenders>
@@ -39,5 +39,7 @@
 
         <!--spring日志-->
         <Logger name="org.springframework" level="WARN"/>
+        <!-- apache -->
+        <Logger name="org.apache" level="WARN"/>
     </Loggers>
 </configuration>

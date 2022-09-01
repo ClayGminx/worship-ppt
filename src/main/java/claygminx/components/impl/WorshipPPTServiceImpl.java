@@ -41,6 +41,7 @@ public class WorshipPPTServiceImpl implements WorshipPPTService {
         try {
             worshipEntity = inputService.readIni(inputFilePath);
         } catch (InputServiceException e) {
+            logger.debug("", e);
             logger.error(e.getMessage());
             return;
         }
@@ -67,7 +68,8 @@ public class WorshipPPTServiceImpl implements WorshipPPTService {
                 worshipStep.execute();
             }
         } catch (Exception e) {
-            logger.error("", e);
+            logger.debug("", e);
+            logger.error(e.getMessage());
             return;
         }
 
@@ -82,9 +84,11 @@ public class WorshipPPTServiceImpl implements WorshipPPTService {
             + "  1.看看文本框里的文字是否符合排版规范；\n"
             + "  2.宣信和证道内容需要手动制作；\n"
             + "  3.圣餐诗歌需要手动调整以符合圣礼需要；\n"
-            + "  4.还有更多需要细心检查的细节。", pptFile.getAbsolutePath());
+            + "  4.还有更多需要细心检查的细节。\n"
+            + "************************************\n", pptFile.getAbsolutePath());
         } catch (IOException e) {
-            logger.error("", e);
+            logger.debug("", e);
+            logger.error(e.getMessage());
         }
     }
 

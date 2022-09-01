@@ -228,9 +228,9 @@ public class ScriptureServiceImpl implements ScriptureService {
     private Connection getConnection() {
         try {
             URL url = Thread.currentThread().getContextClassLoader().getResource("assets/sqlite/" + BIBLE_VERSION + ".db");
-            return DriverManager.getConnection("jdbc:sqlite:" + url);
+            return DriverManager.getConnection("jdbc:sqlite::resource:" + url);
         } catch (SQLException e) {
-            throw new SystemException("从" + BIBLE_VERSION + "获取连接失败！");
+            throw new SystemException("从" + BIBLE_VERSION + "获取连接失败！", e);
         }
     }
 
