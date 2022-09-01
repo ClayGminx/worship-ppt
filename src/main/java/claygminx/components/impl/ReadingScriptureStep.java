@@ -1,6 +1,6 @@
 package claygminx.components.impl;
 
-import claygminx.common.Dict;
+import claygminx.common.config.SystemConfig;
 import claygminx.common.entity.ScriptureEntity;
 import claygminx.components.ScriptureService;
 import claygminx.exception.ScriptureNumberException;
@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.apache.poi.xslf.usermodel.*;
 
 import java.awt.*;
+
+import static claygminx.common.Dict.General.*;
 
 /**
  * 读经阶段
@@ -33,7 +35,8 @@ public class ReadingScriptureStep extends AbstractWorshipStep {
     @Override
     public void execute() throws ScriptureNumberException {
         logger.info("开始读经" + scriptureNumber);
-        ScriptureEntity scriptureEntity = scriptureService.getScriptureWithFormat(scriptureNumber, Dict.ScriptureFormat.FORMAT_4);
+        ScriptureEntity scriptureEntity = scriptureService.getScriptureWithFormat(
+                scriptureNumber, SystemConfig.getString(SCRIPTURE_FORMAT4));
         if (scriptureEntity == null) {
             return;
         }

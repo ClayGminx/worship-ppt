@@ -29,4 +29,13 @@ public class SystemConfig {
     private SystemConfig() {
     }
 
+    /**
+     * 获取字符串值
+     * @param key 键
+     * @return 系统值
+     */
+    public static String getString(String key) {
+        return properties.getProperty(key);
+    }
+
 }

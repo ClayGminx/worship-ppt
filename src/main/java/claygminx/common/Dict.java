@@ -8,8 +8,32 @@ public class Dict {
     /**
      * 系统属性
      */
-    public static class System {
-        public final static String BIBLE_VERSION = "BibleVersion";
+    public static class General {
+        // 项目属性
+        public final static String PROJECT_VERSION = "project.version";
+        public final static String PROJECT_TIME = "project.time";
+        public final static String PROJECT_TIME_FORMAT = "project.time.format";
+
+        // 运行场景
+        public final static String RUNNING_SCENE = "running.scene";
+        public final static String RUNNING_SCENE_UPGRADE = "running.scene.upgrade";
+        public final static String RUNNING_SCENE_PPT = "running.scene.ppt";
+
+        // 圣经版本
+        public final static String BIBLE_VERSION = "bible.version";
+
+        // 经文格式
+        public final static String SCRIPTURE_FORMAT1 = "scripture.format1";
+        public final static String SCRIPTURE_FORMAT2 = "scripture.format2";
+        public final static String SCRIPTURE_FORMAT3 = "scripture.format3";
+        public final static String SCRIPTURE_FORMAT4 = "scripture.format4";
+
+        // GitHub
+        public final static String OWNER = "github.owner";
+        public final static String REPO = "github.repo";
+
+        // 敬拜模式前缀
+        public final static String WORSHIP_MODEL_PREFIX = "worship.model.";
     }
 
     /**
@@ -68,38 +92,10 @@ public class Dict {
     }
 
     /**
-     * 经文格式
-     */
-    public enum ScriptureFormat {
-        FORMAT_1("scripture-format1.ftl"),
-        FORMAT_2("scripture-format2.ftl"),
-        FORMAT_3("scripture-format3.ftl"),
-        FORMAT_4("scripture-format4.ftl");
-
-        private final String value;
-
-        ScriptureFormat(String value) {
-            this.value = value;
-        }
-
-        public String getValue() {
-            return value;
-        }
-    }
-
-    /**
      * 圣餐属性
      */
     public static class HolyCommunionKey {
         public final static String NAME_LIST = "名单";
-    }
-
-    /**
-     * GitHub仓库属性
-     */
-    public static class GitHub {
-        public final static String OWNER = "github.owner";
-        public final static String REPO = "github.repo";
     }
 
 }

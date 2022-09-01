@@ -36,17 +36,17 @@ public interface ScriptureService {
     /**
      * 获取格式化后的经文
      * @param scriptureNumber 经文编号
-     * @param format 格式
+     * @param formatFileName 格式文件名称
      * @return 经文实体
      */
-    ScriptureEntity getScriptureWithFormat(String scriptureNumber, ScriptureFormat format) throws ScriptureNumberException;
+    ScriptureEntity getScriptureWithFormat(String scriptureNumber, String formatFileName) throws ScriptureNumberException;
 
     /**
      * 获取格式化后的经文
      * @param scriptureNumber 经文编号
-     * @param format 格式
+     * @param formatFileName 格式文件名称
      * @return 经文实体
      */
-    ScriptureEntity getScriptureWithFormat(ScriptureNumberEntity scriptureNumber, ScriptureFormat format);
+    ScriptureEntity getScriptureWithFormat(ScriptureNumberEntity scriptureNumber, String formatFileName);
 
 }

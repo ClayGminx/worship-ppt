@@ -1,6 +1,6 @@
 package claygminx.components.impl;
 
-import claygminx.common.Dict;
+import claygminx.common.config.SystemConfig;
 import claygminx.common.entity.ScriptureEntity;
 import claygminx.common.entity.ScriptureNumberEntity;
 import claygminx.components.ScriptureService;
@@ -12,6 +12,8 @@ import org.apache.poi.xslf.usermodel.XSLFSlideLayout;
 import org.apache.poi.xslf.usermodel.XSLFTextShape;
 
 import java.util.List;
+
+import static claygminx.common.Dict.General.*;
 
 public abstract class AbstractWorshipStep implements WorshipStep {
 
@@ -44,7 +46,8 @@ public abstract class AbstractWorshipStep implements WorshipStep {
                 throw new ScriptureServiceException("经文编号格式错误！");
             }
             titleBuilder.append('【').append(scriptureNumberEntity).append('】');
-            ScriptureEntity scriptureEntity = scriptureService.getScriptureWithFormat(scriptureNumberEntity, Dict.ScriptureFormat.FORMAT_1);
+            ScriptureEntity scriptureEntity = scriptureService.getScriptureWithFormat(
+                    scriptureNumberEntity, SystemConfig.getString(SCRIPTURE_FORMAT1));
             scriptureBuilder.append("　　").append(scriptureEntity.getScripture()).append('\n');
         }
         scriptureBuilder.setLength(scriptureBuilder.length() - 1);

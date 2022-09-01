@@ -22,8 +22,6 @@ public class InputServiceImpl implements InputService {
 
     private final static Logger logger = LoggerFactory.getLogger(InputService.class);
 
-    private final static String MODEL_PREFIX = "敬拜模式-";
-
     // 单实例模式
     private static InputService instance;
 
@@ -94,8 +92,8 @@ public class InputServiceImpl implements InputService {
             }
 
             logger.debug("用户选择的敬拜模式是" + worshipModel);
-            String modelKey = MODEL_PREFIX + worshipModel;
-            String pptTemplateName = SystemConfig.properties.getProperty(modelKey);
+            String modelKey = General.WORSHIP_MODEL_PREFIX + worshipModel;
+            String pptTemplateName = SystemConfig.getString(modelKey);
             if (pptTemplateName == null) {
                 throw new InputServiceException("不支持" + worshipModel + "！");
             }

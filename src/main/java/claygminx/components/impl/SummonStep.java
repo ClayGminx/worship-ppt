@@ -1,6 +1,6 @@
 package claygminx.components.impl;
 
-import claygminx.common.Dict;
+import claygminx.common.config.SystemConfig;
 import claygminx.common.entity.ScriptureEntity;
 import claygminx.common.entity.ScriptureNumberEntity;
 import claygminx.components.ScriptureService;
@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.apache.poi.xslf.usermodel.*;
 
 import java.awt.*;
+
+import static claygminx.common.Dict.General.*;
 
 /**
  * 宣召阶段
@@ -37,7 +39,8 @@ public class SummonStep extends AbstractWorshipStep {
             throw new ScriptureServiceException("经文编号格式错误！");
         }
 
-        ScriptureEntity scriptureEntity = scriptureService.getScriptureWithFormat(scriptureNumberEntity, Dict.ScriptureFormat.FORMAT_1);
+        ScriptureEntity scriptureEntity = scriptureService.getScriptureWithFormat(
+                scriptureNumberEntity, SystemConfig.getString(SCRIPTURE_FORMAT1));
 
         XMLSlideShow ppt = getPpt();
         XSLFSlideLayout layout = ppt.findLayout(getLayout());

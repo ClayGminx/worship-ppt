@@ -1,6 +1,5 @@
 package claygminx.components.impl;
 
-import claygminx.common.Dict;
 import claygminx.common.config.FreeMarkerConfig;
 import claygminx.common.config.SystemConfig;
 import claygminx.common.entity.*;
@@ -37,7 +36,7 @@ public class ScriptureServiceImpl implements ScriptureService {
             throw new SystemException("无法加载org.sqlite.JDBC！");
         }
 
-        String bibleVersion = SystemConfig.properties.getProperty(Dict.System.BIBLE_VERSION);
+        String bibleVersion = SystemConfig.getString(General.BIBLE_VERSION);
         if (bibleVersion == null) {
             throw new SystemException("未设置圣经版本！");
         }
@@ -120,7 +119,7 @@ public class ScriptureServiceImpl implements ScriptureService {
     }
 
     @Override
-    public ScriptureEntity getScriptureWithFormat(String scriptureNumber, ScriptureFormat format) throws ScriptureNumberException {
+    public ScriptureEntity getScriptureWithFormat(String scriptureNumber, String format) throws ScriptureNumberException {
         ScriptureNumberEntity scriptureNumberEntity = ScriptureUtil.parseNumber(scriptureNumber);
         boolean flag = validateNumber(scriptureNumberEntity);
         if (flag) {
@@ -131,7 +130,7 @@ public class ScriptureServiceImpl implements ScriptureService {
     }
 
     @Override
-    public ScriptureEntity getScriptureWithFormat(ScriptureNumberEntity scriptureNumber, ScriptureFormat format) {
+    public ScriptureEntity getScriptureWithFormat(ScriptureNumberEntity scriptureNumber, String format) {
         checkScriptureNumber(scriptureNumber);
 
         List<ScriptureSectionEntity> scriptureSections = scriptureNumber.getScriptureSections();
@@ -185,7 +184,7 @@ public class ScriptureServiceImpl implements ScriptureService {
                 scriptureBookEntity.setScriptureVerseList(scriptureVerseEntityList);
 
                 Configuration configuration = FreeMarkerConfig.getConfiguration();
-                Template template = configuration.getTemplate(format.getValue());
+                Template template = configuration.getTemplate(format);
                 try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                      Writer out = new OutputStreamWriter(byteArrayOutputStream)) {
                     template.process(scriptureBookEntity, out);
