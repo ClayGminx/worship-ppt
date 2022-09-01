@@ -4,8 +4,8 @@ import claygminx.common.entity.PoetryEntity;
 import claygminx.exception.SystemException;
 import claygminx.util.PictureUtil;
 import claygminx.util.SizeUtil;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.poi.xslf.usermodel.*;
 
 import java.awt.geom.Rectangle2D;
@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class RegularPoetryStep extends AbstractWorshipStep {
 
-    private final static Logger logger = LogManager.getLogger(RegularPoetryStep.class);
+    private final static Logger logger = LoggerFactory.getLogger(RegularPoetryStep.class);
 
     private final List<PoetryEntity> poetryList;
 

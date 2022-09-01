@@ -3,16 +3,16 @@ package claygminx;
 import claygminx.components.FileService;
 import claygminx.components.InputService;
 import claygminx.components.ScriptureService;
-import claygminx.components.impl.FileServiceImpl;
-import claygminx.components.impl.InputServiceImpl;
-import claygminx.components.impl.ScriptureServiceImpl;
-import claygminx.components.impl.WorshipPPTServiceImpl;
+import claygminx.components.UpgradeService;
+import claygminx.components.impl.*;
 
 public class Main {
 
-//    private final static Logger logger = LogManager.getLogger(Main.class);
+//    private final static Logger logger = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) {
+//        UpgradeService upgradeService = UpgradeServiceImpl.getInstance();
+//        upgradeService.checkNewRelease();
         if (args.length == 0) {
             System.err.println("请输入ini文件！");
             return;

@@ -4,8 +4,8 @@ import claygminx.common.entity.CoverEntity;
 import claygminx.components.FileService;
 import claygminx.exception.FileServiceException;
 import claygminx.exception.SystemException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.URL;
@@ -14,7 +14,7 @@ import java.util.Scanner;
 
 public class FileServiceImpl implements FileService {
 
-    private final static Logger logger = LogManager.getLogger(FileService.class);
+    private final static Logger logger = LoggerFactory.getLogger(FileService.class);
 
     private final static String WORSHIP_PROCEDURE_XML_PATH = "worship-procedure.xml";
 
@@ -73,7 +73,7 @@ public class FileServiceImpl implements FileService {
             }
             return stringBuilder.toString();
         } catch (IOException e) {
-            logger.debug(e);
+            logger.debug("", e);
             throw new FileServiceException("读取" + WORSHIP_PROCEDURE_XML_PATH + "失败！");
         }
     }

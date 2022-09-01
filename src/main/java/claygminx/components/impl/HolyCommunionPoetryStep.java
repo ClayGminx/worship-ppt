@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class HolyCommunionPoetryStep extends RegularPoetryStep {
 
-//    private final static Logger logger = LogManager.getLogger(HolyCommunionPoetryStep.class);
+//    private final static Logger logger = LoggerFactory.getLogger(HolyCommunionPoetryStep.class);
 
     private final List<PoetryEntity> poetryList;
 

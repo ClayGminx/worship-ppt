@@ -4,8 +4,8 @@ import claygminx.common.entity.ScriptureNumberEntity;
 import claygminx.components.ScriptureService;
 import claygminx.exception.ScriptureNumberException;
 import claygminx.util.ScriptureUtil;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.poi.xslf.usermodel.*;
 
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class ForgiveSinsScriptureStep extends AbstractWorshipStep {
 
-    private final static Logger logger = LogManager.getLogger(ForgiveSinsScriptureStep.class);
+    private final static Logger logger = LoggerFactory.getLogger(ForgiveSinsScriptureStep.class);
 
     private final String scriptureNumber;
 

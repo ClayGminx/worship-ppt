@@ -1,7 +1,7 @@
 package claygminx.components.impl;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.poi.xslf.usermodel.XMLSlideShow;
 import org.apache.poi.xslf.usermodel.XSLFSlide;
 import org.apache.poi.xslf.usermodel.XSLFSlideLayout;
@@ -12,7 +12,7 @@ import org.apache.poi.xslf.usermodel.XSLFTextShape;
  */
 public class PublicPrayContentStep extends AbstractWorshipStep {
 
-    private final static Logger logger = LogManager.getLogger(PublicPrayContentStep.class);
+    private final static Logger logger = LoggerFactory.getLogger(PublicPrayContentStep.class);
 
     public static String example = "1.为教会的复兴祷告；\n2.为教会中圣约婚姻家庭的圣洁合一祷告；\n3.为教会中单身弟兄姐妹的婚姻预备祷告；\n4.为教会中生病软弱的肢体祷告。";
 

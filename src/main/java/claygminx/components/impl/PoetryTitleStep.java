@@ -1,7 +1,7 @@
 package claygminx.components.impl;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.poi.xslf.usermodel.XMLSlideShow;
 import org.apache.poi.xslf.usermodel.XSLFSlide;
 import org.apache.poi.xslf.usermodel.XSLFSlideLayout;
@@ -12,7 +12,7 @@ import org.apache.poi.xslf.usermodel.XSLFTextShape;
  */
 public class PoetryTitleStep extends AbstractWorshipStep {
 
-    private final static Logger logger = LogManager.getLogger(PoetryTitleStep.class);
+    private final static Logger logger = LoggerFactory.getLogger(PoetryTitleStep.class);
 
     private final String slideName;
 

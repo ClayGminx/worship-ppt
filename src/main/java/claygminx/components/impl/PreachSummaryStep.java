@@ -1,8 +1,8 @@
 package claygminx.components.impl;
 
 import claygminx.common.entity.PreachEntity;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.poi.xslf.usermodel.XMLSlideShow;
 import org.apache.poi.xslf.usermodel.XSLFSlide;
 import org.apache.poi.xslf.usermodel.XSLFSlideLayout;
@@ -13,7 +13,7 @@ import org.apache.poi.xslf.usermodel.XSLFTextShape;
  */
 public class PreachSummaryStep extends AbstractWorshipStep {
 
-    private final static Logger logger = LogManager.getLogger(PreachSummaryStep.class);
+    private final static Logger logger = LoggerFactory.getLogger(PreachSummaryStep.class);
 
     private final PreachEntity preachEntity;
 

@@ -4,8 +4,8 @@ import claygminx.common.Dict;
 import claygminx.common.entity.ScriptureEntity;
 import claygminx.components.ScriptureService;
 import claygminx.exception.ScriptureNumberException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.poi.xslf.usermodel.*;
 
 import java.awt.*;
@@ -15,7 +15,7 @@ import java.awt.*;
  */
 public class ReadingScriptureStep extends AbstractWorshipStep {
 
-    private final static Logger logger = LogManager.getLogger(ReadingScriptureStep.class);
+    private final static Logger logger = LoggerFactory.getLogger(ReadingScriptureStep.class);
 
     private final static int BEST_LINE_COUNT = 4;
     private final static int BEST_HEIGHT = 207;

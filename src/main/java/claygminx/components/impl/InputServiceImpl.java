@@ -4,8 +4,8 @@ import claygminx.common.config.SystemConfig;
 import claygminx.common.entity.*;
 import claygminx.components.InputService;
 import claygminx.exception.InputServiceException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.ini4j.Profile;
 import org.ini4j.Wini;
 
@@ -20,7 +20,7 @@ import static claygminx.common.Dict.*;
  */
 public class InputServiceImpl implements InputService {
 
-    private final static Logger logger = LogManager.getLogger(InputService.class);
+    private final static Logger logger = LoggerFactory.getLogger(InputService.class);
 
     private final static String MODEL_PREFIX = "敬拜模式-";
 

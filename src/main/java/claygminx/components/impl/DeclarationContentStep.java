@@ -1,16 +1,16 @@
 package claygminx.components.impl;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.poi.xslf.usermodel.XMLSlideShow;
 import org.apache.poi.xslf.usermodel.XSLFSlideLayout;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 宣信内容阶段
  */
 public class DeclarationContentStep extends AbstractWorshipStep {
 
-    private final static Logger logger = LogManager.getLogger(DeclarationContentStep.class);
+    private final static Logger logger = LoggerFactory.getLogger(DeclarationContentStep.class);
 
     public DeclarationContentStep(XMLSlideShow ppt, String layout) {
         super(ppt, layout);

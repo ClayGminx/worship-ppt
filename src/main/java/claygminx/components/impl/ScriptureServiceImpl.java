@@ -10,8 +10,8 @@ import claygminx.exception.ScriptureServiceException;
 import claygminx.exception.SystemException;
 import claygminx.util.ScriptureUtil;
 import freemarker.template.*;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -44,7 +44,7 @@ public class ScriptureServiceImpl implements ScriptureService {
         BIBLE_VERSION = bibleVersion;
     }
 
-    private final static Logger logger = LogManager.getLogger(ScriptureService.class);
+    private final static Logger logger = LoggerFactory.getLogger(ScriptureService.class);
 
     private static ScriptureService scriptureService;
 

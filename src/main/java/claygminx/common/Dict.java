@@ -76,7 +76,7 @@ public class Dict {
         FORMAT_3("scripture-format3.ftl"),
         FORMAT_4("scripture-format4.ftl");
 
-        private String value;
+        private final String value;
 
         ScriptureFormat(String value) {
             this.value = value;
@@ -92,6 +92,14 @@ public class Dict {
      */
     public static class HolyCommunionKey {
         public final static String NAME_LIST = "名单";
+    }
+
+    /**
+     * GitHub仓库属性
+     */
+    public static class GitHub {
+        public final static String OWNER = "github.owner";
+        public final static String REPO = "github.repo";
     }
 
 }

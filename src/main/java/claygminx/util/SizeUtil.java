@@ -1,14 +1,14 @@
 package claygminx.util;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 尺寸工具类
  */
 public class SizeUtil {
 
-    private final static Logger logger = LogManager.getLogger(SizeUtil.class);
+    private final static Logger logger = LoggerFactory.getLogger(SizeUtil.class);
 
     private SizeUtil() {
     }

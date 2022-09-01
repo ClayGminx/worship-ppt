@@ -1,15 +1,15 @@
 package claygminx.util;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.poi.sl.usermodel.PictureData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 图片工具
  */
 public class PictureUtil {
 
-    private final static Logger logger = LogManager.getLogger(PictureUtil.class);
+    private final static Logger logger = LoggerFactory.getLogger(PictureUtil.class);
 
     private PictureUtil() {
     }

@@ -4,8 +4,8 @@ import claygminx.common.entity.WorshipEntity;
 import claygminx.components.*;
 import claygminx.exception.FileServiceException;
 import claygminx.exception.InputServiceException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.poi.xslf.usermodel.XMLSlideShow;
 
 import java.io.File;
@@ -16,7 +16,7 @@ import java.util.List;
 
 public class WorshipPPTServiceImpl implements WorshipPPTService {
 
-    private final static Logger logger = LogManager.getLogger(WorshipPPTService.class);
+    private final static Logger logger = LoggerFactory.getLogger(WorshipPPTService.class);
 
     private final String inputFilePath;
 
@@ -67,7 +67,7 @@ public class WorshipPPTServiceImpl implements WorshipPPTService {
                 worshipStep.execute();
             }
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("", e);
             return;
         }
 
@@ -84,7 +84,7 @@ public class WorshipPPTServiceImpl implements WorshipPPTService {
             + "  3.圣餐诗歌需要手动调整以符合圣礼需要；\n"
             + "  4.还有更多需要细心检查的细节。", pptFile.getAbsolutePath());
         } catch (IOException e) {
-            logger.error(e);
+            logger.error("", e);
         }
     }
 

@@ -10,8 +10,8 @@ import claygminx.exception.FileServiceException;
 import claygminx.exception.SystemException;
 import ognl.Ognl;
 import ognl.OgnlException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.poi.xslf.usermodel.XMLSlideShow;
 import org.dom4j.*;
 
@@ -22,7 +22,7 @@ import java.util.Map;
 
 public class WorshipProcedureServiceImpl implements WorshipProcedureService {
 
-    private final static Logger logger = LogManager.getLogger(WorshipProcedureService.class);
+    private final static Logger logger = LoggerFactory.getLogger(WorshipProcedureService.class);
 
     private FileService fileService;
 
@@ -78,7 +78,7 @@ public class WorshipProcedureServiceImpl implements WorshipProcedureService {
                     return null;
                 }
             } catch (OgnlException e) {
-                logger.debug(e);
+                logger.debug("", e);
                 throw new SystemException("OGNL表达式错误！");
             }
         }
@@ -97,7 +97,7 @@ public class WorshipProcedureServiceImpl implements WorshipProcedureService {
         try {
             return (WorshipStep) Ognl.getValue(expression, context, worshipEntity);
         } catch (OgnlException e) {
-            logger.debug(e);
+            logger.debug("", e);
             throw new SystemException("OGNL表达式错误！");
         }
     }

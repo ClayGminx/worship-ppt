@@ -1,14 +1,14 @@
 package claygminx.components.impl;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.poi.xslf.usermodel.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class FamilyReportStep extends AbstractWorshipStep {
 
-    private final static Logger logger = LogManager.getLogger(FamilyReportStep.class);
+    private final static Logger logger = LoggerFactory.getLogger(FamilyReportStep.class);
 
     private final List<String> familyReports;
 
