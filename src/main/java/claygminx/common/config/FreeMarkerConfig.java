@@ -19,9 +19,10 @@ public class FreeMarkerConfig {
 
     static {
         try {
+            String templatePath = SystemConfig.getString(Dict.General.SCRIPTURE_PATH);
             configuration.setDefaultEncoding(StandardCharsets.UTF_8.name());
             configuration.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
-            configuration.setClassForTemplateLoading(FreeMarkerConfig.class, Dict.General.SCRIPTURE_PATH);
+            configuration.setClassForTemplateLoading(FreeMarkerConfig.class, templatePath);
         } catch (Exception e) {
             throw new SystemException("无法初始化FreeMarker配置！", e);
         }
