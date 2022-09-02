@@ -32,8 +32,11 @@ public class Dict {
         public final static String OWNER = "github.owner";
         public final static String REPO = "github.repo";
 
-        // 敬拜模式前缀
+        // PPT
         public final static String WORSHIP_MODEL_PREFIX = "worship.model.";
+        public final static String WORSHIP_PPT_INITIATION_TEMPLATE = "worship.ppt.入会模板";
+        public final static String WORSHIP_PPT_INITIATION_POETRY_SLIDE_ORDER = "worship.ppt.入会诗歌幻灯片序号";
+        public final static String WORSHIP_PPT_GENERAL_CROSS_LAYOUT_NAME = "worship.ppt.十字架版式名称";
     }
 
     /**

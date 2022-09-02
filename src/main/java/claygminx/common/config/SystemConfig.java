@@ -38,4 +38,18 @@ public class SystemConfig {
         return properties.getProperty(key);
     }
 
+    /**
+     * 获取int值
+     * @param key 键
+     * @return 系统值
+     */
+    public static int getInt(String key) {
+        String strValue = properties.getProperty(key);
+        try {
+            return Integer.parseInt(strValue);
+        } catch (Exception e) {
+            throw new SystemException("根据" + key + "获取int值失败！", e);
+        }
+    }
+
 }
