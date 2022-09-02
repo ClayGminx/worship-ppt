@@ -5,9 +5,6 @@ package claygminx.components;
  */
 public interface UpgradeService {
 
-    /**
-     *
-     */
     void checkNewRelease();
 
 }

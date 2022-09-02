@@ -8,6 +8,12 @@ import claygminx.exception.InputServiceException;
  */
 public interface InputService {
 
+    /**
+     * 读取ini文件
+     * @param filePath ini文件位置
+     * @return 敬拜参数实体对象
+     * @throws InputServiceException 读取时发生的异常
+     */
     WorshipEntity readIni(String filePath) throws InputServiceException;
 
 }
