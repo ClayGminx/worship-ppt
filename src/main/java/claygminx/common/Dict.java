@@ -57,6 +57,14 @@ public class Dict {
         public final static String PPT_POETRY_CONTENT_FONT_SIZE = "ppt.poetryContent.fontSize";
         public final static String PPT_POETRY_CONTENT_LEFT_INSET = "ppt.poetryContent.leftInset";
         public final static String PPT_POETRY_CONTENT_SPACE_BEFORE = "ppt.poetryContent.spaceBefore";
+
+        // PPT 非会友领餐名单表格
+        public final static String PPT_HOLY_COMMUNION_NAME_LIST_X = "ppt.holyCommunion.nameList.x";
+        public final static String PPT_HOLY_COMMUNION_NAME_LIST_Y = "ppt.holyCommunion.nameList.y";
+        public final static String PPT_HOLY_COMMUNION_NAME_LIST_W = "ppt.holyCommunion.nameList.w";
+        public final static String PPT_HOLY_COMMUNION_NAME_LIST_H = "ppt.holyCommunion.nameList.h";
+        public final static String PPT_HOLY_COMMUNION_NAME_LIST_COL_COUNT = "ppt.holyCommunion.nameList.colCount";
+        public final static String PPT_HOLY_COMMUNION_NAME_LIST_FONT_SIZE = "ppt.holyCommunion.nameList.fontSize";
     }
 
     /**

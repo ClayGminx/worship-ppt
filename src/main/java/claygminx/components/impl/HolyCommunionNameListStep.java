@@ -1,5 +1,6 @@
 package claygminx.components.impl;
 
+import claygminx.common.config.SystemConfig;
 import claygminx.util.SizeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +10,8 @@ import org.apache.poi.xslf.usermodel.*;
 import java.awt.geom.Rectangle2D;
 import java.util.List;
 
+import static claygminx.common.Dict.*;
+
 /**
  * 非会友领餐名单阶段
  */
@@ -16,7 +19,6 @@ public class HolyCommunionNameListStep extends AbstractWorshipStep {
 
     private final static Logger logger = LoggerFactory.getLogger(HolyCommunionNameListStep.class);
 
-    private final static int COLUMN_COUNT = 5;
     private final List<String> nameList;
 
     public HolyCommunionNameListStep(XMLSlideShow ppt, String layout, List<String> nameList) {
@@ -30,23 +32,23 @@ public class HolyCommunionNameListStep extends AbstractWorshipStep {
         XSLFSlideLayout layout = ppt.findLayout(getLayout());
         XSLFSlide slide = ppt.createSlide(layout);
 
-        /*
-         * 用表格来展示名单
-         * -------------
-         * 每行5个单元格，每个单元格4.7厘米宽，1.64厘米高
-         * 字体都是微软雅黑，28，单行距
-         */
         if (!nameList.isEmpty()) {
+            logger.debug("创建表格");
             XSLFTable table = slide.createTable();
-            double x = SizeUtil.convertToPoints(0.82),
-                    y = SizeUtil.convertToPoints(3.75),
-                    w = SizeUtil.convertToPoints(23.52),
-                    h = SizeUtil.convertToPoints(1.64);
+
+            logger.debug("初始化表格的尺寸");
+            double x = SizeUtil.convertToPoints(SystemConfig.getDouble(General.PPT_HOLY_COMMUNION_NAME_LIST_X)),
+                    y = SizeUtil.convertToPoints(SystemConfig.getDouble(General.PPT_HOLY_COMMUNION_NAME_LIST_Y)),
+                    w = SizeUtil.convertToPoints(SystemConfig.getDouble(General.PPT_HOLY_COMMUNION_NAME_LIST_W)),
+                    h = SizeUtil.convertToPoints(SystemConfig.getDouble(General.PPT_HOLY_COMMUNION_NAME_LIST_H));
             table.setAnchor(new Rectangle2D.Double(x, y, w, h));
 
+            int colCount = SystemConfig.getInt(General.PPT_HOLY_COMMUNION_NAME_LIST_COL_COUNT);
             XSLFTableRow row = null;
+            logger.debug("总共有{}个人", nameList.size());
             for (int i = 0; i < nameList.size(); i++) {
-                if (i % COLUMN_COUNT == 0) {
+                if (i % colCount == 0) {
+                    logger.debug("加一行");
                     row = table.addRow();
                 }
                 XSLFTableCell cell = row.addCell();
@@ -56,20 +58,22 @@ public class HolyCommunionNameListStep extends AbstractWorshipStep {
                 span.setText(nameList.get(i));
                 span.setFontFamily(getFontFamily(), FontGroup.LATIN);
                 span.setFontFamily(getFontFamily(), FontGroup.EAST_ASIAN);
-                span.setFontSize(28.0);
+                span.setFontSize(SystemConfig.getDouble(General.PPT_HOLY_COMMUNION_NAME_LIST_FONT_SIZE));
             }
 
             // 补齐单元格
-            int m = nameList.size() % COLUMN_COUNT;
+            int m = nameList.size() % colCount;
             if (m > 0) {
-                m = COLUMN_COUNT - m;
+                m = colCount - m;
+                logger.debug("还需要再补{}个单元格", m);
                 for (int i = 0; i < m; i++) {
                     row.addCell();
                 }
             }
 
-            double columnWidth = w / COLUMN_COUNT;
-            for (int i = 0; i < COLUMN_COUNT; i++) {
+            logger.debug("设置每一列的宽度");
+            double columnWidth = w / colCount;
+            for (int i = 0; i < colCount; i++) {
                 table.setColumnWidth(i, columnWidth);
             }
         }
