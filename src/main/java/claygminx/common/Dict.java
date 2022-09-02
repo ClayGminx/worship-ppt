@@ -37,15 +37,26 @@ public class Dict {
         public final static String REPO = "github.repo";
 
         // PPT
+        public final static String WORSHIP_MODEL_PREFIX = "worship.model.";
+        public final static String PPT_PROCEDURE_XML_PATH = "ppt.procedure.path";
         public final static String PPT_FONT_FAMILY = "ppt.fontFamily";
+        public final static String PPT_PLACEHOLDER = "ppt.placeholder";
         public final static String PPT_TEMPLATE_GENERAL_PATH = "ppt.template.general.path";
         public final static String PPT_TEMPLATE_INITIATION_PATH = "ppt.template.initiation.path";
-        public final static String PPT_PROCEDURE_XML_PATH = "ppt.procedure.path";
-        public final static String PPT_PLACEHOLDER = "ppt.placeholder";
-        public final static String WORSHIP_MODEL_PREFIX = "worship.model.";
         public final static String PPT_TEMPLATE_INITIATION_POETRY_SLIDE_ORDER = "ppt.template.initiation.poetrySlide.order";
-        public final static String PPT_HOLY_COMMUNION_POETRY_TOP = "ppt.holyCommunion.poetry.top";
         public final static String PPT_TEMPLATE_GENERAL_LAYOUT_NAME = "ppt.template.generalLayout.name";
+        public final static String PPT_HOLY_COMMUNION_POETRY_TOP = "ppt.holyCommunion.poetry.top";
+
+        // PPT 诗歌清单表格
+        public final static String PPT_POETRY_CONTENT_X = "ppt.poetryContent.x";
+        public final static String PPT_POETRY_CONTENT_Y = "ppt.poetryContent.y";
+        public final static String PPT_POETRY_CONTENT_W = "ppt.poetryContent.w";
+        public final static String PPT_POETRY_CONTENT_H = "ppt.poetryContent.h";
+        public final static String PPT_POETRY_CONTENT_COL_COUNT = "ppt.poetryContent.colCount";
+        public final static String PPT_POETRY_CONTENT_TITLE_FONT_SIZE = "ppt.poetryContent.titleFontSize";
+        public final static String PPT_POETRY_CONTENT_FONT_SIZE = "ppt.poetryContent.fontSize";
+        public final static String PPT_POETRY_CONTENT_LEFT_INSET = "ppt.poetryContent.leftInset";
+        public final static String PPT_POETRY_CONTENT_SPACE_BEFORE = "ppt.poetryContent.spaceBefore";
     }
 
     /**

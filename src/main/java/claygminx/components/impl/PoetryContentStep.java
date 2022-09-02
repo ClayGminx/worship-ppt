@@ -1,5 +1,6 @@
 package claygminx.components.impl;
 
+import claygminx.common.config.SystemConfig;
 import claygminx.common.entity.PoetryAlbumEntity;
 import claygminx.common.entity.PoetryContentEntity;
 import claygminx.common.entity.PoetryEntity;
@@ -11,6 +12,8 @@ import org.apache.poi.xslf.usermodel.*;
 
 import java.awt.geom.Rectangle2D;
 import java.util.List;
+
+import static claygminx.common.Dict.*;
 
 /**
  * 诗歌清单阶段
@@ -31,15 +34,21 @@ public class PoetryContentStep extends AbstractWorshipStep {
         XMLSlideShow ppt = getPpt();
         XSLFSlideLayout poemManifest = ppt.findLayout(getLayout());
         XSLFSlide slide = ppt.createSlide(poemManifest);
+
+        logger.debug("创建表格");
         XSLFTable table = slide.createTable();
 
-        // 水平：0.86厘米，垂直：2.62厘米
-        // 宽度：22.58厘米
-        table.setAnchor(new Rectangle2D.Double(24.4, 74.3, 640, 500));
+        logger.debug("初始化表格的尺寸");
+        double x = SizeUtil.convertToPoints(SystemConfig.getDouble(General.PPT_POETRY_CONTENT_X)),
+                y = SizeUtil.convertToPoints(SystemConfig.getDouble(General.PPT_POETRY_CONTENT_Y)),
+                w = SizeUtil.convertToPoints(SystemConfig.getDouble(General.PPT_POETRY_CONTENT_W)),
+                h = SizeUtil.convertToPoints(SystemConfig.getDouble(General.PPT_POETRY_CONTENT_H));
+        table.setAnchor(new Rectangle2D.Double(x, y, w, h));
 
+        int colCount = SystemConfig.getInt(General.PPT_POETRY_CONTENT_COL_COUNT);
         List<PoetryAlbumEntity> list = poetryContentEntity.export();
-
-        for (int i = 0; i < list.size(); i += 2) {
+        logger.debug(list.size() + "个诗歌集");
+        for (int i = 0; i < list.size(); i += colCount) {
             PoetryAlbumEntity left, right = null;
             left = list.get(i);
             if (i < list.size() - 1) {
@@ -50,8 +59,10 @@ public class PoetryContentStep extends AbstractWorshipStep {
                     left.getPoetryList(), right == null ? null : right.getPoetryList());
         }
 
-        table.setColumnWidth(0, 320);
-        table.setColumnWidth(1, 320);
+        double colWidth = w / colCount;
+        for (int i = 0; i < colCount; i++) {
+            table.setColumnWidth(i, colWidth);
+        }
 
         logger.info("诗歌清单幻灯片制作完成");
     }
@@ -73,7 +84,7 @@ public class PoetryContentStep extends AbstractWorshipStep {
             XSLFTextParagraph paragraph = cell.addNewTextParagraph();
             XSLFTextRun span = paragraph.addNewTextRun();
             span.setText(title);
-            span.setFontSize(28.0);
+            span.setFontSize(SystemConfig.getDouble(General.PPT_POETRY_CONTENT_TITLE_FONT_SIZE));
             span.setBold(true);
             span.setFontFamily(getFontFamily(), FontGroup.LATIN);
             span.setFontFamily(getFontFamily(), FontGroup.EAST_ASIAN);
@@ -83,9 +94,9 @@ public class PoetryContentStep extends AbstractWorshipStep {
     private void makePoetryList(List<PoetryEntity> rightPoetryList, XSLFTableRow row) {
         XSLFTableCell cell = row.addCell();
         if (rightPoetryList != null) {
-            cell.setLeftInset(SizeUtil.convertToPoints(1.2));
+            cell.setLeftInset(SizeUtil.convertToPoints(SystemConfig.getDouble(General.PPT_POETRY_CONTENT_LEFT_INSET)));
             XSLFTextParagraph paragraph = cell.addNewTextParagraph();
-            paragraph.setSpaceBefore(-9.0);// 段落前空出9磅的间距
+            paragraph.setSpaceBefore(SystemConfig.getDouble(General.PPT_POETRY_CONTENT_SPACE_BEFORE));// 段落前空出9磅的间距
             XSLFTextRun span = paragraph.addNewTextRun();
 
             StringBuilder poetryBuilder = new StringBuilder();
@@ -94,7 +105,7 @@ public class PoetryContentStep extends AbstractWorshipStep {
             }
             span.setText(poetryBuilder.toString());
 
-            span.setFontSize(18.0);
+            span.setFontSize(SystemConfig.getDouble(General.PPT_POETRY_CONTENT_FONT_SIZE));
             span.setFontFamily(getFontFamily(), FontGroup.LATIN);
             span.setFontFamily(getFontFamily(), FontGroup.EAST_ASIAN);
         }
