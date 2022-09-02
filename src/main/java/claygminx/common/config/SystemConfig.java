@@ -58,4 +58,18 @@ public class SystemConfig {
         }
     }
 
+    /**
+     * 获取double值
+     * @param key 键
+     * @return 系统值
+     */
+    public static double getDouble(String key) {
+        String strValue = properties.getProperty(key);
+        try {
+            return Double.parseDouble(strValue);
+        } catch (Exception e) {
+            throw new SystemException("根据" + key + "获取double值失败！", e);
+        }
+    }
+
 }

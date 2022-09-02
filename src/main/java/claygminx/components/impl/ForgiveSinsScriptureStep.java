@@ -18,7 +18,6 @@ public class ForgiveSinsScriptureStep extends AbstractWorshipStep {
     private final static Logger logger = LoggerFactory.getLogger(ForgiveSinsScriptureStep.class);
 
     private final String scriptureNumber;
-
     private final ScriptureService scriptureService;
 
     public ForgiveSinsScriptureStep(XMLSlideShow ppt, String layout, ScriptureService scriptureService, String scriptureNumber) {

@@ -17,7 +17,6 @@ public class HolyCommunionNameListStep extends AbstractWorshipStep {
     private final static Logger logger = LoggerFactory.getLogger(HolyCommunionNameListStep.class);
 
     private final static int COLUMN_COUNT = 5;
-
     private final List<String> nameList;
 
     public HolyCommunionNameListStep(XMLSlideShow ppt, String layout, List<String> nameList) {
@@ -55,8 +54,8 @@ public class HolyCommunionNameListStep extends AbstractWorshipStep {
                 paragraph.setLineSpacing(100.0);
                 XSLFTextRun span = paragraph.addNewTextRun();
                 span.setText(nameList.get(i));
-                span.setFontFamily("微软雅黑", FontGroup.LATIN);
-                span.setFontFamily("微软雅黑", FontGroup.EAST_ASIAN);
+                span.setFontFamily(getFontFamily(), FontGroup.LATIN);
+                span.setFontFamily(getFontFamily(), FontGroup.EAST_ASIAN);
                 span.setFontSize(28.0);
             }
 

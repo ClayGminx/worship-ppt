@@ -26,6 +26,7 @@ public class Dict {
         public final static String BIBLE_VERSION = "bible.version";
 
         // 经文格式
+        public final static String SCRIPTURE_PATH = "scripture.path";
         public final static String SCRIPTURE_FORMAT1 = "scripture.format1";
         public final static String SCRIPTURE_FORMAT2 = "scripture.format2";
         public final static String SCRIPTURE_FORMAT3 = "scripture.format3";
@@ -36,14 +37,15 @@ public class Dict {
         public final static String REPO = "github.repo";
 
         // PPT
+        public final static String PPT_FONT_FAMILY = "ppt.fontFamily";
+        public final static String PPT_TEMPLATE_GENERAL_PATH = "ppt.template.general.path";
+        public final static String PPT_TEMPLATE_INITIATION_PATH = "ppt.template.initiation.path";
+        public final static String PPT_PROCEDURE_XML_PATH = "ppt.procedure.path";
+        public final static String PPT_PLACEHOLDER = "ppt.placeholder";
         public final static String WORSHIP_MODEL_PREFIX = "worship.model.";
-        public final static String WORSHIP_PPT_INITIATION_TEMPLATE = "worship.ppt.入会模板";
-        public final static String WORSHIP_PPT_INITIATION_POETRY_SLIDE_ORDER = "worship.ppt.入会诗歌幻灯片序号";
-        public final static String WORSHIP_PPT_GENERAL_CROSS_LAYOUT_NAME = "worship.ppt.十字架版式名称";
-        public final static String WORSHIP_PPT_CUSTOM_PLACEHOLDER = "worship.ppt.自定义占位符";
-
-        // FreeMarker
-        public final static String FREEMARKER_PATH = "freemarker.path";
+        public final static String PPT_TEMPLATE_INITIATION_POETRY_SLIDE_ORDER = "ppt.template.initiation.poetrySlide.order";
+        public final static String PPT_HOLY_COMMUNION_POETRY_TOP = "ppt.holyCommunion.poetry.top";
+        public final static String PPT_TEMPLATE_GENERAL_LAYOUT_NAME = "ppt.template.generalLayout.name";
     }
 
     /**

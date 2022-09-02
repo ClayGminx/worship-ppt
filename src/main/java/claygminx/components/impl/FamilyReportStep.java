@@ -26,6 +26,7 @@ public class FamilyReportStep extends AbstractWorshipStep {
         XSLFTextShape placeholder = slide.getPlaceholder(0);
         placeholder.clearText();
 
+        logger.debug(familyReports.size() + "项家事报告");
         for (int i = 0; i < familyReports.size(); i++) {
             String item = familyReports.get(i);
             XSLFTextParagraph paragraph = placeholder.addNewTextParagraph();

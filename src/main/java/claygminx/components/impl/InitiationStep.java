@@ -1,5 +1,6 @@
 package claygminx.components.impl;
 
+import claygminx.common.Dict;
 import claygminx.common.config.SystemConfig;
 import claygminx.common.entity.PoetryEntity;
 import claygminx.exception.SystemException;
@@ -12,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.Objects;
 
 import static claygminx.common.Dict.*;
 
@@ -34,21 +36,18 @@ public class InitiationStep extends RegularPoetryStep {
     public void execute() throws Exception {
         XMLSlideShow sourcePpt = getSourcePpt();
         XMLSlideShow targetPpt = getPpt();
-        int poetrySlideOrder = SystemConfig.getInt(General.WORSHIP_PPT_INITIATION_POETRY_SLIDE_ORDER);
+        int poetrySlideOrder = SystemConfig.getInt(General.PPT_TEMPLATE_INITIATION_POETRY_SLIDE_ORDER);
 
-        createInitiationSlide(targetPpt, sourcePpt, 0, poetrySlideOrder);
-
-        // 制作入会诗歌歌谱图
+        copyInitiationSlide(targetPpt, sourcePpt, 0, poetrySlideOrder);
         super.execute();
-
-        createInitiationSlide(targetPpt, sourcePpt, poetrySlideOrder, -1);
+        copyInitiationSlide(targetPpt, sourcePpt, poetrySlideOrder, -1);
 
         logger.info("入会幻灯片制作完成");
     }
 
     @Override
     public double getTop() {
-        return 2.18;
+        return SystemConfig.getDouble(Dict.General.PPT_HOLY_COMMUNION_POETRY_TOP);
     }
 
     @Override
@@ -56,25 +55,40 @@ public class InitiationStep extends RegularPoetryStep {
         return poetryList;
     }
 
-    private void createInitiationSlide(XMLSlideShow targetPpt, XMLSlideShow sourcePpt, int from, int to) {
-        String layoutName = SystemConfig.getString(General.WORSHIP_PPT_GENERAL_CROSS_LAYOUT_NAME);
+    /**
+     * 将入会模板中的一些幻灯片拷贝到目标PPT中
+     * @param targetPpt 目标PPT
+     * @param sourcePpt 源PPT
+     * @param from 幻灯片起始位置
+     * @param to 幻灯片结束位置，注意，拷贝时不包含此位置的幻灯片，若传-1，则表示源PPT中的最后位置
+     */
+    private void copyInitiationSlide(XMLSlideShow targetPpt, XMLSlideShow sourcePpt, int from, int to) {
+        // 拷贝时，目标PPT应先创建幻灯片，并且使用统一的版式
+        String layoutName = SystemConfig.getString(General.PPT_TEMPLATE_GENERAL_LAYOUT_NAME);
         XSLFSlideLayout layout = targetPpt.findLayout(layoutName);
         List<XSLFSlide> sourceSlides = sourcePpt.getSlides();
 
         to = to == -1 ? sourceSlides.size() : to;
+        logger.debug("准备拷贝幻灯片，起始索引为{}, 结束索引为{}", from ,to);
         for (int i = from; i < to; i++) {
             XSLFSlide sourceSlide = sourceSlides.get(i);
             XmlObject copy = sourceSlide.getXmlObject().copy();
             XSLFSlide newSlide = targetPpt.createSlide(layout);
             newSlide.getXmlObject().set(copy);
         }
+        logger.debug("拷贝完成");
     }
 
+    /**
+     * 获取入会PPT对象
+     * @return PPT对象
+     */
     private XMLSlideShow getSourcePpt() {
+        String classPath = SystemConfig.getString(General.PPT_TEMPLATE_INITIATION_PATH);
         ClassLoader classLoader = InitiationStep.class.getClassLoader();
-        String classPath = "assets/ppt/initiation.pptx";
-        logger.debug(classPath);
-        try (InputStream is = classLoader.getResourceAsStream(classPath)) {
+        logger.debug("准备读取入会PPT模板文件流");
+        try (InputStream is = Objects.requireNonNull(classLoader.getResourceAsStream(classPath))) {
+            logger.debug("入会PPT模板文件流读取完成");
             return new XMLSlideShow(is);
         } catch (Exception e) {
             throw new SystemException("读取入会模板文件失败！", e);

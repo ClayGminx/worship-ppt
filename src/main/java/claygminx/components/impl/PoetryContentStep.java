@@ -75,8 +75,8 @@ public class PoetryContentStep extends AbstractWorshipStep {
             span.setText(title);
             span.setFontSize(28.0);
             span.setBold(true);
-            span.setFontFamily("微软雅黑", FontGroup.LATIN);
-            span.setFontFamily("微软雅黑", FontGroup.EAST_ASIAN);
+            span.setFontFamily(getFontFamily(), FontGroup.LATIN);
+            span.setFontFamily(getFontFamily(), FontGroup.EAST_ASIAN);
         }
     }
 
@@ -95,8 +95,8 @@ public class PoetryContentStep extends AbstractWorshipStep {
             span.setText(poetryBuilder.toString());
 
             span.setFontSize(18.0);
-            span.setFontFamily("微软雅黑", FontGroup.LATIN);
-            span.setFontFamily("微软雅黑", FontGroup.EAST_ASIAN);
+            span.setFontFamily(getFontFamily(), FontGroup.LATIN);
+            span.setFontFamily(getFontFamily(), FontGroup.EAST_ASIAN);
         }
     }
 }

@@ -51,7 +51,11 @@ public abstract class AbstractWorshipStep implements WorshipStep {
      * @return 文本框中的占位符
      */
     public String getCustomPlaceholder() {
-        return SystemConfig.getString(WORSHIP_PPT_CUSTOM_PLACEHOLDER);
+        return SystemConfig.getString(PPT_PLACEHOLDER);
+    }
+
+    public String getFontFamily() {
+        return SystemConfig.getString(PPT_FONT_FAMILY);
     }
 
     /**

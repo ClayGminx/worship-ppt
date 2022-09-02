@@ -37,8 +37,10 @@ public class DeclarationTitleStep extends AbstractWorshipStep {
                     if (index == 0) {
                         textRun.setText(textRun.getRawText().replace(getCustomPlaceholder(), declarationEntity.getTitle()));
                         index++;
+                        logger.debug("填充了标题：" + declarationEntity.getTitle());
                     } else {
                         textRun.setText(textRun.getRawText().replace(getCustomPlaceholder(), declarationEntity.getSpeaker()));
+                        logger.debug("填充了讲员：" + declarationEntity.getSpeaker());
                     }
                 }
             }

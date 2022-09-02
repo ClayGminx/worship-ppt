@@ -43,5 +43,6 @@ public class HolyCommunionPoetryTitleStep extends AbstractWorshipStep {
             }
         }
 
+        logger.info("圣餐诗歌标题幻灯片制作完成");
     }
 }

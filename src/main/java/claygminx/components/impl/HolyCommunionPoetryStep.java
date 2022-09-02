@@ -1,5 +1,7 @@
 package claygminx.components.impl;
 
+import claygminx.common.Dict;
+import claygminx.common.config.SystemConfig;
 import claygminx.common.entity.PoetryEntity;
 import org.apache.poi.xslf.usermodel.XMLSlideShow;
 
@@ -26,7 +28,7 @@ public class HolyCommunionPoetryStep extends RegularPoetryStep {
 
     @Override
     public double getTop() {
-        return 2.18;
+        return SystemConfig.getDouble(Dict.General.PPT_HOLY_COMMUNION_POETRY_TOP);
     }
 
     @Override

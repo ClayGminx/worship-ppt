@@ -17,7 +17,6 @@ public class ConfessScriptureStep extends AbstractWorshipStep {
     private final static Logger logger = LoggerFactory.getLogger(ConfessScriptureStep.class);
 
     private final String scriptureNumber;
-
     private final ScriptureService scriptureService;
 
     public ConfessScriptureStep(XMLSlideShow ppt, String layout, ScriptureService scriptureService, String scriptureNumber) {
