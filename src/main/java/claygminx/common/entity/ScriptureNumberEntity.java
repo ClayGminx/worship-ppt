@@ -27,6 +27,9 @@ public class ScriptureNumberEntity {
      */
     private List<ScriptureSectionEntity> scriptureSections;
 
+    /**
+     * 字符串形式经文编号
+     */
     private final String value;
 
     public ScriptureNumberEntity(String value) {
@@ -76,4 +79,5 @@ public class ScriptureNumberEntity {
     public String toString() {
         return value;
     }
+
 }

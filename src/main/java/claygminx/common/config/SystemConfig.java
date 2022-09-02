@@ -12,8 +12,14 @@ import java.util.Properties;
  */
 public class SystemConfig {
 
+    /**
+     * 系统属性文件
+     */
     public final static String PROPERTIES_FILE_NAME = "worship-ppt.properties";
 
+    /**
+     * 系统属性实例对象
+     */
     public final static Properties properties = new Properties();
 
     static {

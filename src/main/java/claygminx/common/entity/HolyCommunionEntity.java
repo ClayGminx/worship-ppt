@@ -7,6 +7,9 @@ import java.util.List;
  */
 public class HolyCommunionEntity {
 
+    /**
+     * 非会友领餐名单
+     */
     private List<String> nameList;
 
     public List<String> getNameList() {
@@ -15,5 +18,12 @@ public class HolyCommunionEntity {
 
     public void setNameList(List<String> nameList) {
         this.nameList = nameList;
+    }
+
+    @Override
+    public String toString() {
+        return "HolyCommunionEntity{" +
+                "nameList=" + nameList +
+                '}';
     }
 }

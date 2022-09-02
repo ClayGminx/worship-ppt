@@ -32,4 +32,12 @@ public class ScriptureSectionEntity {
     public void setVerses(List<Integer> verses) {
         this.verses = verses;
     }
+
+    @Override
+    public String toString() {
+        return "ScriptureSectionEntity{" +
+                "chapter=" + chapter +
+                ", verses=" + verses +
+                '}';
+    }
 }

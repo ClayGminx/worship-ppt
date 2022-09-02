@@ -120,13 +120,25 @@ public class PoetryContentEntity {
         if (offertoryPoetryAlbum != null) {
             list.add(offertoryPoetryAlbum);
         }
-        if (initiationPoetryAlbum != null) {
-            list.add(initiationPoetryAlbum);
-        }
         if (holyCommunionPoetryAlbum != null) {
             list.add(holyCommunionPoetryAlbum);
+        }
+        if (initiationPoetryAlbum != null) {
+            list.add(initiationPoetryAlbum);
         }
         return list;
     }
 
+    @Override
+    public String toString() {
+        return "PoetryContentEntity{" +
+                "prayPoetryAlbum=" + prayPoetryAlbum +
+                ", practisePoetryAlbum=" + practisePoetryAlbum +
+                ", worshipPoetryAlbum=" + worshipPoetryAlbum +
+                ", responsePoetryAlbum=" + responsePoetryAlbum +
+                ", offertoryPoetryAlbum=" + offertoryPoetryAlbum +
+                ", initiationPoetryAlbum=" + initiationPoetryAlbum +
+                ", holyCommunionPoetryAlbum=" + holyCommunionPoetryAlbum +
+                '}';
+    }
 }

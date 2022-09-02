@@ -56,4 +56,14 @@ public class ScriptureEntity {
     public void setScripture(String scripture) {
         this.scripture = scripture;
     }
+
+    @Override
+    public String toString() {
+        return "ScriptureEntity{" +
+                "versionId=" + versionId +
+                ", versionName='" + versionName + '\'' +
+                ", scriptureNumber=" + scriptureNumber +
+                ", scripture='" + scripture + '\'' +
+                '}';
+    }
 }

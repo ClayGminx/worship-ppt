@@ -29,4 +29,12 @@ public class PoetryEntity {
     public File getDirectory() {
         return directory;
     }
+
+    @Override
+    public String toString() {
+        return "PoetryEntity{" +
+                "name='" + name + '\'' +
+                ", directory=" + directory +
+                '}';
+    }
 }

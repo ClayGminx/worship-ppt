@@ -97,4 +97,17 @@ public class WorshipEntity {
     public void setHolyCommunion(HolyCommunionEntity holyCommunion) {
         this.holyCommunion = holyCommunion;
     }
+
+    @Override
+    public String toString() {
+        return "WorshipEntity{" +
+                "cover=" + cover +
+                ", poetryContent=" + poetryContent +
+                ", scriptureContent=" + scriptureContent +
+                ", declaration=" + declaration +
+                ", preach=" + preach +
+                ", familyReports=" + familyReports +
+                ", holyCommunion=" + holyCommunion +
+                '}';
+    }
 }

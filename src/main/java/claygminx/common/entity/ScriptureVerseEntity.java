@@ -5,20 +5,44 @@ package claygminx.common.entity;
  */
 public class ScriptureVerseEntity {
 
+    /**
+     * 译本编号
+     */
     private Integer versionId;
 
+    /**
+     * 译本名称
+     */
     private String versionName;
 
+    /**
+     * 书卷编号
+     */
     private Integer bookId;
 
+    /**
+     * 书卷全称
+     */
     private String bookFullName;
 
+    /**
+     * 书卷简称
+     */
     private String bookShortName;
 
+    /**
+     * 章
+     */
     private Integer chapter;
 
+    /**
+     * 节
+     */
     private Integer verse;
 
+    /**
+     * 经文
+     */
     private String scripture;
 
     public Integer getVersionId() {
@@ -83,5 +107,19 @@ public class ScriptureVerseEntity {
 
     public void setScripture(String scripture) {
         this.scripture = scripture;
+    }
+
+    @Override
+    public String toString() {
+        return "ScriptureVerseEntity{" +
+                "versionId=" + versionId +
+                ", versionName='" + versionName + '\'' +
+                ", bookId=" + bookId +
+                ", bookFullName='" + bookFullName + '\'' +
+                ", bookShortName='" + bookShortName + '\'' +
+                ", chapter=" + chapter +
+                ", verse=" + verse +
+                ", scripture='" + scripture + '\'' +
+                '}';
     }
 }

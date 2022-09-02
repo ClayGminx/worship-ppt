@@ -32,4 +32,12 @@ public class PoetryAlbumEntity {
     public void setPoetryList(List<PoetryEntity> poetryList) {
         this.poetryList = poetryList;
     }
+
+    @Override
+    public String toString() {
+        return "PoetryAlbumEntity{" +
+                "name='" + name + '\'' +
+                ", poetryList=" + poetryList +
+                '}';
+    }
 }
