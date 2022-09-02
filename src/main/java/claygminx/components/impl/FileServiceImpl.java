@@ -41,7 +41,7 @@ public class FileServiceImpl implements FileService {
         logger.info("开始根据模板创建PPT文件");
         String model = coverEntity.getModel();// 这里该参数不应该是null或""
         ClassLoader classLoader = FileServiceImpl.class.getClassLoader();
-        String classPath = PPT_TEMPLATE_PATH + model + EXTENSION;
+        String classPath = "assets/ppt/worship.pptx";
         logger.debug(classPath);
 
         File targetFile = new File("敬拜-" + coverEntity.getWorshipDate() + EXTENSION);
