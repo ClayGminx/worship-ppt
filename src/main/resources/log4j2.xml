@@ -14,19 +14,23 @@
 
         <!-- 将日志输出到文件-->
         <RollingFile name="FILE-APPENDER"
+                     immediateFlush="true"
                      fileName="${LOG_HOME}/WorshipPPT.log"
-                     filePattern="${LOG_HOME}/WorshipPPT-%d{yyyy-MM-dd}-%i.log">
+                     filePattern="${LOG_HOME}/WorshipPPT-%d{yyyy-MM-dd}-%i.log.zip">
             <!--设置日志格式-->
             <PatternLayout>
-                <pattern>[%d][%p][%t][%C] %m%n</pattern>
+                <pattern>[%d{HH:mm:ss:SSS}] - [%t] [%p] - %logger{36} - %m%n</pattern>
             </PatternLayout>
             <Policies>
-                <!-- 设置日志文件切分参数 -->
-                <SizeBasedTriggeringPolicy size="100 MB"/>
-                <TimeBasedTriggeringPolicy/>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="10 MB"/>
             </Policies>
-            <!--设置最大存档数-->
-            <DefaultRolloverStrategy max="20"/>
+            <DefaultRolloverStrategy max="20">
+                <Delete basePath="${LOG_HOME}" maxDepth="2">
+                    <IfFileName glob="debug_*.zip"/>
+                    <IfLastModified age="168H"/>
+                </Delete>
+            </DefaultRolloverStrategy>
         </RollingFile>
     </Appenders>
 
