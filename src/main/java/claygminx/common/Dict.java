@@ -23,7 +23,7 @@ public class Dict {
         public final static String RUNNING_SCENE_PPT = "running.scene.ppt";
 
         // 圣经版本
-        public final static String BIBLE_VERSION = "bible.version";
+        public final static String SCRIPTURE_VERSION = "scripture.version";
 
         // 经文格式
         public final static String SCRIPTURE_PATH = "scripture.path";

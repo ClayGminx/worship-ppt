@@ -36,7 +36,7 @@ public class ScriptureServiceImpl implements ScriptureService {
             throw new SystemException("无法加载org.sqlite.JDBC！", e);
         }
 
-        String bibleVersion = SystemConfig.getString(General.BIBLE_VERSION);
+        String bibleVersion = SystemConfig.getString(General.SCRIPTURE_VERSION);
         if (bibleVersion == null) {
             throw new SystemException("未设置圣经版本！");
         }

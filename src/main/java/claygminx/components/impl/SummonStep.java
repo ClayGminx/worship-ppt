@@ -22,7 +22,6 @@ public class SummonStep extends AbstractWorshipStep {
     private final static Logger logger = LoggerFactory.getLogger(SummonStep.class);
 
     private final String scriptureNumber;
-
     private final ScriptureService scriptureService;
 
     public SummonStep(XMLSlideShow ppt, String layout, ScriptureService scriptureService, String scriptureNumber) {

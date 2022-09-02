@@ -25,7 +25,6 @@ public class WorshipProcedureServiceImpl implements WorshipProcedureService {
     private final static Logger logger = LoggerFactory.getLogger(WorshipProcedureService.class);
 
     private FileService fileService;
-
     private ScriptureService scriptureService;
 
     @Override
