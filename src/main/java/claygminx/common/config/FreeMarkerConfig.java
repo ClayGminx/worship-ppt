@@ -19,7 +19,7 @@ public class FreeMarkerConfig {
             configuration.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
             configuration.setClassForTemplateLoading(FreeMarkerConfig.class, "/templates");
         } catch (Exception e) {
-            throw new SystemException("无法初始化FreeMarker配置！");
+            throw new SystemException("无法初始化FreeMarker配置！", e);
         }
     }
 

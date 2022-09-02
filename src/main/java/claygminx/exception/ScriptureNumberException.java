@@ -8,4 +8,8 @@ public class ScriptureNumberException extends Exception {
     public ScriptureNumberException(String message) {
         super(message);
     }
+
+    public ScriptureNumberException(String message, Throwable throwable) {
+        super(message, throwable);
+    }
 }

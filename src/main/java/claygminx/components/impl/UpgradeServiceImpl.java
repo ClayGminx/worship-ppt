@@ -103,7 +103,7 @@ public class UpgradeServiceImpl implements UpgradeService {
             return releaseEntity;
         } catch (ParseException e) {
             String message = String.format("格式化发行包的构建时间时出错，构建时间是%s，时间格式是%s", sProjectTime, projectTimeFormat);
-            throw new SystemException(message);
+            throw new SystemException(message, e);
         }
     }
 }

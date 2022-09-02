@@ -36,7 +36,7 @@ public class WorshipProcedureServiceImpl implements WorshipProcedureService {
         try {
             document = DocumentHelper.parseText(xmlString);
         } catch (DocumentException e) {
-            throw new FileServiceException("XML读取失败！");
+            throw new FileServiceException("XML读取失败！", e);
         }
 
         CoverEntity cover = worshipEntity.getCover();
@@ -78,8 +78,7 @@ public class WorshipProcedureServiceImpl implements WorshipProcedureService {
                     return null;
                 }
             } catch (OgnlException e) {
-                logger.debug("", e);
-                throw new SystemException("OGNL表达式错误！");
+                throw new SystemException("OGNL表达式错误！", e);
             }
         }
 
@@ -97,8 +96,7 @@ public class WorshipProcedureServiceImpl implements WorshipProcedureService {
         try {
             return (WorshipStep) Ognl.getValue(expression, context, worshipEntity);
         } catch (OgnlException e) {
-            logger.debug("", e);
-            throw new SystemException("OGNL表达式错误！");
+            throw new SystemException("OGNL表达式错误！", e);
         }
     }
 

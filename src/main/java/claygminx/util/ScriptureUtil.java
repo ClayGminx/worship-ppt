@@ -151,7 +151,7 @@ public class ScriptureUtil {
         try {
             chapter = Integer.parseInt(sectionArray[0]);
         } catch (NumberFormatException e) {
-            throw new ScriptureNumberException(sectionArray[0] + "不是数字！");
+            throw new ScriptureNumberException(sectionArray[0] + "不是数字！", e);
         }
 
         List<Integer> verses = new ArrayList<>();
@@ -179,7 +179,7 @@ public class ScriptureUtil {
         try {
             n = Integer.parseInt(digit);
         } catch (NumberFormatException e) {
-            throw new ScriptureNumberException(digit + "不是数字！");
+            throw new ScriptureNumberException(digit + "不是数字！", e);
         }
 
         addSection(n, type, sectionList);
@@ -195,13 +195,13 @@ public class ScriptureUtil {
         try {
             start = Integer.parseInt(sectionArray[0]);
         } catch (NumberFormatException e) {
-            throw new ScriptureNumberException(sectionArray[0] + "不是数字");
+            throw new ScriptureNumberException(sectionArray[0] + "不是数字", e);
         }
 
         try {
             end = Integer.parseInt(sectionArray[1]);
         } catch (NumberFormatException e) {
-            throw new ScriptureNumberException(sectionArray[1] + "不是数字");
+            throw new ScriptureNumberException(sectionArray[1] + "不是数字", e);
         }
 
         for (int i = start; i <= end; i++) {

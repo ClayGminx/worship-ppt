@@ -22,7 +22,7 @@ public class SystemConfig {
                 Objects.requireNonNull(classLoader.getResourceAsStream(PROPERTIES_FILE_NAME)), StandardCharsets.UTF_8)) {
             properties.load(reader);
         } catch (Exception e) {
-            throw new SystemException(PROPERTIES_FILE_NAME + "加载失败！");
+            throw new SystemException(PROPERTIES_FILE_NAME + "加载失败！", e);
         }
     }
 

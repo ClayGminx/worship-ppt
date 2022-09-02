@@ -33,7 +33,7 @@ public class ScriptureServiceImpl implements ScriptureService {
         try {
             Class.forName("org.sqlite.JDBC");
         } catch (ClassNotFoundException e) {
-            throw new SystemException("无法加载org.sqlite.JDBC！");
+            throw new SystemException("无法加载org.sqlite.JDBC！", e);
         }
 
         String bibleVersion = SystemConfig.getString(General.BIBLE_VERSION);
@@ -77,7 +77,7 @@ public class ScriptureServiceImpl implements ScriptureService {
                 return bookId;
             }
         } catch (SQLException e) {
-            throw new SystemException("数据库异常！");
+            throw new SystemException("数据库异常！", e);
         }
         return 0;
     }
@@ -96,7 +96,7 @@ public class ScriptureServiceImpl implements ScriptureService {
                 return result;
             }
         } catch (SQLException e) {
-            throw new SystemException("数据库异常！");
+            throw new SystemException("数据库异常！", e);
         }
         return null;
     }

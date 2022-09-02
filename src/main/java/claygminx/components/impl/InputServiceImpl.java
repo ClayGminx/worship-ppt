@@ -36,8 +36,7 @@ public class InputServiceImpl implements InputService {
             wini = new Wini(new File(filePath));
         } catch (IOException e) {
             String message = String.format("读取文件[%s]时发生异常！", filePath);
-            logger.error(message, e);
-            throw new InputServiceException(message);
+            throw new InputServiceException(message, e);
         }
 
         CoverEntity coverEntity = readCover(wini);

@@ -70,8 +70,7 @@ public class FileServiceImpl implements FileService {
             }
             return stringBuilder.toString();
         } catch (IOException e) {
-            logger.debug("", e);
-            throw new FileServiceException("读取" + WORSHIP_PROCEDURE_XML_PATH + "失败！");
+            throw new FileServiceException("读取" + WORSHIP_PROCEDURE_XML_PATH + "失败！", e);
         }
     }
 }

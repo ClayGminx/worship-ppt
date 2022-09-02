@@ -5,10 +5,6 @@ package claygminx.exception;
  */
 public class FileServiceException extends Exception {
 
-    public FileServiceException(String message) {
-        super(message);
-    }
-
     public FileServiceException(String message, Throwable e) {
         super(message, e);
     }
