@@ -40,6 +40,7 @@ public class Dict {
         public final static String WORSHIP_PPT_INITIATION_TEMPLATE = "worship.ppt.入会模板";
         public final static String WORSHIP_PPT_INITIATION_POETRY_SLIDE_ORDER = "worship.ppt.入会诗歌幻灯片序号";
         public final static String WORSHIP_PPT_GENERAL_CROSS_LAYOUT_NAME = "worship.ppt.十字架版式名称";
+        public final static String WORSHIP_PPT_CUSTOM_PLACEHOLDER = "worship.ppt.自定义占位符";
 
         // FreeMarker
         public final static String FREEMARKER_PATH = "freemarker.path";
