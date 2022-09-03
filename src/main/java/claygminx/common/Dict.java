@@ -39,6 +39,7 @@ public class Dict {
         public final static String GITHUB_CONNECT_TIMEOUT = "github.connectTimeout";
         public final static String GITHUB_CONNECT_REQUEST_TIMEOUT = "github.connectRequestTimeout";
         public final static String GITHUB_RESPONSE_TIMEOUT = "github.responseTimeout";
+        public final static String GITHUB_DOWNLOAD_TITLE = "github.downloadTitle";
 
 
         // PPT

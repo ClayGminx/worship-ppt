@@ -19,9 +19,9 @@ public class ReleaseEntity implements Serializable, Comparable<ReleaseEntity> {
     private String name;
 
     /**
-     * ZIP包地址
+     * fa'xing
      */
-    private String zipball_url;
+    private String body;
 
     public Date getPublished_at() {
         return published_at;
@@ -39,12 +39,12 @@ public class ReleaseEntity implements Serializable, Comparable<ReleaseEntity> {
         this.name = name;
     }
 
-    public String getZipball_url() {
-        return zipball_url;
+    public String getBody() {
+        return body;
     }
 
-    public void setZipball_url(String zipball_url) {
-        this.zipball_url = zipball_url;
+    public void setBody(String body) {
+        this.body = body;
     }
 
     @Override
@@ -52,7 +52,7 @@ public class ReleaseEntity implements Serializable, Comparable<ReleaseEntity> {
         return "ReleaseEntity{" +
                 "published_at=" + published_at +
                 ", name='" + name + '\'' +
-                ", zipball_url='" + zipball_url + '\'' +
+                ", body='" + body + '\'' +
                 '}';
     }
 

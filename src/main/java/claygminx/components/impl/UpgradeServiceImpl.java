@@ -14,6 +14,7 @@ import org.apache.hc.core5.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -67,22 +68,26 @@ public class UpgradeServiceImpl implements UpgradeService {
             } else if (HttpStatus.SC_OK == response.getCode()) {
                 logger.debug("{} 返回200！", url);
                 StringBuilder responseBuilder = new StringBuilder();
-                try (Scanner scanner = new Scanner(response.getEntity().getContent())) {
+
+                try (Scanner scanner = new Scanner(response.getEntity().getContent(), StandardCharsets.UTF_8.name())) {
                     while (scanner.hasNextLine()) {
                         responseBuilder.append(scanner.nextLine());
                     }
                 }
                 String responseString = responseBuilder.toString();
+                // 转码
+                responseString = new String(responseString.getBytes(), System.getProperty("file.encoding"));
                 logger.debug(responseString);
 
                 ReleaseEntity remoteReleaseEntity = new Gson().fromJson(responseString, ReleaseEntity.class);
                 ReleaseEntity thisReleaseEntity = getThisProjectReleaseEntity();
                 if (thisReleaseEntity.compareTo(remoteReleaseEntity) < 0) {
                     // 小于远程发行包版本，所以应提示要升级
+                    String downloadUrl = getDownloadUrlFromGitHubBody(remoteReleaseEntity.getBody());
                     logger.info("温馨提示");
                     logger.info("有新的版本" + remoteReleaseEntity.getName());
                     logger.info("发布于" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(remoteReleaseEntity.getPublished_at()));
-                    logger.info("新版本下载地址：" + remoteReleaseEntity.getZipball_url());
+                    logger.info("新版本下载地址：" + downloadUrl);
                 } else {
                     logger.debug("该发行包应该是最新的，不用升级");
                 }
@@ -109,5 +114,22 @@ public class UpgradeServiceImpl implements UpgradeService {
             String message = String.format("格式化发行包的构建时间时出错，构建时间是%s，时间格式是%s", sProjectTime, projectTimeFormat);
             throw new SystemException(message, e);
         }
+    }
+
+    protected String getDownloadUrlFromGitHubBody(String body) {
+        if (body == null) {
+            return "";
+        }
+        String downloadTitle = SystemConfig.getString(GITHUB_DOWNLOAD_TITLE);
+        String[] strArray = body.split("\r\n");
+        for (int i = 0; i < strArray.length; i++) {
+            String str = strArray[i];
+            if (downloadTitle.equals(str)) {
+                if (i != strArray.length - 1) {
+                    return strArray[i + 1];
+                }
+            }
+        }
+        return "";
     }
 }
