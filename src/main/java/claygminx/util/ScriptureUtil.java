@@ -1,46 +1,36 @@
 package claygminx.util;
 
+import claygminx.common.config.SystemConfig;
 import claygminx.common.entity.ScriptureNumberEntity;
 import claygminx.common.entity.ScriptureSectionEntity;
 import claygminx.exception.ScriptureNumberException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
+
+import static claygminx.common.Dict.*;
 
 /**
  * 经文小工具
  */
 public class ScriptureUtil {
 
-    public final static String SCRIPTURE_NUMBER_BOOK_SPLITTER = ";";
-
-    private final static Pattern HTML_PATTERN = Pattern.compile("</?[a-zA-Z]+>");
-
-    private final static Pattern GOD_PATTERN = Pattern.compile("　神");
-
-    private final static Pattern SELAH_PATTERN = Pattern.compile("（细拉）");
+    private final static Logger logger = LoggerFactory.getLogger(ScriptureUtil.class);
 
     private ScriptureUtil() {
-    }
-
-    /**
-     * 移除经文中的HTML标签
-     * @param scripture 经文
-     * @return 经文
-     */
-    public static String removeHtmlTag(String scripture) {
-        return HTML_PATTERN.matcher(scripture).replaceAll("");
     }
 
     /**
      * 解析可能带有多卷的经文编号
      * @param arg 经文编号
      * @return 经文编号实体列表
-     * @throws ScriptureNumberException
+     * @throws IllegalArgumentException 若参数为空，抛出此异常
+     * @throws ScriptureNumberException 若给定参数不符合经文编号格式，抛出此异常
      */
     public static List<ScriptureNumberEntity> parseNumbers(String arg) throws ScriptureNumberException {
-        String[] scriptureNumberArray = arg.split(ScriptureUtil.SCRIPTURE_NUMBER_BOOK_SPLITTER);
+        String[] scriptureNumberArray = arg.split(";");
         List<ScriptureNumberEntity> publicScriptureNumberList = new ArrayList<>(scriptureNumberArray.length);
         for (String scriptureNumberItem : scriptureNumberArray) {
             ScriptureNumberEntity scriptureNumberEntity = ScriptureUtil.parseNumber(scriptureNumberItem);
@@ -50,19 +40,46 @@ public class ScriptureUtil {
     }
 
     /**
+     * 解析经文编号
      *
-     * @param arg
-     * @return
-     * @throws ScriptureNumberException
+     * <p>
+     *     <ol>
+     *         <li>有且仅有一个书卷，书卷名可以是全称，也可以是简称；</li>
+     *         <li>书卷名称后面跟着章或节，可以只有章，但不可以只有节；</li>
+     *         <li>如果后面仅跟着章，章和章用英文逗号隔开，若章和章是连续的，可以用英文短横线连接；</li>
+     *         <li>章和节开始用英文冒号隔开；</li>
+     *         <li>节和节的分隔符，跟章和章一样，用英文逗号连接连续节，或者用英文逗号分隔节和节。</li>
+     *     </ol>
+     * </p>
+     *
+     * <p>例如：</p>
+     * <ol>
+     *     <li>创世记1:1</li>
+     *     <li>创1:1</li>
+     *     <li>诗42-43</li>
+     *     <li>诗42,43</li>
+     *     <li>创1:1-5,7,9,11-15,2:1-3,5:1-5</li>
+     * </ol>
+     *
+     * @param arg 字符串形式的经文编号
+     * @return 经文编号实体。注意，经文编号里的章和节是否存在，还没有经过验证。
+     * @throws IllegalArgumentException 若参数为空，抛出此异常
+     * @throws ScriptureNumberException 若给定参数不符合经文编号格式，抛出此异常
      */
     public static ScriptureNumberEntity parseNumber(String arg) throws ScriptureNumberException {
+        if (arg == null || arg.isEmpty()) {
+            throw new IllegalArgumentException("参数不可为空！");
+        }
+
+        logger.debug("开始解析经文编号");
         char[] chars = arg.toCharArray();
         int sectionsStartIndex = -1;
-        // 应从第二个字符开始
+        // 应从第二个字符开始，因为通常而言，第一个字符是书卷名称的一部分
         for (int i  = 1; i < chars.length; i++) {
             char c = chars[i];
             if (c >= '1' && c <= '9') {
                 sectionsStartIndex = i;
+                logger.debug("章的起始索引是" + sectionsStartIndex);
                 break;
             }
         }
@@ -78,6 +95,7 @@ public class ScriptureUtil {
         result.setBookFullName(bookName);
         result.setBookShortName(bookName);
         result.setScriptureSections(sectionList);
+        logger.debug("经文编号解析完成");
 
         return result;
     }
@@ -85,12 +103,20 @@ public class ScriptureUtil {
     /**
      * 解析章节
      * <p>规则：</p>
+     * <ol>
+     *     <li>章节的第一分隔符是逗号（,）；</li>
+     *     <li>短横线（-）既可以连接章和章，也可以连接节和节，不可以连接章和节；</li>
+     *     <li>冒号（:）仅能连接章和节，左边是章，右边是节。</li>
+     * </ol>
      * @param sections 字符串形式的章节
-     * @return 章节
+     * @return 章节列表
+     * @throws ScriptureNumberException 若给定参数不符合经文编号格式，抛出此异常
      */
     public static List<ScriptureSectionEntity> parseSections(String sections) throws ScriptureNumberException {
+        logger.debug("开始章节");
         // 章节的第一分隔符是逗号
         String[] splitResult = sections.split(",");
+        logger.debug("逗号分割后有{}个部分", splitResult.length);
         // 返回结果
         List<ScriptureSectionEntity> sectionList = new ArrayList<>(splitResult.length);
         // 当前解析类型，要么是chapter，要么是verse
@@ -111,35 +137,19 @@ public class ScriptureUtil {
 
     /**
      * 精简经文
-     * @param scripture 经文
-     * @return 经文
+     * @param scripture 未精简的经文
+     * @return 精简后的经文
      */
     public static String simplifyScripture(String scripture) {
-        String result = removeHtmlTag(scripture);
-        result = GOD_PATTERN.matcher(result).replaceAll("神");
-        result = SELAH_PATTERN.matcher(result).replaceAll("");
-        return result;
+        String pattern = SystemConfig.getString(General.SCRIPTURE_REPLACE);
+        return scripture.replaceAll(pattern, "");
     }
 
     /**
-     * 是否中文标点符号
-     * @param c 字符
-     * @return 是中文标点符号就返回true
-     */
-    public static boolean isChinesePunctuation(char c) {
-        Character.UnicodeBlock ub = Character.UnicodeBlock.of(c);
-        return ub == Character.UnicodeBlock.GENERAL_PUNCTUATION
-                || ub == Character.UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION
-                || ub == Character.UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS
-                || ub == Character.UnicodeBlock.CJK_COMPATIBILITY_FORMS
-                || ub == Character.UnicodeBlock.VERTICAL_FORMS;
-    }
-
-    /**
-     *
-     * @param sections
-     * @param sectionList
-     * @throws ScriptureNumberException
+     * 解析由冒号（:）连接的章节
+     * @param sections 章节
+     * @param sectionList 章节列表
+     * @throws ScriptureNumberException 若章节格式不是“章:节”或"章:节-节"，则抛出此异常
      */
     private static void parseSectionWithColon(String sections, List<ScriptureSectionEntity> sectionList) throws ScriptureNumberException {
         String[] sectionArray = sections.split(":");
@@ -168,23 +178,27 @@ public class ScriptureUtil {
     }
 
     /**
-     *
-     * @param digit
-     * @param type
-     * @param sectionList
-     * @throws ScriptureNumberException
+     * 将章号或节号添加到列表
+     * @param digit 字符串形式的章号，或节号
+     * @param type chapter，或verse
+     * @param sectionList 章节列表
+     * @throws ScriptureNumberException 若{@code digit}不是整型数字，则抛出此异常
      */
     private static void parseDigitSection(String digit, String type, List<ScriptureSectionEntity> sectionList) throws ScriptureNumberException {
-        int n;
         try {
-            n = Integer.parseInt(digit);
+            addSection(Integer.parseInt(digit), type, sectionList);
         } catch (NumberFormatException e) {
             throw new ScriptureNumberException(digit + "不是数字！", e);
         }
-
-        addSection(n, type, sectionList);
     }
 
+    /**
+     * 解析由短横线（-）连接的章节部分
+     * @param sections 章节
+     * @param type chapter，或verse
+     * @param sectionList 章节列表
+     * @throws ScriptureNumberException 若给定章节参数的格式不是“数字-数字”，则抛出此异常
+     */
     private static void parseSectionWithinDash(String sections, String type, List<ScriptureSectionEntity> sectionList) throws ScriptureNumberException {
         String[] sectionArray = sections.split("-");
         if (sectionArray.length != 2) {
@@ -209,6 +223,12 @@ public class ScriptureUtil {
         }
     }
 
+    /**
+     * 将章节添加到列表中
+     * @param n 章号，或节号
+     * @param type chapter，或verse
+     * @param sectionList 章节列表
+     */
     private static void addSection(int n, String type, List<ScriptureSectionEntity> sectionList) {
         if ("chapter".equals(type)) {
             ScriptureSectionEntity section = new ScriptureSectionEntity();

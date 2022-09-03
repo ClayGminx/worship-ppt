@@ -31,6 +31,7 @@ public class Dict {
         public final static String SCRIPTURE_FORMAT2 = "scripture.format2";
         public final static String SCRIPTURE_FORMAT3 = "scripture.format3";
         public final static String SCRIPTURE_FORMAT4 = "scripture.format4";
+        public final static String SCRIPTURE_REPLACE = "scripture.replace";
 
         // GitHub
         public final static String OWNER = "github.owner";
