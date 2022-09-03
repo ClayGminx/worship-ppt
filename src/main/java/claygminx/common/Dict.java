@@ -47,6 +47,12 @@ public class Dict {
         public final static String PPT_TEMPLATE_GENERAL_LAYOUT_NAME = "ppt.template.generalLayout.name";
         public final static String PPT_HOLY_COMMUNION_POETRY_TOP = "ppt.holyCommunion.poetry.top";
 
+        // PPT 诗歌
+        public final static String PPT_POETRY_EXTENSION = "ppt.poetry.extension";
+        public final static String PPT_POETRY_WIDTH = "ppt.poetry.width";
+        public final static String PPT_POETRY_LEFT = "ppt.poetry.left";
+        public final static String PPT_POETRY_TOP = "ppt.poetry.top";
+
         // PPT 诗歌清单表格
         public final static String PPT_POETRY_CONTENT_X = "ppt.poetryContent.x";
         public final static String PPT_POETRY_CONTENT_Y = "ppt.poetryContent.y";

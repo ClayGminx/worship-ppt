@@ -1,5 +1,6 @@
 package claygminx.components.impl;
 
+import claygminx.common.config.SystemConfig;
 import claygminx.common.entity.PoetryEntity;
 import claygminx.exception.SystemException;
 import claygminx.util.PictureUtil;
@@ -15,6 +16,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import static claygminx.common.Dict.*;
+
 /**
  * 常规诗歌阶段
  */
@@ -23,8 +26,6 @@ public class RegularPoetryStep extends AbstractWorshipStep {
     private final static Logger logger = LoggerFactory.getLogger(RegularPoetryStep.class);
 
     private final List<PoetryEntity> poetryList;
-
-    private String fileExtensionName = ".png";
 
     public RegularPoetryStep(XMLSlideShow ppt, String layout, List<PoetryEntity> poetryList) {
         super(ppt, layout);
@@ -37,7 +38,7 @@ public class RegularPoetryStep extends AbstractWorshipStep {
         for (PoetryEntity poetry : poetryList) {
             File directory = poetry.getDirectory();
             checkDirectory(directory);
-            File[] files = directory.listFiles((dir, name) -> name.endsWith(fileExtensionName));
+            File[] files = directory.listFiles((dir, name) -> name.endsWith(getFileExtensionName()));
             if (files == null || files.length == 0) {
                 return;
             }
@@ -49,20 +50,20 @@ public class RegularPoetryStep extends AbstractWorshipStep {
         logger.info("诗歌幻灯片制作完成");
     }
 
-    public void setFileExtensionName(String fileExtensionName) {
-        this.fileExtensionName = fileExtensionName;
+    public String getFileExtensionName() {
+        return SystemConfig.getString(General.PPT_POETRY_EXTENSION);
     }
 
     public double getLeft() {
-        return 0d;
+        return SystemConfig.getDouble(General.PPT_POETRY_LEFT);
     }
 
     public double getTop() {
-        return 0d;
+        return SystemConfig.getDouble(General.PPT_POETRY_TOP);
     }
 
     public double getPictureLength() {
-        return 24.3;
+        return SystemConfig.getDouble(General.PPT_POETRY_WIDTH);
     }
 
     public List<PoetryEntity> getPoetryList() {
@@ -75,9 +76,9 @@ public class RegularPoetryStep extends AbstractWorshipStep {
      * @throws IOException 添加图片到幻灯片时可能发生的异常
      */
     private void makeSlides(File[] files) throws IOException {
-        XSLFPictureData.PictureType pictureType = PictureUtil.getPictureType(fileExtensionName);
+        XSLFPictureData.PictureType pictureType = PictureUtil.getPictureType(getFileExtensionName());
         if (pictureType == null) {
-            throw new SystemException("文件扩展名[" + fileExtensionName + "]错误！");
+            throw new SystemException("文件扩展名[" + getFileExtensionName() + "]错误！");
         }
 
         XMLSlideShow ppt = getPpt();
