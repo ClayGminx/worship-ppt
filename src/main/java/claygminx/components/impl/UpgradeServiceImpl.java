@@ -43,17 +43,21 @@ public class UpgradeServiceImpl implements UpgradeService {
     public void checkNewRelease() {
         try {
             logger.debug("检查升级服务");
-            String owner = SystemConfig.getString(OWNER);
-            String repo = SystemConfig.getString(REPO);
+            String owner = SystemConfig.getString(GITHUB_OWNER);
+            String repo = SystemConfig.getString(GITHUB_REPO);
+            int connectTimeout = SystemConfig.getInt(GITHUB_CONNECT_TIMEOUT);
+            int connectRequestTimeout = SystemConfig.getInt(GITHUB_CONNECT_REQUEST_TIMEOUT);
+            int responseTimeout = SystemConfig.getInt(GITHUB_RESPONSE_TIMEOUT);
+
             CloseableHttpClient client = HttpClients.createDefault();
             String url = String.format("https://api.github.com/repos/%s/%s/releases/latest", owner, repo);
             logger.debug("GET " + url);
             HttpGet httpGet = new HttpGet(url);
             httpGet.setHeader("Accept", "application/vnd.github+json");
             RequestConfig requestConfig = RequestConfig.custom()
-                    .setConnectTimeout(5, TimeUnit.SECONDS)
-                    .setConnectionRequestTimeout(30, TimeUnit.SECONDS)
-                    .setResponseTimeout(30, TimeUnit.SECONDS)
+                    .setConnectTimeout(connectTimeout, TimeUnit.SECONDS)
+                    .setConnectionRequestTimeout(connectRequestTimeout, TimeUnit.SECONDS)
+                    .setResponseTimeout(responseTimeout, TimeUnit.SECONDS)
                     .build();
             httpGet.setConfig(requestConfig);
             CloseableHttpResponse response = client.execute(httpGet);
@@ -86,8 +90,7 @@ public class UpgradeServiceImpl implements UpgradeService {
                 logger.warn("{} 返回{}", url, response.getCode());
             }
         } catch (Exception e) {
-            logger.warn("升级服务出现异常！");
-            logger.debug("", e);
+            throw new SystemException("升级服务出现异常！", e);
         }
     }
 

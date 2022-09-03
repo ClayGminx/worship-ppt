@@ -34,8 +34,12 @@ public class Dict {
         public final static String SCRIPTURE_REPLACE = "scripture.replace";
 
         // GitHub
-        public final static String OWNER = "github.owner";
-        public final static String REPO = "github.repo";
+        public final static String GITHUB_OWNER = "github.owner";
+        public final static String GITHUB_REPO = "github.repo";
+        public final static String GITHUB_CONNECT_TIMEOUT = "github.connectTimeout";
+        public final static String GITHUB_CONNECT_REQUEST_TIMEOUT = "github.connectRequestTimeout";
+        public final static String GITHUB_RESPONSE_TIMEOUT = "github.responseTimeout";
+
 
         // PPT
         public final static String WORSHIP_MODEL_PREFIX = "worship.model.";
