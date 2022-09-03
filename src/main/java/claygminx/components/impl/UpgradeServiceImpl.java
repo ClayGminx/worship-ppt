@@ -90,7 +90,8 @@ public class UpgradeServiceImpl implements UpgradeService {
                 logger.warn("{} 返回{}", url, response.getCode());
             }
         } catch (Exception e) {
-            throw new SystemException("升级服务出现异常！", e);
+            logger.debug("升级服务出现异常！", e);
+            logger.error("升级服务出现异常！");
         }
     }
 
