@@ -145,11 +145,13 @@ public class ScriptureServiceImpl implements ScriptureService {
                     preparedStatement.setInt(2, scriptureSection.getChapter());
                     ResultSet resultSet = preparedStatement.executeQuery();
                     while (resultSet.next()) {
+                        String scripture = resultSet.getString(2);
+                        scripture = ScriptureUtil.simplifyScripture(scripture);
                         ScriptureVerseEntity scriptureVerseEntity = new ScriptureVerseEntity();
                         scriptureVerseEntity.setBookId(scriptureNumber.getBookId());
                         scriptureVerseEntity.setChapter(scriptureSection.getChapter());
                         scriptureVerseEntity.setVerse(resultSet.getInt(1));
-                        scriptureVerseEntity.setScripture(resultSet.getString(2));
+                        scriptureVerseEntity.setScripture(scripture);
                         scriptureVerseEntityList.add(scriptureVerseEntity);
                     }
                 } else {
@@ -162,6 +164,7 @@ public class ScriptureServiceImpl implements ScriptureService {
                         ResultSet resultSet = preparedStatement.executeQuery();
                         if (resultSet.next()) {
                             String scripture = resultSet.getString(1);
+                            scripture = ScriptureUtil.simplifyScripture(scripture);
                             ScriptureVerseEntity scriptureVerseEntity = new ScriptureVerseEntity();
                             scriptureVerseEntity.setBookId(scriptureNumber.getBookId());
                             scriptureVerseEntity.setChapter(scriptureSection.getChapter());
@@ -189,7 +192,7 @@ public class ScriptureServiceImpl implements ScriptureService {
                      Writer out = new OutputStreamWriter(byteArrayOutputStream)) {
                     template.process(scriptureBookEntity, out);
                     byte[] bytes = byteArrayOutputStream.toByteArray();
-                    String scripture = ScriptureUtil.simplifyScripture(new String(bytes));
+                    String scripture = new String(bytes);
                     ScriptureEntity scriptureEntity = new ScriptureEntity();
                     scriptureEntity.setScriptureNumber(scriptureNumber);
                     scriptureEntity.setScripture(scripture);

@@ -141,7 +141,7 @@ public class ScriptureUtil {
      * @return 精简后的经文
      */
     public static String simplifyScripture(String scripture) {
-        String pattern = SystemConfig.getString(General.SCRIPTURE_REPLACE);
+        String pattern = SystemConfig.getString(General.SCRIPTURE_REGEX);
         return scripture.replaceAll(pattern, "");
     }
 

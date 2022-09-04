@@ -31,7 +31,7 @@ public class Dict {
         public final static String SCRIPTURE_FORMAT2 = "scripture.format2";
         public final static String SCRIPTURE_FORMAT3 = "scripture.format3";
         public final static String SCRIPTURE_FORMAT4 = "scripture.format4";
-        public final static String SCRIPTURE_REPLACE = "scripture.replace";
+        public final static String SCRIPTURE_REGEX = "scripture.regex";
 
         // GitHub
         public final static String GITHUB_OWNER = "github.owner";
@@ -52,6 +52,9 @@ public class Dict {
         public final static String PPT_TEMPLATE_INITIATION_POETRY_SLIDE_ORDER = "ppt.template.initiation.poetrySlide.order";
         public final static String PPT_TEMPLATE_GENERAL_LAYOUT_NAME = "ppt.template.generalLayout.name";
         public final static String PPT_HOLY_COMMUNION_POETRY_TOP = "ppt.holyCommunion.poetry.top";
+
+        // PPT 赦罪
+        public final static String PPT_FORGIVE_SINS_SCRIPTURE_LINE_SPACING = "ppt.forgiveSinsScripture.lineSpacing";
 
         // PPT 诗歌
         public final static String PPT_POETRY_EXTENSION = "ppt.poetry.extension";

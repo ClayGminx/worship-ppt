@@ -12,10 +12,10 @@ echo ---------------------------------------
 
 REM 先检查升级
 echo 正检查升级，请稍等...
-"jre1.8.0_341\bin\java.exe" -jar -Drunning.scene=升级 worship-ppt.jar
+"jre1.8.0_341\bin\java.exe" -Dfile.encoding=GBK -Drunning.scene=升级 -jar worship-ppt.jar
 
 REM PPT
 set /p file_path=请输入带有敬拜数据的ini文件的路径：
-"jre1.8.0_341\bin\java.exe" -jar -Drunning.scene=PPT worship-ppt.jar "%file_path%"
+"jre1.8.0_341\bin\java.exe" -Dfile.encoding=GBK -Drunning.scene=PPT -jar worship-ppt.jar "%file_path%"
 
 echo 辛苦了 φ(゜▽゜*)? & pause>nul

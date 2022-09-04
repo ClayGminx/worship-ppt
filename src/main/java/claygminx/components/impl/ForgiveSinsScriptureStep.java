@@ -1,5 +1,6 @@
 package claygminx.components.impl;
 
+import claygminx.common.config.SystemConfig;
 import claygminx.common.entity.ScriptureNumberEntity;
 import claygminx.components.ScriptureService;
 import claygminx.exception.ScriptureNumberException;
@@ -9,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.apache.poi.xslf.usermodel.*;
 
 import java.util.List;
+
+import static claygminx.common.Dict.General.PPT_FORGIVE_SINS_SCRIPTURE_LINE_SPACING;
 
 /**
  * 赦罪经文阶段
@@ -47,6 +50,7 @@ public class ForgiveSinsScriptureStep extends AbstractWorshipStep {
                 String rawText = textRun.getRawText();
                 if (rawText != null && rawText.contains(getCustomPlaceholder())) {
                     textRun.setText(rawText.replace(getCustomPlaceholder(), titleAndScripture[1]));
+                    paragraph.setLineSpacing(SystemConfig.getDouble(PPT_FORGIVE_SINS_SCRIPTURE_LINE_SPACING));
                     break;
                 }
             }

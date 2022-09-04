@@ -19,8 +19,8 @@ public class Main {
         String scene = System.getProperty(RUNNING_SCENE);
         logger.debug(scene);
 
+        UpgradeService service = UpgradeServiceImpl.getInstance();
         if (SystemConfig.getString(RUNNING_SCENE_UPGRADE).equals(scene)) {
-            UpgradeService service = UpgradeServiceImpl.getInstance();
             service.checkNewRelease();
         } else if (SystemConfig.getString(RUNNING_SCENE_PPT).equals(scene)) {
             if (args.length == 0) {
@@ -38,9 +38,11 @@ public class Main {
             worshipPPTService.setFileService(fileService);
             worshipPPTService.setScriptureService(scriptureService);
             worshipPPTService.make();
+
+            service.checkNewRelease();
         } else {
             logger.info("请选择正确的运行场景：升级，或PPT");
-            logger.info("命令行如：java -jar -Drunning.scene=PPT worship-ppt.jar D:/input.ini");
+            logger.info("命令行如：java -Drunning.scene=PPT -jar worship-ppt.jar D:/input.ini");
         }
     }
 
