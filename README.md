@@ -4,6 +4,11 @@
 
 由马克约瑟弟兄制作。
 
+![Version](https://img.shields.io/badge/version-1.0.1-blue)
+[![GitHub license](https://img.shields.io/github/license/ClayGminx/worship-ppt)](https://github.com/ClayGminx/worship-ppt/blob/master/LICENSE)
+![poi-ooxml dependency](https://img.shields.io/badge/poi--ooxml-v5.2.2-9cf)
+![sqlite-jdbc dependency](https://img.shields.io/badge/sqlite--jdbc-3.39.2.0-9cf)
+
 ## 简介
 
 为了更加快速、方便、准确地制作用于主日敬拜的 PPT 文件，此应用程序应用而生。
@@ -47,3 +52,7 @@
 
 此应用程序默认使用“新标点和合本”，若要使用其它版本的圣经，则要打开`worship-ppt.jar`里`worship-ppt.properties`核心配置文件，找到`scripture.version`，
 修改为你想要的版本。
+
+## 下一个版本预告
+
+支持mac os系统
