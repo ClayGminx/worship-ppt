@@ -20,6 +20,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static claygminx.common.Dict.General.*;
 
@@ -116,20 +118,48 @@ public class UpgradeServiceImpl implements UpgradeService {
         }
     }
 
+    /**
+     * 从GitHub消息返回体中获取下载地址
+     * @param body 消息体
+     * @return 下载地址
+     */
     protected String getDownloadUrlFromGitHubBody(String body) {
         if (body == null) {
             return "";
         }
         String downloadTitle = SystemConfig.getString(GITHUB_DOWNLOAD_TITLE);
+        String titleLevel = downloadTitle.split(" ")[0];
+        Pattern titlePattern = Pattern.compile("^[#]+");
+
         String[] strArray = body.split("\r\n");
+        StringBuilder returnBuilder = new StringBuilder();
+        int j = strArray.length;
         for (int i = 0; i < strArray.length; i++) {
             String str = strArray[i];
-            if (downloadTitle.equals(str)) {
-                if (i != strArray.length - 1) {
-                    return strArray[i + 1];
+            if (str.trim().isEmpty()) {
+                continue;
+            }
+            if (i >= j) {// 在“下载地址”的上下文中
+                Matcher matcher = titlePattern.matcher(str);
+                if (matcher.find()) {// 是个标题，那么再判断是不是“下载地址”的子标题
+                    String group = matcher.group();
+                    if (group.length() > titleLevel.length()) {// 子标题
+                        returnBuilder.append(str).append('\n');
+                    } else {
+                        break;
+                    }
+                } else {
+                    returnBuilder.append(str).append('\n');
                 }
+            } else if (downloadTitle.equals(str)) {// 开始“下载地址”
+                j = i + 1;
             }
         }
-        return "";
+
+        String result = returnBuilder.toString();
+        if (result.length() > 0 && result.endsWith("\n")) {
+            result = result.substring(0, result.length() - 1);
+        }
+        return result;
     }
 }
