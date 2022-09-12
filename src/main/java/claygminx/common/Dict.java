@@ -41,7 +41,6 @@ public class Dict {
         public final static String GITHUB_RESPONSE_TIMEOUT = "github.responseTimeout";
         public final static String GITHUB_DOWNLOAD_TITLE = "github.downloadTitle";
 
-
         // PPT
         public final static String WORSHIP_MODEL_PREFIX = "worship.model.";
         public final static String PPT_PROCEDURE_XML_PATH = "ppt.procedure.path";

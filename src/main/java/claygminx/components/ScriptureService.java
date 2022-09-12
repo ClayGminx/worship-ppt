@@ -4,8 +4,6 @@ import claygminx.common.entity.ScriptureEntity;
 import claygminx.common.entity.ScriptureNumberEntity;
 import claygminx.exception.ScriptureNumberException;
 
-import static claygminx.common.Dict.*;
-
 /**
  * 经文服务
  */
