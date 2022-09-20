@@ -4,7 +4,9 @@ import claygminx.common.config.SystemConfig;
 import claygminx.common.entity.ScriptureEntity;
 import claygminx.common.entity.ScriptureNumberEntity;
 import claygminx.components.ScriptureService;
+import claygminx.exception.ScriptureNumberException;
 import claygminx.exception.ScriptureServiceException;
+import claygminx.exception.WorshipStepException;
 import claygminx.util.ScriptureUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,8 +33,13 @@ public class SummonStep extends AbstractWorshipStep {
     }
 
     @Override
-    public void execute() throws Exception {
-        ScriptureNumberEntity scriptureNumberEntity = ScriptureUtil.parseNumber(scriptureNumber);
+    public void execute() throws WorshipStepException {
+        ScriptureNumberEntity scriptureNumberEntity;
+        try {
+            scriptureNumberEntity = ScriptureUtil.parseNumber(scriptureNumber);
+        } catch (ScriptureNumberException e) {
+            throw new WorshipStepException("解析经文编号 [" + scriptureNumber + "] 时出错！", e);
+        }
         boolean validateResult = scriptureService.validateNumber(scriptureNumberEntity);
         if (!validateResult) {
             throw new ScriptureServiceException("经文编号格式错误！");

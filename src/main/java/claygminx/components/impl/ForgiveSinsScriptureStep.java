@@ -4,6 +4,7 @@ import claygminx.common.config.SystemConfig;
 import claygminx.common.entity.ScriptureNumberEntity;
 import claygminx.components.ScriptureService;
 import claygminx.exception.ScriptureNumberException;
+import claygminx.exception.WorshipStepException;
 import claygminx.util.ScriptureUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,8 +31,13 @@ public class ForgiveSinsScriptureStep extends AbstractWorshipStep {
     }
 
     @Override
-    public void execute() throws ScriptureNumberException {
-        List<ScriptureNumberEntity> scriptureNumberList = ScriptureUtil.parseNumbers(scriptureNumber);
+    public void execute() throws WorshipStepException {
+        List<ScriptureNumberEntity> scriptureNumberList;
+        try {
+            scriptureNumberList = ScriptureUtil.parseNumbers(scriptureNumber);
+        } catch (ScriptureNumberException e) {
+            throw new WorshipStepException("解析赦罪经文编号 [" + scriptureNumber + "] 时出错！", e);
+        }
         String[] titleAndScripture = getTitleAndScripture(scriptureService, scriptureNumberList);
 
         XMLSlideShow ppt = getPpt();

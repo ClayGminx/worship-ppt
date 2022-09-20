@@ -4,6 +4,7 @@ import claygminx.common.config.SystemConfig;
 import claygminx.common.entity.ScriptureEntity;
 import claygminx.components.ScriptureService;
 import claygminx.exception.ScriptureNumberException;
+import claygminx.exception.WorshipStepException;
 import org.apache.poi.sl.usermodel.TextShape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,9 +35,14 @@ public class ReadingScriptureStep extends AbstractWorshipStep {
     }
 
     @Override
-    public void execute() throws ScriptureNumberException {
+    public void execute() throws WorshipStepException {
         logger.info("开始读经" + scriptureNumber);
-        ScriptureEntity scriptureEntity = scriptureService.getScriptureWithFormat(scriptureNumber, SystemConfig.getString(FORMAT4));
+        ScriptureEntity scriptureEntity;
+        try {
+            scriptureEntity = scriptureService.getScriptureWithFormat(scriptureNumber, SystemConfig.getString(FORMAT4));
+        } catch (ScriptureNumberException e) {
+            throw new WorshipStepException("解析经文编号 [" + scriptureNumber + "] 时出错！", e);
+        }
         if (scriptureEntity == null) {
             return;
         }

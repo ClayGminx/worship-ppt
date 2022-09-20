@@ -3,6 +3,7 @@ package claygminx.components.impl;
 import claygminx.common.config.SystemConfig;
 import claygminx.common.entity.PoetryEntity;
 import claygminx.exception.SystemException;
+import claygminx.exception.WorshipStepException;
 import claygminx.util.PictureUtil;
 import claygminx.util.SizeUtil;
 import org.slf4j.Logger;
@@ -33,11 +34,15 @@ public class RegularPoetryStep extends AbstractWorshipStep {
     }
 
     @Override
-    public void execute() throws Exception {
+    public void execute() throws WorshipStepException {
         List<PoetryEntity> poetryList = getPoetryList();
         for (PoetryEntity poetry : poetryList) {
             File directory = poetry.getDirectory();
-            checkDirectory(directory);
+            try {
+                checkDirectory(directory);
+            } catch (IllegalArgumentException | FileNotFoundException e) {
+                throw new WorshipStepException("检查文件夹：" + e.getMessage(), e);
+            }
             File[] files = directory.listFiles((dir, name) -> name.endsWith(getFileExtensionName()));
             if (files == null || files.length == 0) {
                 return;
@@ -45,7 +50,13 @@ public class RegularPoetryStep extends AbstractWorshipStep {
             sortFiles(files);
 
             // 下面开始一张张地制作幻灯片
-            makeSlides(files);
+            try {
+                makeSlides(files);
+            } catch (SystemException e) {
+                throw new WorshipStepException("系统异常：" + e.getMessage(), e);
+            } catch (Exception e) {
+                throw new WorshipStepException("未知异常！", e);
+            }
         }
         logger.info("诗歌幻灯片制作完成");
     }
@@ -99,7 +110,7 @@ public class RegularPoetryStep extends AbstractWorshipStep {
     /**
      * 检查诗歌所在的文件夹
      */
-    private void checkDirectory(File directory) throws Exception {
+    private void checkDirectory(File directory) throws IllegalArgumentException, FileNotFoundException {
         if (directory == null) {
             throw new IllegalArgumentException("未指定简谱所在的文件夹！");
         }

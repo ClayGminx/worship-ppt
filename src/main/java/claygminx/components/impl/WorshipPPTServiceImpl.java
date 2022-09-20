@@ -6,6 +6,7 @@ import claygminx.components.*;
 import claygminx.exception.FileServiceException;
 import claygminx.exception.InputServiceException;
 import claygminx.exception.SystemException;
+import claygminx.exception.WorshipStepException;
 import org.openxmlformats.schemas.drawingml.x2006.main.CTTextCharacterProperties;
 import org.openxmlformats.schemas.drawingml.x2006.main.CTTextListStyle;
 import org.openxmlformats.schemas.drawingml.x2006.main.CTTextParagraphProperties;
@@ -94,13 +95,13 @@ public class WorshipPPTServiceImpl implements WorshipPPTService {
             for (WorshipStep worshipStep : worshipProcedure) {
                 worshipStep.execute();
             }
-        } catch (FileServiceException e) {
+        } catch (FileServiceException | WorshipStepException e) {
             logger.debug("", e);
             logger.error(e.getMessage());
             return;
         } catch (Exception e) {
             logger.debug("", e);
-            logger.error(e.getMessage());
+            logger.error("出现未知错误！");
             return;
         }
 
@@ -119,7 +120,10 @@ public class WorshipPPTServiceImpl implements WorshipPPTService {
             + "************************************\n", pptFile.getAbsolutePath());
         } catch (IOException e) {
             logger.debug("", e);
-            logger.error(e.getMessage());
+            logger.error("保存PPT文件时出现错误！");
+        } catch (Exception e) {
+            logger.debug("", e);
+            logger.error("出现未知错误！");
         }
     }
 

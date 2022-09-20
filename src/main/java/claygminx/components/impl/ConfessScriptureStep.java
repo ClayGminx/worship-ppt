@@ -2,6 +2,8 @@ package claygminx.components.impl;
 
 import claygminx.common.entity.ScriptureNumberEntity;
 import claygminx.components.ScriptureService;
+import claygminx.exception.ScriptureNumberException;
+import claygminx.exception.WorshipStepException;
 import claygminx.util.ScriptureUtil;
 import org.apache.poi.xslf.usermodel.XMLSlideShow;
 import org.slf4j.Logger;
@@ -26,9 +28,13 @@ public class ConfessScriptureStep extends AbstractWorshipStep {
     }
 
     @Override
-    public void execute() throws Exception {
-        List<ScriptureNumberEntity> scriptureNumberList = ScriptureUtil.parseNumbers(scriptureNumber);
-        fillTitleAndScripture("认罪经文", scriptureService, scriptureNumberList);
-        logger.info("认罪经文幻灯片制作完成");
+    public void execute() throws WorshipStepException {
+        try {
+            List<ScriptureNumberEntity> scriptureNumberList = ScriptureUtil.parseNumbers(scriptureNumber);
+            fillTitleAndScripture("认罪经文", scriptureService, scriptureNumberList);
+            logger.info("认罪经文幻灯片制作完成");
+        } catch (ScriptureNumberException e) {
+            throw new WorshipStepException("解析认罪经文 [" + scriptureNumber + "] 编号时出错！", e);
+        }
     }
 }
