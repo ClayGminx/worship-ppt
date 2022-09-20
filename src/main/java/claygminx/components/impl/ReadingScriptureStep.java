@@ -64,7 +64,7 @@ public class ReadingScriptureStep extends AbstractWorshipStep {
                 slide = ppt.createSlide(layout);
                 placeholder = slide.getPlaceholder(0);
                 String text = placeholder.getText();
-                placeholder.setText(text.replace(getCustomPlaceholder(), scriptureNumber));
+                placeholder.setText(text.replace(getCustomPlaceholder(), scriptureNumber.replaceAll("-", "–")));
 
                 placeholder = slide.getPlaceholder(1);
                 placeholder.clearText();

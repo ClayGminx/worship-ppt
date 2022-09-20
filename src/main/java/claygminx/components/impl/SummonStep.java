@@ -54,7 +54,7 @@ public class SummonStep extends AbstractWorshipStep {
 
         XSLFTextShape placeholder = slide.getPlaceholder(0);
         placeholder.clearText();
-        placeholder.setText("【" + scriptureNumber + "】");
+        placeholder.setText("【" + scriptureNumber.replaceAll("-", "–") + "】");
 
         placeholder = slide.getPlaceholder(1);
         placeholder.clearText();

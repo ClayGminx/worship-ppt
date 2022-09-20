@@ -79,7 +79,7 @@ public abstract class AbstractWorshipStep implements WorshipStep {
             if (!validateResult) {
                 throw new ScriptureServiceException("经文编号格式错误！");
             }
-            titleBuilder.append('【').append(scriptureNumberEntity).append('】');
+            titleBuilder.append('【').append(scriptureNumberEntity.getValue().replaceAll("-", "–")).append('】');
             ScriptureEntity scriptureEntity = scriptureService.getScriptureWithFormat(scriptureNumberEntity, SystemConfig.getString(FORMAT1));
             if (logger.isDebugEnabled()) {
                 logger.debug(scriptureEntity.toString());
