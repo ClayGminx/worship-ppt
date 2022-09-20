@@ -79,7 +79,7 @@ public abstract class AbstractWorshipStep implements WorshipStep {
             if (!validateResult) {
                 throw new ScriptureServiceException("经文编号格式错误！");
             }
-            titleBuilder.append('【').append(scriptureNumberEntity.getValue().replaceAll("-", "–")).append('】');
+            titleBuilder.append('【').append(scriptureNumberEntity.getValue()).append('】');
             ScriptureEntity scriptureEntity = scriptureService.getScriptureWithFormat(scriptureNumberEntity, SystemConfig.getString(FORMAT1));
             if (logger.isDebugEnabled()) {
                 logger.debug(scriptureEntity.toString());
@@ -135,17 +135,30 @@ public abstract class AbstractWorshipStep implements WorshipStep {
         CTTextParagraph xmlObject = paragraph.getXmlObject();
         CTTextParagraphProperties pPr = xmlObject.getPPr();
         if (pPr == null) {
-            CTTextParagraphProperties defaultPpr = getPpt().getCTPresentation().getDefaultTextStyle().getDefPPr();
-            xmlObject.setPPr((CTTextParagraphProperties) defaultPpr.copy());
-        } else {
-            CTTextCharacterProperties defRPr = pPr.getDefRPr();
-            if (defRPr == null) {
-                CTTextCharacterProperties defaultRpr = getPpt().getCTPresentation().getDefaultTextStyle().getDefPPr().getDefRPr();
-                pPr.setDefRPr((CTTextCharacterProperties) defaultRpr.copy());
-            } else {
-                defRPr.setLang(SystemConfig.getString(GENERAL_LANGUAGE));
-                defRPr.setAltLang(SystemConfig.getString(GENERAL_LANGUAGE));
-            }
+            pPr = xmlObject.addNewPPr();
         }
+
+        // 按中文习惯控制首尾字符
+        pPr.setEaLnBrk(true);
+
+        // 允许标点溢出边界
+        pPr.setHangingPunct(true);
+
+        CTTextCharacterProperties defRPr = pPr.getDefRPr();
+        if (defRPr == null) {
+            defRPr = pPr.addNewDefRPr();
+        }
+        // 设置语言
+        String lang = SystemConfig.getString(GENERAL_LANGUAGE);
+        defRPr.setLang(lang);
+        defRPr.setAltLang(lang);
+
+        CTTextCharacterProperties endParaRPr = xmlObject.getEndParaRPr();
+        if (endParaRPr == null) {
+            endParaRPr = xmlObject.addNewEndParaRPr();
+        }
+        // 设置语言
+        endParaRPr.setLang(lang);
+        endParaRPr.setAltLang(lang);
     }
 }
