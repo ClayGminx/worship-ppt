@@ -2,6 +2,7 @@ package claygminx.components.impl;
 
 import claygminx.common.config.SystemConfig;
 import claygminx.common.entity.PoetryEntity;
+import claygminx.exception.WorshipStepException;
 import org.apache.poi.xslf.usermodel.XMLSlideShow;
 
 import java.util.List;
@@ -23,7 +24,7 @@ public class HolyCommunionPoetryStep extends RegularPoetryStep {
     }
 
     @Override
-    public void execute() throws Exception {
+    public void execute() throws WorshipStepException {
         super.execute();
     }
 
