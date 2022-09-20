@@ -19,7 +19,7 @@ public class FreeMarkerConfig {
 
     static {
         try {
-            String templatePath = SystemConfig.getString(Dict.General.SCRIPTURE_PATH);
+            String templatePath = SystemConfig.getString(Dict.ScriptureProperty.PATH);
             configuration.setDefaultEncoding(StandardCharsets.UTF_8.name());
             configuration.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
             configuration.setClassForTemplateLoading(FreeMarkerConfig.class, templatePath);

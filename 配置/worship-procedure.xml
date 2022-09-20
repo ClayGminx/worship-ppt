@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<worship>
+    <model name="min">
+        <worship-step name="封面" layout="封面" class="claygminx.components.impl.CoverStep" data="cover"/>
+        <worship-step name="诗歌清单" layout="诗歌清单" class="claygminx.components.impl.PoetryContentStep" data="poetryContent"/>
+        <worship-step name="祷告诗歌" layout="常规诗歌" class="claygminx.components.impl.RegularPoetryStep" data="poetryContent.prayPoetryAlbum.poetryList" if="poetryContent.prayPoetryAlbum != null"/>
+        <worship-step name="练唱诗歌" layout="常规诗歌" class="claygminx.components.impl.RegularPoetryStep" data="poetryContent.practisePoetryAlbum.poetryList" if="poetryContent.practisePoetryAlbum != null"/>
+        <worship-step name="敬拜提示" layout="敬拜提示" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="静默" layout="静默" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="敬拜宣告" layout="敬拜宣告" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="三一颂" layout="三一颂" class="claygminx.components.impl.OdeToTheTrinityStep" data="'宣召诗歌'"/>
+        <worship-step name="宣召" layout="宣召" class="claygminx.components.impl.SummonStep" data="#scriptureService, scriptureContent.summon"/>
+        <worship-step name="敬拜诗歌" layout="诗歌标题" class="claygminx.components.impl.PoetryTitleStep" data="'以诗歌颂扬敬拜上帝', poetryContent.worshipPoetryAlbum.poetryList[0].name"/>
+        <worship-step name="敬拜诗歌" layout="常规诗歌" class="claygminx.components.impl.RegularPoetryStep" data="poetryContent.worshipPoetryAlbum.poetryList.subList(0, 1)"/>
+        <worship-step name="公祷经文" layout="公祷经文" class="claygminx.components.impl.PublicPrayScriptureStep" data="#scriptureService, scriptureContent.publicPray"/>
+        <worship-step name="公祷事项" layout="公祷事项" class="claygminx.components.impl.PublicPrayContentStep" data="''"/>
+        <worship-step name="认罪经文" layout="认罪经文" class="claygminx.components.impl.ConfessScriptureStep" data="#scriptureService, scriptureContent.confess"/>
+        <worship-step name="默想认罪" layout="默想认罪" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="赦罪" layout="赦罪" class="claygminx.components.impl.ForgiveSinsScriptureStep" data="#scriptureService, scriptureContent.forgiveSins"/>
+        <worship-step name="读经" layout="读经" class="claygminx.components.impl.ReadingScriptureStep" data="#scriptureService, scriptureContent.readingScripture"/>
+        <worship-step name="敬拜诗歌" layout="诗歌标题" class="claygminx.components.impl.PoetryTitleStep" data="'以诗歌颂扬敬拜上帝', poetryContent.worshipPoetryAlbum.poetryList[1].name"/>
+        <worship-step name="敬拜诗歌" layout="常规诗歌" class="claygminx.components.impl.RegularPoetryStep" data="poetryContent.worshipPoetryAlbum.poetryList.subList(1, 2)"/>
+        <worship-step name="宣信证道" layout="宣信证道" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="宣信" layout="宣信标题" class="claygminx.components.impl.DeclarationTitleStep" data="declaration"/>
+        <worship-step name="宣信" layout="宣信内容" class="claygminx.components.impl.DeclarationContentStep"/>
+        <worship-step name="证道" layout="证道摘要" class="claygminx.components.impl.PreachSummaryStep" data="preach"/>
+        <worship-step name="证道" layout="证道经文" class="claygminx.components.impl.PreachScriptureStep" data="preach"/>
+        <worship-step name="证道" layout="证道" class="claygminx.components.impl.PreachStep" data="preach"/>
+        <worship-step name="回应诗歌" layout="诗歌标题" class="claygminx.components.impl.PoetryTitleStep" data="'以诗歌回应上帝', poetryContent.responsePoetryAlbum.poetryList[0].name"/>
+        <worship-step name="回应诗歌" layout="常规诗歌" class="claygminx.components.impl.RegularPoetryStep" data="poetryContent.responsePoetryAlbum.poetryList.subList(0, 1)"/>
+        <worship-step name="感恩奉献" layout="感恩奉献" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="奉献诗歌" layout="诗歌标题" class="claygminx.components.impl.PoetryTitleStep" data="'以感恩奉献敬拜神', poetryContent.offertoryPoetryAlbum.poetryList[0].name"/>
+        <worship-step name="奉献诗歌" layout="常规诗歌" class="claygminx.components.impl.RegularPoetryStep" data="poetryContent.offertoryPoetryAlbum.poetryList.subList(0, 1)"/>
+        <worship-step name="三一颂" layout="三一颂" class="claygminx.components.impl.OdeToTheTrinityStep" data="'诗歌'"/>
+        <worship-step name="会毕祝福" layout="会毕祝福" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="祝祷" layout="祝祷" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="阿们二叠颂" layout="阿们二叠颂" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="主祷文" layout="主祷文" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="新朋友" layout="新朋友" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="家事报告" layout="家事报告" class="claygminx.components.impl.FamilyReportStep" data="familyReports"/>
+        <worship-step name="团契学习" layout="团契学习" class="claygminx.components.impl.FixedStep"/>
+    </model>
+    <model name="within-holy-communion">
+        <worship-step name="封面" layout="封面" class="claygminx.components.impl.CoverStep" data="cover"/>
+        <worship-step name="诗歌清单" layout="诗歌清单" class="claygminx.components.impl.PoetryContentStep" data="poetryContent"/>
+        <worship-step name="祷告诗歌" layout="常规诗歌" class="claygminx.components.impl.RegularPoetryStep" data="poetryContent.prayPoetryAlbum.poetryList" if="poetryContent.prayPoetryAlbum != null"/>
+        <worship-step name="练唱诗歌" layout="常规诗歌" class="claygminx.components.impl.RegularPoetryStep" data="poetryContent.practisePoetryAlbum.poetryList" if="poetryContent.practisePoetryAlbum != null"/>
+        <worship-step name="敬拜提示" layout="敬拜提示" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="静默" layout="静默" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="敬拜宣告" layout="敬拜宣告" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="三一颂" layout="三一颂" class="claygminx.components.impl.OdeToTheTrinityStep" data="'宣召诗歌'"/>
+        <worship-step name="宣召" layout="宣召" class="claygminx.components.impl.SummonStep" data="#scriptureService, scriptureContent.summon"/>
+        <worship-step name="敬拜诗歌" layout="诗歌标题" class="claygminx.components.impl.PoetryTitleStep" data="'以诗歌颂扬敬拜上帝', poetryContent.worshipPoetryAlbum.poetryList[0].name"/>
+        <worship-step name="敬拜诗歌" layout="常规诗歌" class="claygminx.components.impl.RegularPoetryStep" data="poetryContent.worshipPoetryAlbum.poetryList.subList(0, 1)"/>
+        <worship-step name="公祷经文" layout="公祷经文" class="claygminx.components.impl.PublicPrayScriptureStep" data="#scriptureService, scriptureContent.publicPray"/>
+        <worship-step name="公祷事项" layout="公祷事项" class="claygminx.components.impl.PublicPrayContentStep" data="''"/>
+        <worship-step name="认罪经文" layout="认罪经文" class="claygminx.components.impl.ConfessScriptureStep" data="#scriptureService, scriptureContent.confess"/>
+        <worship-step name="默想认罪" layout="默想认罪" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="赦罪" layout="赦罪" class="claygminx.components.impl.ForgiveSinsScriptureStep" data="#scriptureService, scriptureContent.forgiveSins"/>
+        <worship-step name="读经" layout="读经" class="claygminx.components.impl.ReadingScriptureStep" data="#scriptureService, scriptureContent.readingScripture"/>
+        <worship-step name="敬拜诗歌" layout="诗歌标题" class="claygminx.components.impl.PoetryTitleStep" data="'以诗歌颂扬敬拜上帝', poetryContent.worshipPoetryAlbum.poetryList[1].name"/>
+        <worship-step name="敬拜诗歌" layout="常规诗歌" class="claygminx.components.impl.RegularPoetryStep" data="poetryContent.worshipPoetryAlbum.poetryList.subList(1, 2)"/>
+        <worship-step name="宣信证道" layout="宣信证道" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="宣信" layout="宣信标题" class="claygminx.components.impl.DeclarationTitleStep" data="declaration"/>
+        <worship-step name="宣信" layout="宣信内容" class="claygminx.components.impl.DeclarationContentStep"/>
+        <worship-step name="证道" layout="证道摘要" class="claygminx.components.impl.PreachSummaryStep" data="preach"/>
+        <worship-step name="证道" layout="证道经文" class="claygminx.components.impl.PreachScriptureStep" data="preach"/>
+        <worship-step name="证道" layout="证道" class="claygminx.components.impl.PreachStep" data="preach"/>
+        <worship-step name="回应诗歌" layout="诗歌标题" class="claygminx.components.impl.PoetryTitleStep" data="'以诗歌回应上帝', poetryContent.responsePoetryAlbum.poetryList[0].name"/>
+        <worship-step name="回应诗歌" layout="常规诗歌" class="claygminx.components.impl.RegularPoetryStep" data="poetryContent.responsePoetryAlbum.poetryList.subList(0, 1)"/>
+        <worship-step name="圣餐" layout="圣餐-开始" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="领餐提醒" layout="圣餐-提醒" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="非会友领餐名单" layout="圣餐-名单" class="claygminx.components.impl.HolyCommunionNameListStep" data="holyCommunion.nameList"/>
+        <worship-step name="小要理问答91问" layout="圣餐-小要理问答91问" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="圣餐经文1" layout="圣餐-经文1" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="圣餐经文2" layout="圣餐-经文2" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="圣餐诗歌标题" layout="圣餐-诗歌标题" class="claygminx.components.impl.HolyCommunionPoetryTitleStep" data="poetryContent.holyCommunionPoetryAlbum.poetryList"/>
+        <worship-step name="圣餐诗歌" layout="圣餐-诗歌" class="claygminx.components.impl.HolyCommunionPoetryStep" data="poetryContent.holyCommunionPoetryAlbum.poetryList"/>
+        <worship-step name="圣餐举饼祝谢" layout="圣餐-举饼祝谢" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="圣餐举饼祝谢" layout="圣餐-举饼祝谢" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="圣餐自我省察" layout="圣餐-自我省察" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="圣餐同领饼和杯" layout="圣餐-同领饼和杯" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="圣餐祷告" layout="圣餐-祷告" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="感恩奉献" layout="感恩奉献" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="奉献诗歌" layout="诗歌标题" class="claygminx.components.impl.PoetryTitleStep" data="'以感恩奉献敬拜神', poetryContent.offertoryPoetryAlbum.poetryList[0].name"/>
+        <worship-step name="奉献诗歌" layout="常规诗歌" class="claygminx.components.impl.RegularPoetryStep" data="poetryContent.offertoryPoetryAlbum.poetryList.subList(0, 1)"/>
+        <worship-step name="三一颂" layout="三一颂" class="claygminx.components.impl.OdeToTheTrinityStep" data="'诗歌'"/>
+        <worship-step name="会毕祝福" layout="会毕祝福" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="祝祷" layout="祝祷" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="阿们二叠颂" layout="阿们二叠颂" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="主祷文" layout="主祷文" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="新朋友" layout="新朋友" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="家事报告" layout="家事报告" class="claygminx.components.impl.FamilyReportStep" data="familyReports"/>
+        <worship-step name="团契学习" layout="团契学习" class="claygminx.components.impl.FixedStep"/>
+    </model>
+    <model name="within-initiation">
+        <worship-step name="封面" layout="封面" class="claygminx.components.impl.CoverStep" data="cover"/>
+        <worship-step name="诗歌清单" layout="诗歌清单" class="claygminx.components.impl.PoetryContentStep" data="poetryContent"/>
+        <worship-step name="祷告诗歌" layout="常规诗歌" class="claygminx.components.impl.RegularPoetryStep" data="poetryContent.prayPoetryAlbum.poetryList" if="poetryContent.prayPoetryAlbum != null"/>
+        <worship-step name="练唱诗歌" layout="常规诗歌" class="claygminx.components.impl.RegularPoetryStep" data="poetryContent.practisePoetryAlbum.poetryList" if="poetryContent.practisePoetryAlbum != null"/>
+        <worship-step name="敬拜提示" layout="敬拜提示" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="静默" layout="静默" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="敬拜宣告" layout="敬拜宣告" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="三一颂" layout="三一颂" class="claygminx.components.impl.OdeToTheTrinityStep" data="'宣召诗歌'"/>
+        <worship-step name="宣召" layout="宣召" class="claygminx.components.impl.SummonStep" data="#scriptureService, scriptureContent.summon"/>
+        <worship-step name="敬拜诗歌" layout="诗歌标题" class="claygminx.components.impl.PoetryTitleStep" data="'以诗歌颂扬敬拜上帝', poetryContent.worshipPoetryAlbum.poetryList[0].name"/>
+        <worship-step name="敬拜诗歌" layout="常规诗歌" class="claygminx.components.impl.RegularPoetryStep" data="poetryContent.worshipPoetryAlbum.poetryList.subList(0, 1)"/>
+        <worship-step name="公祷经文" layout="公祷经文" class="claygminx.components.impl.PublicPrayScriptureStep" data="#scriptureService, scriptureContent.publicPray"/>
+        <worship-step name="公祷事项" layout="公祷事项" class="claygminx.components.impl.PublicPrayContentStep" data="''"/>
+        <worship-step name="认罪经文" layout="认罪经文" class="claygminx.components.impl.ConfessScriptureStep" data="#scriptureService, scriptureContent.confess"/>
+        <worship-step name="默想认罪" layout="默想认罪" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="赦罪" layout="赦罪" class="claygminx.components.impl.ForgiveSinsScriptureStep" data="#scriptureService, scriptureContent.forgiveSins"/>
+        <worship-step name="读经" layout="读经" class="claygminx.components.impl.ReadingScriptureStep" data="#scriptureService, scriptureContent.readingScripture"/>
+        <worship-step name="敬拜诗歌" layout="诗歌标题" class="claygminx.components.impl.PoetryTitleStep" data="'以诗歌颂扬敬拜上帝', poetryContent.worshipPoetryAlbum.poetryList[1].name"/>
+        <worship-step name="敬拜诗歌" layout="常规诗歌" class="claygminx.components.impl.RegularPoetryStep" data="poetryContent.worshipPoetryAlbum.poetryList.subList(1, 2)"/>
+        <worship-step name="宣信证道" layout="宣信证道" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="宣信" layout="宣信标题" class="claygminx.components.impl.DeclarationTitleStep" data="declaration"/>
+        <worship-step name="宣信" layout="宣信内容" class="claygminx.components.impl.DeclarationContentStep"/>
+        <worship-step name="证道" layout="证道摘要" class="claygminx.components.impl.PreachSummaryStep" data="preach"/>
+        <worship-step name="证道" layout="证道经文" class="claygminx.components.impl.PreachScriptureStep" data="preach"/>
+        <worship-step name="证道" layout="证道" class="claygminx.components.impl.PreachStep" data="preach"/>
+        <worship-step name="回应诗歌" layout="诗歌标题" class="claygminx.components.impl.PoetryTitleStep" data="'以诗歌回应上帝', poetryContent.responsePoetryAlbum.poetryList[0].name"/>
+        <worship-step name="回应诗歌" layout="常规诗歌" class="claygminx.components.impl.RegularPoetryStep" data="poetryContent.responsePoetryAlbum.poetryList.subList(0, 1)"/>
+        <worship-step name="入会" layout="入会诗歌" class="claygminx.components.impl.InitiationStep" data="poetryContent.initiationPoetryAlbum.poetryList"/>
+        <worship-step name="圣餐" layout="圣餐-开始" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="领餐提醒" layout="圣餐-提醒" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="非会友领餐名单" layout="圣餐-名单" class="claygminx.components.impl.HolyCommunionNameListStep" data="holyCommunion.nameList"/>
+        <worship-step name="小要理问答91问" layout="圣餐-小要理问答91问" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="圣餐经文1" layout="圣餐-经文1" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="圣餐经文2" layout="圣餐-经文2" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="圣餐诗歌标题" layout="圣餐-诗歌标题" class="claygminx.components.impl.HolyCommunionPoetryTitleStep" data="poetryContent.holyCommunionPoetryAlbum.poetryList"/>
+        <worship-step name="圣餐诗歌" layout="圣餐-诗歌" class="claygminx.components.impl.HolyCommunionPoetryStep" data="poetryContent.holyCommunionPoetryAlbum.poetryList"/>
+        <worship-step name="圣餐举饼祝谢" layout="圣餐-举饼祝谢" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="圣餐举饼祝谢" layout="圣餐-举饼祝谢" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="圣餐自我省察" layout="圣餐-自我省察" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="圣餐同领饼和杯" layout="圣餐-同领饼和杯" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="圣餐祷告" layout="圣餐-祷告" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="感恩奉献" layout="感恩奉献" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="奉献诗歌" layout="诗歌标题" class="claygminx.components.impl.PoetryTitleStep" data="'以感恩奉献敬拜神', poetryContent.offertoryPoetryAlbum.poetryList[0].name"/>
+        <worship-step name="奉献诗歌" layout="常规诗歌" class="claygminx.components.impl.RegularPoetryStep" data="poetryContent.offertoryPoetryAlbum.poetryList.subList(0, 1)"/>
+        <worship-step name="三一颂" layout="三一颂" class="claygminx.components.impl.OdeToTheTrinityStep" data="'诗歌'"/>
+        <worship-step name="会毕祝福" layout="会毕祝福" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="祝祷" layout="祝祷" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="阿们二叠颂" layout="阿们二叠颂" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="主祷文" layout="主祷文" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="新朋友" layout="新朋友" class="claygminx.components.impl.FixedStep"/>
+        <worship-step name="家事报告" layout="家事报告" class="claygminx.components.impl.FamilyReportStep" data="familyReports"/>
+        <worship-step name="团契学习" layout="团契学习" class="claygminx.components.impl.FixedStep"/>
+    </model>
+</worship>

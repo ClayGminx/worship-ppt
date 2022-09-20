@@ -41,13 +41,13 @@ public class HolyCommunionNameListStep extends AbstractWorshipStep {
         XSLFTable table = slide.createTable();
 
         logger.debug("初始化表格的尺寸");
-        double x = SizeUtil.convertToPoints(SystemConfig.getDouble(General.PPT_HOLY_COMMUNION_NAME_LIST_X)),
-                y = SizeUtil.convertToPoints(SystemConfig.getDouble(General.PPT_HOLY_COMMUNION_NAME_LIST_Y)),
-                w = SizeUtil.convertToPoints(SystemConfig.getDouble(General.PPT_HOLY_COMMUNION_NAME_LIST_W)),
-                h = SizeUtil.convertToPoints(SystemConfig.getDouble(General.PPT_HOLY_COMMUNION_NAME_LIST_H));
+        double x = SizeUtil.convertToPoints(SystemConfig.getDouble(PPTProperty.HOLY_COMMUNION_NAME_LIST_X)),
+                y = SizeUtil.convertToPoints(SystemConfig.getDouble(PPTProperty.HOLY_COMMUNION_NAME_LIST_Y)),
+                w = SizeUtil.convertToPoints(SystemConfig.getDouble(PPTProperty.HOLY_COMMUNION_NAME_LIST_W)),
+                h = SizeUtil.convertToPoints(SystemConfig.getDouble(PPTProperty.HOLY_COMMUNION_NAME_LIST_H));
         table.setAnchor(new Rectangle2D.Double(x, y, w, h));
 
-        int colCount = SystemConfig.getInt(General.PPT_HOLY_COMMUNION_NAME_LIST_COL_COUNT);
+        int colCount = SystemConfig.getInt(PPTProperty.HOLY_COMMUNION_NAME_LIST_COL_COUNT);
         XSLFTableRow row = null;
         logger.debug("总共有{}个人", nameList.size());
         for (int i = 0; i < nameList.size(); i++) {
@@ -62,7 +62,7 @@ public class HolyCommunionNameListStep extends AbstractWorshipStep {
             span.setText(nameList.get(i));
             span.setFontFamily(getFontFamily(), FontGroup.LATIN);
             span.setFontFamily(getFontFamily(), FontGroup.EAST_ASIAN);
-            span.setFontSize(SystemConfig.getDouble(General.PPT_HOLY_COMMUNION_NAME_LIST_FONT_SIZE));
+            span.setFontSize(SystemConfig.getDouble(PPTProperty.HOLY_COMMUNION_NAME_LIST_FONT_SIZE));
         }
 
         // 补齐单元格

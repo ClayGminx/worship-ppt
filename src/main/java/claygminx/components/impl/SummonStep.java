@@ -12,7 +12,7 @@ import org.apache.poi.xslf.usermodel.*;
 
 import java.awt.*;
 
-import static claygminx.common.Dict.General.*;
+import static claygminx.common.Dict.ScriptureProperty.*;
 
 /**
  * 宣召阶段
@@ -39,7 +39,7 @@ public class SummonStep extends AbstractWorshipStep {
         }
 
         ScriptureEntity scriptureEntity = scriptureService.getScriptureWithFormat(
-                scriptureNumberEntity, SystemConfig.getString(SCRIPTURE_FORMAT1));
+                scriptureNumberEntity, SystemConfig.getString(FORMAT1));
 
         XMLSlideShow ppt = getPpt();
         XSLFSlideLayout layout = ppt.findLayout(getLayout());
@@ -52,6 +52,7 @@ public class SummonStep extends AbstractWorshipStep {
         placeholder = slide.getPlaceholder(1);
         placeholder.clearText();
         XSLFTextParagraph paragraph = placeholder.addNewTextParagraph();
+        useCustomLanguage(paragraph);
         XSLFTextRun span = paragraph.addNewTextRun();
         span.setText("　　");
         span = paragraph.addNewTextRun();

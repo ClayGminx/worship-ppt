@@ -11,7 +11,7 @@ import org.apache.poi.xslf.usermodel.*;
 
 import java.util.List;
 
-import static claygminx.common.Dict.General.PPT_FORGIVE_SINS_SCRIPTURE_LINE_SPACING;
+import static claygminx.common.Dict.PPTProperty.FORGIVE_SINS_SCRIPTURE_LINE_SPACING;
 
 /**
  * 赦罪经文阶段
@@ -50,7 +50,8 @@ public class ForgiveSinsScriptureStep extends AbstractWorshipStep {
                 String rawText = textRun.getRawText();
                 if (rawText != null && rawText.contains(getCustomPlaceholder())) {
                     textRun.setText(rawText.replace(getCustomPlaceholder(), titleAndScripture[1]));
-                    paragraph.setLineSpacing(SystemConfig.getDouble(PPT_FORGIVE_SINS_SCRIPTURE_LINE_SPACING));
+                    paragraph.setLineSpacing(SystemConfig.getDouble(FORGIVE_SINS_SCRIPTURE_LINE_SPACING));
+                    useCustomLanguage(paragraph);
                     break;
                 }
             }

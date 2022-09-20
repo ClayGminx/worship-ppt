@@ -12,11 +12,7 @@ import freemarker.template.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.net.URL;
+import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,18 +32,22 @@ public class ScriptureServiceImpl implements ScriptureService {
             throw new SystemException("无法加载org.sqlite.JDBC！", e);
         }
 
-        String bibleVersion = SystemConfig.getString(General.SCRIPTURE_VERSION);
-        if (bibleVersion == null) {
-            throw new SystemException("未设置圣经版本！");
+        String dbFilePath = SystemConfig.getString(DatabaseProperty.SQLITE_PATH);
+        if (dbFilePath == null) {
+            throw new SystemException("未设置圣经数据库！");
         }
-        BIBLE_VERSION = bibleVersion;
+        File dbFile = new File(dbFilePath);
+        if (!dbFile.exists()) {
+            throw new SystemException(dbFilePath + "不存在！");
+        }
+        DB_URL = "jdbc:sqlite:" + dbFile.getAbsolutePath();
     }
 
     private final static Logger logger = LoggerFactory.getLogger(ScriptureService.class);
 
-    private static ScriptureService scriptureService;
+    private final static String DB_URL;
 
-    private final static String BIBLE_VERSION;
+    private static ScriptureService scriptureService;
 
     private ScriptureServiceImpl() {
     }
@@ -230,10 +230,9 @@ public class ScriptureServiceImpl implements ScriptureService {
      */
     private Connection getConnection() {
         try {
-            URL url = Thread.currentThread().getContextClassLoader().getResource("assets/sqlite/" + BIBLE_VERSION + ".db");
-            return DriverManager.getConnection("jdbc:sqlite::resource:" + url);
+            return DriverManager.getConnection(DB_URL);
         } catch (SQLException e) {
-            throw new SystemException("从" + BIBLE_VERSION + "获取连接失败！", e);
+            throw new SystemException("无法从圣经数据库获取连接！", e);
         }
     }
 

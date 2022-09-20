@@ -8,6 +8,9 @@ import org.apache.poi.xslf.usermodel.XSLFSlide;
 import org.apache.poi.xslf.usermodel.XSLFSlideLayout;
 import org.apache.poi.xslf.usermodel.XSLFTextShape;
 
+/**
+ * 证道阶段
+ */
 public class PreachStep extends AbstractWorshipStep {
 
     private final static Logger logger = LoggerFactory.getLogger(PreachStep.class);

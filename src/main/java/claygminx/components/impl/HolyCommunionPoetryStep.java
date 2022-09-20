@@ -1,11 +1,12 @@
 package claygminx.components.impl;
 
-import claygminx.common.Dict;
 import claygminx.common.config.SystemConfig;
 import claygminx.common.entity.PoetryEntity;
 import org.apache.poi.xslf.usermodel.XMLSlideShow;
 
 import java.util.List;
+
+import static claygminx.common.Dict.*;
 
 /**
  * 圣餐诗歌阶段
@@ -28,7 +29,7 @@ public class HolyCommunionPoetryStep extends RegularPoetryStep {
 
     @Override
     public double getTop() {
-        return SystemConfig.getDouble(Dict.General.PPT_HOLY_COMMUNION_POETRY_TOP);
+        return SystemConfig.getDouble(PPTProperty.HOLY_COMMUNION_POETRY_TOP);
     }
 
     @Override

@@ -9,76 +9,95 @@ public class Dict {
     }
 
     /**
-     * 系统属性
+     * PPT制作属性
      */
-    public static class General {
-        // 项目属性
-        public final static String PROJECT_VERSION = "project.version";
-        public final static String PROJECT_TIME = "project.time";
-        public final static String PROJECT_TIME_FORMAT = "project.time.format";
+    public static class PPTProperty {
+        // 全局制作参数
+        public final static String GENERAL_WORSHIP_MODEL_PREFIX = "worship.model.";
+        public final static String GENERAL_PROCEDURE_XML_PATH = "ppt.general.procedurePath";
+        public final static String GENERAL_FONT_FAMILY = "ppt.general.fontFamily";
+        public final static String GENERAL_PLACEHOLDER = "ppt.general.placeholder";
+        public final static String GENERAL_LANGUAGE = "ppt.general.language";
+        // 幻灯片母版
+        public final static String MASTER_WORSHIP_FILE_PATH = "ppt.master.worshipFilePath";
+        public final static String MASTER_INITIATION_FILE_PATH = "ppt.master.initiationFilePath";
+        public final static String MASTER_GENERAL_LAYOUT_NAME = "ppt.master.generalLayout.name";
+        public final static String MASTER_INITIATION_POETRY_SLIDE_ORDER = "ppt.master.initiation.poetrySlide.order";
+        // 赦罪
+        public final static String FORGIVE_SINS_SCRIPTURE_LINE_SPACING = "ppt.forgiveSinsScripture.lineSpacing";
+        // 诗歌：歌谱图
+        public final static String POETRY_EXTENSION = "ppt.poetry.extension";
+        public final static String POETRY_WIDTH = "ppt.poetry.width";
+        public final static String POETRY_LEFT = "ppt.poetry.left";
+        public final static String POETRY_TOP = "ppt.poetry.top";
+        // 诗歌：清单
+        public final static String POETRY_CONTENT_X = "ppt.poetryContent.x";
+        public final static String POETRY_CONTENT_Y = "ppt.poetryContent.y";
+        public final static String POETRY_CONTENT_W = "ppt.poetryContent.w";
+        public final static String POETRY_CONTENT_H = "ppt.poetryContent.h";
+        public final static String POETRY_CONTENT_COL_COUNT = "ppt.poetryContent.colCount";
+        public final static String POETRY_CONTENT_TITLE_FONT_SIZE = "ppt.poetryContent.titleFontSize";
+        public final static String POETRY_CONTENT_FONT_SIZE = "ppt.poetryContent.fontSize";
+        public final static String POETRY_CONTENT_LEFT_INSET = "ppt.poetryContent.leftInset";
+        public final static String POETRY_CONTENT_SPACE_BEFORE = "ppt.poetryContent.spaceBefore";
+        // 圣餐：诗歌
+        public final static String HOLY_COMMUNION_POETRY_TOP = "ppt.holyCommunion.poetry.top";
+        // 圣餐：非会友领餐名单表格
+        public final static String HOLY_COMMUNION_NAME_LIST_X = "ppt.holyCommunion.nameList.x";
+        public final static String HOLY_COMMUNION_NAME_LIST_Y = "ppt.holyCommunion.nameList.y";
+        public final static String HOLY_COMMUNION_NAME_LIST_W = "ppt.holyCommunion.nameList.w";
+        public final static String HOLY_COMMUNION_NAME_LIST_H = "ppt.holyCommunion.nameList.h";
+        public final static String HOLY_COMMUNION_NAME_LIST_COL_COUNT = "ppt.holyCommunion.nameList.colCount";
+        public final static String HOLY_COMMUNION_NAME_LIST_FONT_SIZE = "ppt.holyCommunion.nameList.fontSize";
+    }
 
-        // 运行场景
-        public final static String RUNNING_SCENE = "running.scene";
-        public final static String RUNNING_SCENE_UPGRADE = "running.scene.upgrade";
-        public final static String RUNNING_SCENE_PPT = "running.scene.ppt";
+    /**
+     * 数据库属性
+     */
+    public static class DatabaseProperty {
+        public final static String SQLITE_PATH = "SQLite.path";
+    }
 
-        // 圣经版本
-        public final static String SCRIPTURE_VERSION = "scripture.version";
+    /**
+     * 经文属性
+     */
+    public static class ScriptureProperty {
+        public final static String PATH = "scripture.path";
+        public final static String FORMAT1 = "scripture.format1";
+//        public final static String FORMAT2 = "scripture.format2";
+//        public final static String FORMAT3 = "scripture.format3";
+        public final static String FORMAT4 = "scripture.format4";
+        public final static String REGEX = "scripture.regex";
+    }
 
-        // 经文格式
-        public final static String SCRIPTURE_PATH = "scripture.path";
-        public final static String SCRIPTURE_FORMAT1 = "scripture.format1";
-        public final static String SCRIPTURE_FORMAT2 = "scripture.format2";
-        public final static String SCRIPTURE_FORMAT3 = "scripture.format3";
-        public final static String SCRIPTURE_FORMAT4 = "scripture.format4";
-        public final static String SCRIPTURE_REGEX = "scripture.regex";
+    /**
+     * 项目属性
+     */
+    public static class ProjectProperty {
+        public final static String VERSION = "project.version";
+        public final static String TIME = "project.time";
+        public final static String TIME_FORMAT = "project.time.format";
+    }
 
-        // GitHub
-        public final static String GITHUB_OWNER = "github.owner";
-        public final static String GITHUB_REPO = "github.repo";
-        public final static String GITHUB_CONNECT_TIMEOUT = "github.connectTimeout";
-        public final static String GITHUB_CONNECT_REQUEST_TIMEOUT = "github.connectRequestTimeout";
-        public final static String GITHUB_RESPONSE_TIMEOUT = "github.responseTimeout";
-        public final static String GITHUB_DOWNLOAD_TITLE = "github.downloadTitle";
+    /**
+     * GitHub属性
+     */
+    public static class GithubProperty {
+        public final static String OWNER = "github.owner";
+        public final static String REPO = "github.repo";
+        public final static String CONNECT_TIMEOUT = "github.connectTimeout";
+        public final static String CONNECT_REQUEST_TIMEOUT = "github.connectRequestTimeout";
+        public final static String RESPONSE_TIMEOUT = "github.responseTimeout";
+        public final static String DOWNLOAD_TITLE = "github.downloadTitle";
+    }
 
-        // PPT
-        public final static String WORSHIP_MODEL_PREFIX = "worship.model.";
-        public final static String PPT_PROCEDURE_XML_PATH = "ppt.procedure.path";
-        public final static String PPT_FONT_FAMILY = "ppt.fontFamily";
-        public final static String PPT_PLACEHOLDER = "ppt.placeholder";
-        public final static String PPT_TEMPLATE_GENERAL_PATH = "ppt.template.general.path";
-        public final static String PPT_TEMPLATE_INITIATION_PATH = "ppt.template.initiation.path";
-        public final static String PPT_TEMPLATE_INITIATION_POETRY_SLIDE_ORDER = "ppt.template.initiation.poetrySlide.order";
-        public final static String PPT_TEMPLATE_GENERAL_LAYOUT_NAME = "ppt.template.generalLayout.name";
-        public final static String PPT_HOLY_COMMUNION_POETRY_TOP = "ppt.holyCommunion.poetry.top";
-
-        // PPT 赦罪
-        public final static String PPT_FORGIVE_SINS_SCRIPTURE_LINE_SPACING = "ppt.forgiveSinsScripture.lineSpacing";
-
-        // PPT 诗歌
-        public final static String PPT_POETRY_EXTENSION = "ppt.poetry.extension";
-        public final static String PPT_POETRY_WIDTH = "ppt.poetry.width";
-        public final static String PPT_POETRY_LEFT = "ppt.poetry.left";
-        public final static String PPT_POETRY_TOP = "ppt.poetry.top";
-
-        // PPT 诗歌清单表格
-        public final static String PPT_POETRY_CONTENT_X = "ppt.poetryContent.x";
-        public final static String PPT_POETRY_CONTENT_Y = "ppt.poetryContent.y";
-        public final static String PPT_POETRY_CONTENT_W = "ppt.poetryContent.w";
-        public final static String PPT_POETRY_CONTENT_H = "ppt.poetryContent.h";
-        public final static String PPT_POETRY_CONTENT_COL_COUNT = "ppt.poetryContent.colCount";
-        public final static String PPT_POETRY_CONTENT_TITLE_FONT_SIZE = "ppt.poetryContent.titleFontSize";
-        public final static String PPT_POETRY_CONTENT_FONT_SIZE = "ppt.poetryContent.fontSize";
-        public final static String PPT_POETRY_CONTENT_LEFT_INSET = "ppt.poetryContent.leftInset";
-        public final static String PPT_POETRY_CONTENT_SPACE_BEFORE = "ppt.poetryContent.spaceBefore";
-
-        // PPT 非会友领餐名单表格
-        public final static String PPT_HOLY_COMMUNION_NAME_LIST_X = "ppt.holyCommunion.nameList.x";
-        public final static String PPT_HOLY_COMMUNION_NAME_LIST_Y = "ppt.holyCommunion.nameList.y";
-        public final static String PPT_HOLY_COMMUNION_NAME_LIST_W = "ppt.holyCommunion.nameList.w";
-        public final static String PPT_HOLY_COMMUNION_NAME_LIST_H = "ppt.holyCommunion.nameList.h";
-        public final static String PPT_HOLY_COMMUNION_NAME_LIST_COL_COUNT = "ppt.holyCommunion.nameList.colCount";
-        public final static String PPT_HOLY_COMMUNION_NAME_LIST_FONT_SIZE = "ppt.holyCommunion.nameList.fontSize";
+    /**
+     * 运行属性
+     */
+    public static class RunningProperty {
+        public final static String SCENE = "running.scene";
+        public final static String SCENE_UPGRADE = "running.scene.upgrade";
+        public final static String SCENE_PPT = "running.scene.ppt";
     }
 
     /**

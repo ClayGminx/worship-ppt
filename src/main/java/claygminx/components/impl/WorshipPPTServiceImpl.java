@@ -1,9 +1,15 @@
 package claygminx.components.impl;
 
+import claygminx.common.config.SystemConfig;
 import claygminx.common.entity.WorshipEntity;
 import claygminx.components.*;
 import claygminx.exception.FileServiceException;
 import claygminx.exception.InputServiceException;
+import claygminx.exception.SystemException;
+import org.openxmlformats.schemas.drawingml.x2006.main.CTTextCharacterProperties;
+import org.openxmlformats.schemas.drawingml.x2006.main.CTTextListStyle;
+import org.openxmlformats.schemas.drawingml.x2006.main.CTTextParagraphProperties;
+import org.openxmlformats.schemas.presentationml.x2006.main.CTPresentation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.poi.xslf.usermodel.XMLSlideShow;
@@ -14,16 +20,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
+import static claygminx.common.Dict.*;
+
 public class WorshipPPTServiceImpl implements WorshipPPTService {
 
     private final static Logger logger = LoggerFactory.getLogger(WorshipPPTService.class);
 
     private final String inputFilePath;
-
     private InputService inputService;
-
     private FileService fileService;
-
     private ScriptureService scriptureService;
 
     /**
@@ -44,6 +49,10 @@ public class WorshipPPTServiceImpl implements WorshipPPTService {
             logger.debug("", e);
             logger.error(e.getMessage());
             return;
+        } catch (Exception e) {
+            logger.debug("", e);
+            logger.error("出现未知错误！");
+            return;
         }
 
         // 2.准备PPT文件
@@ -54,19 +63,41 @@ public class WorshipPPTServiceImpl implements WorshipPPTService {
             logger.debug("", e);
             logger.error(e.getMessage());
             return;
+        } catch (Exception e) {
+            logger.debug("", e);
+            logger.error("出现未知错误！");
+            return;
         }
 
         // 3.按照指定模板制作幻灯片
         XMLSlideShow ppt;
         try (FileInputStream fis  = new FileInputStream(pptFile)) {
+            // 创建PPT对象
             ppt = new XMLSlideShow(fis);
+            // 使用自定义语言
+            String lang = SystemConfig.getString(PPTProperty.GENERAL_LANGUAGE);
+            if (lang == null || "".equals(lang)) {
+                throw new SystemException("PPT语言不可为空！");
+            }
+            CTPresentation ctPresentation = ppt.getCTPresentation();
+            CTTextListStyle defaultTextStyle = ctPresentation.getDefaultTextStyle();
+            CTTextParagraphProperties defPPr = defaultTextStyle.getDefPPr();
+            CTTextCharacterProperties defRPr = defPPr.getDefRPr();
+            defRPr.setLang(lang);
+            defRPr.setAltLang(lang);
+            // 敬拜过程服务对象
             WorshipProcedureServiceImpl worshipProcedureService = new WorshipProcedureServiceImpl();
             worshipProcedureService.setFileService(fileService);
             worshipProcedureService.setScriptureService(scriptureService);
             List<WorshipStep> worshipProcedure = worshipProcedureService.generate(ppt, worshipEntity);
+            // 开始一个个阶段地制作幻灯片
             for (WorshipStep worshipStep : worshipProcedure) {
                 worshipStep.execute();
             }
+        } catch (FileServiceException e) {
+            logger.debug("", e);
+            logger.error(e.getMessage());
+            return;
         } catch (Exception e) {
             logger.debug("", e);
             logger.error(e.getMessage());

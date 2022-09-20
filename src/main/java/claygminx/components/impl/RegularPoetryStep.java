@@ -51,19 +51,19 @@ public class RegularPoetryStep extends AbstractWorshipStep {
     }
 
     public String getFileExtensionName() {
-        return SystemConfig.getString(General.PPT_POETRY_EXTENSION);
+        return SystemConfig.getString(PPTProperty.POETRY_EXTENSION);
     }
 
     public double getLeft() {
-        return SystemConfig.getDouble(General.PPT_POETRY_LEFT);
+        return SystemConfig.getDouble(PPTProperty.POETRY_LEFT);
     }
 
     public double getTop() {
-        return SystemConfig.getDouble(General.PPT_POETRY_TOP);
+        return SystemConfig.getDouble(PPTProperty.POETRY_TOP);
     }
 
     public double getPictureLength() {
-        return SystemConfig.getDouble(General.PPT_POETRY_WIDTH);
+        return SystemConfig.getDouble(PPTProperty.POETRY_WIDTH);
     }
 
     public List<PoetryEntity> getPoetryList() {

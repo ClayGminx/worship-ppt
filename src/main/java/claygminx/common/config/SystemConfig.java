@@ -2,6 +2,7 @@ package claygminx.common.config;
 
 import claygminx.exception.SystemException;
 
+import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
@@ -18,17 +19,33 @@ public class SystemConfig {
     public final static String PROPERTIES_FILE_NAME = "worship-ppt.properties";
 
     /**
+     * 自定义属性文件的系统属性名称
+     */
+    public final static String PROPERTY_NAME = "configFile";
+
+    /**
      * 系统属性实例对象
      */
     public final static Properties properties = new Properties();
 
     static {
+        // 先加载系统内置的配置
         ClassLoader classLoader = SystemConfig.class.getClassLoader();
         try (InputStreamReader reader = new InputStreamReader(
                 Objects.requireNonNull(classLoader.getResourceAsStream(PROPERTIES_FILE_NAME)), StandardCharsets.UTF_8)) {
             properties.load(reader);
         } catch (Exception e) {
             throw new SystemException(PROPERTIES_FILE_NAME + "加载失败！", e);
+        }
+        // 再加载自定义的配置
+        String propertyFilePath = System.getProperty(PROPERTY_NAME);
+        if (propertyFilePath != null) {
+            try (InputStreamReader reader = new InputStreamReader(
+                    new FileInputStream(propertyFilePath), StandardCharsets.UTF_8)) {
+                properties.load(reader);
+            } catch (Exception e) {
+                throw new SystemException(PROPERTIES_FILE_NAME + "加载失败！", e);
+            }
         }
     }
 

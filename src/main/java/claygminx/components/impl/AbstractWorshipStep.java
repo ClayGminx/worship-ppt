@@ -6,16 +6,17 @@ import claygminx.common.entity.ScriptureNumberEntity;
 import claygminx.components.ScriptureService;
 import claygminx.components.WorshipStep;
 import claygminx.exception.ScriptureServiceException;
-import org.apache.poi.xslf.usermodel.XMLSlideShow;
-import org.apache.poi.xslf.usermodel.XSLFSlide;
-import org.apache.poi.xslf.usermodel.XSLFSlideLayout;
-import org.apache.poi.xslf.usermodel.XSLFTextShape;
+import org.apache.poi.xslf.usermodel.*;
+import org.openxmlformats.schemas.drawingml.x2006.main.CTTextCharacterProperties;
+import org.openxmlformats.schemas.drawingml.x2006.main.CTTextParagraph;
+import org.openxmlformats.schemas.drawingml.x2006.main.CTTextParagraphProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-import static claygminx.common.Dict.General.*;
+import static claygminx.common.Dict.PPTProperty.*;
+import static claygminx.common.Dict.ScriptureProperty.*;
 
 /**
  * 通用的敬拜阶段抽象类
@@ -51,11 +52,11 @@ public abstract class AbstractWorshipStep implements WorshipStep {
      * @return 文本框中的占位符
      */
     public String getCustomPlaceholder() {
-        return SystemConfig.getString(PPT_PLACEHOLDER);
+        return SystemConfig.getString(GENERAL_PLACEHOLDER);
     }
 
     public String getFontFamily() {
-        return SystemConfig.getString(PPT_FONT_FAMILY);
+        return SystemConfig.getString(GENERAL_FONT_FAMILY);
     }
 
     /**
@@ -79,7 +80,7 @@ public abstract class AbstractWorshipStep implements WorshipStep {
                 throw new ScriptureServiceException("经文编号格式错误！");
             }
             titleBuilder.append('【').append(scriptureNumberEntity).append('】');
-            ScriptureEntity scriptureEntity = scriptureService.getScriptureWithFormat(scriptureNumberEntity, SystemConfig.getString(SCRIPTURE_FORMAT1));
+            ScriptureEntity scriptureEntity = scriptureService.getScriptureWithFormat(scriptureNumberEntity, SystemConfig.getString(FORMAT1));
             if (logger.isDebugEnabled()) {
                 logger.debug(scriptureEntity.toString());
             }
@@ -112,8 +113,34 @@ public abstract class AbstractWorshipStep implements WorshipStep {
         placeholder = slide.getPlaceholder(1);
         placeholder.clearText();
         placeholder.setText(titleAndScripture[1]);
+        List<XSLFTextParagraph> paragraphs = placeholder.getTextParagraphs();
+        for (XSLFTextParagraph paragraph : paragraphs) {
+            useCustomLanguage(paragraph);
+        }
         if (logger.isDebugEnabled()) {
             logger.debug("填充经文：" + titleAndScripture[1]);
+        }
+    }
+
+    /**
+     * 使用自定义语言
+     * @param paragraph 段落
+     */
+    protected void useCustomLanguage(XSLFTextParagraph paragraph) {
+        CTTextParagraph xmlObject = paragraph.getXmlObject();
+        CTTextParagraphProperties pPr = xmlObject.getPPr();
+        if (pPr == null) {
+            CTTextParagraphProperties defaultPpr = getPpt().getCTPresentation().getDefaultTextStyle().getDefPPr();
+            xmlObject.setPPr((CTTextParagraphProperties) defaultPpr.copy());
+        } else {
+            CTTextCharacterProperties defRPr = pPr.getDefRPr();
+            if (defRPr == null) {
+                CTTextCharacterProperties defaultRpr = getPpt().getCTPresentation().getDefaultTextStyle().getDefPPr().getDefRPr();
+                pPr.setDefRPr((CTTextCharacterProperties) defaultRpr.copy());
+            } else {
+                defRPr.setLang(SystemConfig.getString(GENERAL_LANGUAGE));
+                defRPr.setAltLang(SystemConfig.getString(GENERAL_LANGUAGE));
+            }
         }
     }
 }

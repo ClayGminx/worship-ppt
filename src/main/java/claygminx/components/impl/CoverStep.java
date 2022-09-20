@@ -32,9 +32,11 @@ public class CoverStep extends AbstractWorshipStep {
         placeholder.clearText();
         placeholder.setText(coverEntity.getWorshipDate());
 
-        placeholder = coverSlide.getPlaceholder(1);
-        placeholder.clearText();
-        placeholder.setText(coverEntity.getChurchName());
+        if (coverEntity.getChurchName() != null) {
+            placeholder = coverSlide.getPlaceholder(1);
+            placeholder.clearText();
+            placeholder.setText(coverEntity.getChurchName());
+        }
 
         logger.info("封面幻灯片制作完成");
     }

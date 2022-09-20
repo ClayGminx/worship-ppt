@@ -9,20 +9,20 @@ import claygminx.components.impl.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static claygminx.common.Dict.General.*;
+import static claygminx.common.Dict.RunningProperty.*;
 
 public class Main {
 
     private final static Logger logger = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) {
-        String scene = System.getProperty(RUNNING_SCENE);
+        String scene = System.getProperty(SCENE);
         logger.debug(scene);
 
         UpgradeService service = UpgradeServiceImpl.getInstance();
-        if (SystemConfig.getString(RUNNING_SCENE_UPGRADE).equals(scene)) {
+        if (SystemConfig.getString(SCENE_UPGRADE).equals(scene)) {
             service.checkNewRelease();
-        } else if (SystemConfig.getString(RUNNING_SCENE_PPT).equals(scene)) {
+        } else if (SystemConfig.getString(SCENE_PPT).equals(scene)) {
             if (args.length == 0) {
                 System.err.println("请输入ini文件！");
                 return;

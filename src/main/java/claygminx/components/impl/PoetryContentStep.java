@@ -39,13 +39,13 @@ public class PoetryContentStep extends AbstractWorshipStep {
         XSLFTable table = slide.createTable();
 
         logger.debug("初始化表格的尺寸");
-        double x = SizeUtil.convertToPoints(SystemConfig.getDouble(General.PPT_POETRY_CONTENT_X)),
-                y = SizeUtil.convertToPoints(SystemConfig.getDouble(General.PPT_POETRY_CONTENT_Y)),
-                w = SizeUtil.convertToPoints(SystemConfig.getDouble(General.PPT_POETRY_CONTENT_W)),
-                h = SizeUtil.convertToPoints(SystemConfig.getDouble(General.PPT_POETRY_CONTENT_H));
+        double x = SizeUtil.convertToPoints(SystemConfig.getDouble(PPTProperty.POETRY_CONTENT_X)),
+                y = SizeUtil.convertToPoints(SystemConfig.getDouble(PPTProperty.POETRY_CONTENT_Y)),
+                w = SizeUtil.convertToPoints(SystemConfig.getDouble(PPTProperty.POETRY_CONTENT_W)),
+                h = SizeUtil.convertToPoints(SystemConfig.getDouble(PPTProperty.POETRY_CONTENT_H));
         table.setAnchor(new Rectangle2D.Double(x, y, w, h));
 
-        int colCount = SystemConfig.getInt(General.PPT_POETRY_CONTENT_COL_COUNT);
+        int colCount = SystemConfig.getInt(PPTProperty.POETRY_CONTENT_COL_COUNT);
         List<PoetryAlbumEntity> list = poetryContentEntity.export();
         logger.debug(list.size() + "个诗歌集");
         for (int i = 0; i < list.size(); i += colCount) {
@@ -84,7 +84,7 @@ public class PoetryContentStep extends AbstractWorshipStep {
             XSLFTextParagraph paragraph = cell.addNewTextParagraph();
             XSLFTextRun span = paragraph.addNewTextRun();
             span.setText(title);
-            span.setFontSize(SystemConfig.getDouble(General.PPT_POETRY_CONTENT_TITLE_FONT_SIZE));
+            span.setFontSize(SystemConfig.getDouble(PPTProperty.POETRY_CONTENT_TITLE_FONT_SIZE));
             span.setBold(true);
             span.setFontFamily(getFontFamily(), FontGroup.LATIN);
             span.setFontFamily(getFontFamily(), FontGroup.EAST_ASIAN);
@@ -94,9 +94,9 @@ public class PoetryContentStep extends AbstractWorshipStep {
     private void makePoetryList(List<PoetryEntity> rightPoetryList, XSLFTableRow row) {
         XSLFTableCell cell = row.addCell();
         if (rightPoetryList != null) {
-            cell.setLeftInset(SizeUtil.convertToPoints(SystemConfig.getDouble(General.PPT_POETRY_CONTENT_LEFT_INSET)));
+            cell.setLeftInset(SizeUtil.convertToPoints(SystemConfig.getDouble(PPTProperty.POETRY_CONTENT_LEFT_INSET)));
             XSLFTextParagraph paragraph = cell.addNewTextParagraph();
-            paragraph.setSpaceBefore(SystemConfig.getDouble(General.PPT_POETRY_CONTENT_SPACE_BEFORE));// 段落前空出9磅的间距
+            paragraph.setSpaceBefore(SystemConfig.getDouble(PPTProperty.POETRY_CONTENT_SPACE_BEFORE));// 段落前空出9磅的间距
             XSLFTextRun span = paragraph.addNewTextRun();
 
             StringBuilder poetryBuilder = new StringBuilder();
@@ -105,7 +105,7 @@ public class PoetryContentStep extends AbstractWorshipStep {
             }
             span.setText(poetryBuilder.toString());
 
-            span.setFontSize(SystemConfig.getDouble(General.PPT_POETRY_CONTENT_FONT_SIZE));
+            span.setFontSize(SystemConfig.getDouble(PPTProperty.POETRY_CONTENT_FONT_SIZE));
             span.setFontFamily(getFontFamily(), FontGroup.LATIN);
             span.setFontFamily(getFontFamily(), FontGroup.EAST_ASIAN);
         }

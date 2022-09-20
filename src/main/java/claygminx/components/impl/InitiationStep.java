@@ -1,6 +1,5 @@
 package claygminx.components.impl;
 
-import claygminx.common.Dict;
 import claygminx.common.config.SystemConfig;
 import claygminx.common.entity.PoetryEntity;
 import claygminx.exception.SystemException;
@@ -11,9 +10,9 @@ import org.apache.xmlbeans.XmlObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.List;
-import java.util.Objects;
 
 import static claygminx.common.Dict.*;
 
@@ -36,7 +35,7 @@ public class InitiationStep extends RegularPoetryStep {
     public void execute() throws Exception {
         XMLSlideShow sourcePpt = getSourcePpt();
         XMLSlideShow targetPpt = getPpt();
-        int poetrySlideOrder = SystemConfig.getInt(General.PPT_TEMPLATE_INITIATION_POETRY_SLIDE_ORDER);
+        int poetrySlideOrder = SystemConfig.getInt(PPTProperty.MASTER_INITIATION_POETRY_SLIDE_ORDER);
 
         copyInitiationSlide(targetPpt, sourcePpt, 0, poetrySlideOrder);
         super.execute();
@@ -47,7 +46,7 @@ public class InitiationStep extends RegularPoetryStep {
 
     @Override
     public double getTop() {
-        return SystemConfig.getDouble(Dict.General.PPT_HOLY_COMMUNION_POETRY_TOP);
+        return SystemConfig.getDouble(PPTProperty.HOLY_COMMUNION_POETRY_TOP);
     }
 
     @Override
@@ -64,7 +63,7 @@ public class InitiationStep extends RegularPoetryStep {
      */
     private void copyInitiationSlide(XMLSlideShow targetPpt, XMLSlideShow sourcePpt, int from, int to) {
         // 拷贝时，目标PPT应先创建幻灯片，并且使用统一的版式
-        String layoutName = SystemConfig.getString(General.PPT_TEMPLATE_GENERAL_LAYOUT_NAME);
+        String layoutName = SystemConfig.getString(PPTProperty.MASTER_GENERAL_LAYOUT_NAME);
         XSLFSlideLayout layout = targetPpt.findLayout(layoutName);
         List<XSLFSlide> sourceSlides = sourcePpt.getSlides();
 
@@ -84,10 +83,9 @@ public class InitiationStep extends RegularPoetryStep {
      * @return PPT对象
      */
     private XMLSlideShow getSourcePpt() {
-        String classPath = SystemConfig.getString(General.PPT_TEMPLATE_INITIATION_PATH);
-        ClassLoader classLoader = InitiationStep.class.getClassLoader();
+        String filePath = SystemConfig.getString(PPTProperty.MASTER_INITIATION_FILE_PATH);
         logger.debug("准备读取入会PPT模板文件流");
-        try (InputStream is = Objects.requireNonNull(classLoader.getResourceAsStream(classPath))) {
+        try (InputStream is = new FileInputStream(filePath)) {
             logger.debug("入会PPT模板文件流读取完成");
             return new XMLSlideShow(is);
         } catch (Exception e) {

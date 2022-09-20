@@ -86,12 +86,12 @@ public class InputServiceImpl implements InputService {
             if (worshipDate == null || worshipDate.isEmpty()) {
                 throw new InputServiceException("没有主日敬拜日期！");
             }
-            if (churchName == null || churchName.isEmpty()) {
-                throw new InputServiceException("没有教会名称！");
-            }
+//            if (churchName == null || churchName.isEmpty()) {
+//                throw new InputServiceException("没有教会名称！");
+//            }
 
             logger.debug("用户选择的敬拜模式是" + worshipModel);
-            String modelKey = General.WORSHIP_MODEL_PREFIX + worshipModel;
+            String modelKey = PPTProperty.GENERAL_WORSHIP_MODEL_PREFIX + worshipModel;
             String pptTemplateName = SystemConfig.getString(modelKey);
             if (pptTemplateName == null) {
                 throw new InputServiceException("不支持" + worshipModel + "！");

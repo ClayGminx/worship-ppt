@@ -11,7 +11,7 @@ import org.apache.poi.xslf.usermodel.*;
 
 import java.awt.*;
 
-import static claygminx.common.Dict.General.*;
+import static claygminx.common.Dict.ScriptureProperty.*;
 
 /**
  * 读经阶段
@@ -36,7 +36,7 @@ public class ReadingScriptureStep extends AbstractWorshipStep {
     @Override
     public void execute() throws ScriptureNumberException {
         logger.info("开始读经" + scriptureNumber);
-        ScriptureEntity scriptureEntity = scriptureService.getScriptureWithFormat(scriptureNumber, SystemConfig.getString(SCRIPTURE_FORMAT4));
+        ScriptureEntity scriptureEntity = scriptureService.getScriptureWithFormat(scriptureNumber, SystemConfig.getString(FORMAT4));
         if (scriptureEntity == null) {
             return;
         }
@@ -69,6 +69,7 @@ public class ReadingScriptureStep extends AbstractWorshipStep {
             // 往正文添加一段经文，注意，可能因为经文字数较多，一行容不下
             placeholder = slide.getPlaceholder(1);
             XSLFTextParagraph paragraph = placeholder.addNewTextParagraph();
+            useCustomLanguage(paragraph);
             XSLFTextRun textRun = paragraph.addNewTextRun();
             String trimScriptureItem = scriptureItem.trim();
             textRun.setText(trimScriptureItem);

@@ -15,7 +15,6 @@ public class PoetryTitleStep extends AbstractWorshipStep {
     private final static Logger logger = LoggerFactory.getLogger(PoetryTitleStep.class);
 
     private final String slideName;
-
     private final String poetryName;
 
     public PoetryTitleStep(XMLSlideShow ppt, String layout, String slideName, String poetryName) {

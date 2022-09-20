@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static claygminx.common.Dict.General.*;
+import static claygminx.common.Dict.*;
 
 public class UpgradeServiceImpl implements UpgradeService {
 
@@ -46,11 +46,11 @@ public class UpgradeServiceImpl implements UpgradeService {
     public void checkNewRelease() {
         try {
             logger.debug("检查升级服务");
-            String owner = SystemConfig.getString(GITHUB_OWNER);
-            String repo = SystemConfig.getString(GITHUB_REPO);
-            int connectTimeout = SystemConfig.getInt(GITHUB_CONNECT_TIMEOUT);
-            int connectRequestTimeout = SystemConfig.getInt(GITHUB_CONNECT_REQUEST_TIMEOUT);
-            int responseTimeout = SystemConfig.getInt(GITHUB_RESPONSE_TIMEOUT);
+            String owner = SystemConfig.getString(GithubProperty.OWNER);
+            String repo = SystemConfig.getString(GithubProperty.REPO);
+            int connectTimeout = SystemConfig.getInt(GithubProperty.CONNECT_TIMEOUT);
+            int connectRequestTimeout = SystemConfig.getInt(GithubProperty.CONNECT_REQUEST_TIMEOUT);
+            int responseTimeout = SystemConfig.getInt(GithubProperty.RESPONSE_TIMEOUT);
 
             CloseableHttpClient client = HttpClients.createDefault();
             String url = String.format("https://api.github.com/repos/%s/%s/releases/latest", owner, repo);
@@ -103,9 +103,9 @@ public class UpgradeServiceImpl implements UpgradeService {
     }
 
     protected ReleaseEntity getThisProjectReleaseEntity() {
-        String projectVersion = SystemConfig.getString(PROJECT_VERSION);
-        String sProjectTime = SystemConfig.getString(PROJECT_TIME);
-        String projectTimeFormat = SystemConfig.getString(PROJECT_TIME_FORMAT);
+        String projectVersion = SystemConfig.getString(ProjectProperty.VERSION);
+        String sProjectTime = SystemConfig.getString(ProjectProperty.TIME);
+        String projectTimeFormat = SystemConfig.getString(ProjectProperty.TIME_FORMAT);
         try {
             Date oProjectTime = new SimpleDateFormat(projectTimeFormat).parse(sProjectTime);
             ReleaseEntity releaseEntity = new ReleaseEntity();
@@ -127,7 +127,7 @@ public class UpgradeServiceImpl implements UpgradeService {
         if (body == null) {
             return "";
         }
-        String downloadTitle = SystemConfig.getString(GITHUB_DOWNLOAD_TITLE);
+        String downloadTitle = SystemConfig.getString(GithubProperty.DOWNLOAD_TITLE);
         String titleLevel = downloadTitle.split(" ")[0];
         Pattern titlePattern = Pattern.compile("^[#]+");
 
