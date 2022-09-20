@@ -87,6 +87,11 @@ public abstract class AbstractWorshipStep implements WorshipStep {
             scriptureBuilder.append("　　").append(scriptureEntity.getScripture()).append('\n');
         }
         scriptureBuilder.setLength(scriptureBuilder.length() - 1);
+        char lastChar = scriptureBuilder.charAt(scriptureBuilder.length() - 1);
+        if (lastChar == '，' || lastChar == '；') {
+            scriptureBuilder.setCharAt(scriptureBuilder.length() - 1, '。');
+        }
+
         return new String[] {titleBuilder.toString(), scriptureBuilder.toString()};
     }
 
