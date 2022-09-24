@@ -120,12 +120,34 @@ public class Dict {
     }
 
     /**
+     * 敬拜模式
+     */
+    public static class WorshipModel {
+        public final static String WITHOUT_HOLY_COMMUNION = "无圣餐";
+        public final static String WITHIN_HOLY_COMMUNION = "有圣餐";
+        public final static String WITHIN_INITIATION = "有入会";
+    }
+
+    /**
      * 封面属性
      */
     public static class CoverKey {
         public final static String MODEL = "敬拜模式";
         public final static String WORSHIP_DATE = "敬拜日期";
         public final static String CHURCH_NAME = "教会名称";
+    }
+
+    /**
+     * 诗歌集的名称
+     */
+    public static class POETRY_ALBUM_NAME {
+        public final static String PRAY_POETRY = "祷告诗歌";
+        public final static String PRACTISE_POETRY = "练唱诗歌";
+        public final static String WORSHIP_POETRY = "敬拜诗歌";
+        public final static String RESPONSE_POETRY = "回应诗歌";
+        public final static String OFFERTORY_POETRY = "奉献诗歌";
+        public final static String HOLY_COMMUNION_POETRY = "圣餐诗歌";
+        public final static String INITIATION_POETRY = "入会诗歌";
     }
 
     /**

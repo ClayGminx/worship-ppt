@@ -3,7 +3,13 @@ package claygminx.common.entity;
 /**
  * 经文清单实体
  */
-public class ScriptureContentEntity {
+public class ScriptureContentEntity extends WorshipPropertyBean {
+
+    public final static String SUMMON = "summon";
+    public final static String PUBLIC_PRAY = "publicPray";
+    public final static String CONFESS = "confess";
+    public final static String FORGIVE_SINS = "forgiveSins";
+    public final static String READING_SCRIPTURE = "readingScripture";
 
     /**
      * 宣召
@@ -35,6 +41,7 @@ public class ScriptureContentEntity {
     }
 
     public void setSummon(String summon) {
+        firePropertyChange(SUMMON, this.summon, summon);
         this.summon = summon;
     }
 
@@ -43,6 +50,7 @@ public class ScriptureContentEntity {
     }
 
     public void setPublicPray(String publicPray) {
+        firePropertyChange(PUBLIC_PRAY, this.publicPray, publicPray);
         this.publicPray = publicPray;
     }
 
@@ -51,6 +59,7 @@ public class ScriptureContentEntity {
     }
 
     public void setConfess(String confess) {
+        firePropertyChange(CONFESS, this.confess, confess);
         this.confess = confess;
     }
 
@@ -59,6 +68,7 @@ public class ScriptureContentEntity {
     }
 
     public void setForgiveSins(String forgiveSins) {
+        firePropertyChange(FORGIVE_SINS, this.forgiveSins, forgiveSins);
         this.forgiveSins = forgiveSins;
     }
 
@@ -67,6 +77,7 @@ public class ScriptureContentEntity {
     }
 
     public void setReadingScripture(String readingScripture) {
+        firePropertyChange(READING_SCRIPTURE, this.readingScripture, readingScripture);
         this.readingScripture = readingScripture;
     }
 
@@ -80,4 +91,5 @@ public class ScriptureContentEntity {
                 ", readingScripture='" + readingScripture + '\'' +
                 '}';
     }
+
 }

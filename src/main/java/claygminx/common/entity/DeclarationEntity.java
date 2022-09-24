@@ -3,7 +3,10 @@ package claygminx.common.entity;
 /**
  * 宣信实体
  */
-public class DeclarationEntity {
+public class DeclarationEntity extends WorshipPropertyBean {
+
+    public final static String TITLE = "title";
+    public final static String SPEAKER = "speaker";
 
     /**
      * 宣信主题
@@ -20,6 +23,7 @@ public class DeclarationEntity {
     }
 
     public void setTitle(String title) {
+        firePropertyChange(TITLE, this.title, title);
         this.title = title;
     }
 
@@ -28,6 +32,7 @@ public class DeclarationEntity {
     }
 
     public void setSpeaker(String speaker) {
+        firePropertyChange(SPEAKER, this.speaker, speaker);
         this.speaker = speaker;
     }
 

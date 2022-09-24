@@ -5,7 +5,9 @@ import java.util.List;
 /**
  * 圣餐实体
  */
-public class HolyCommunionEntity {
+public class HolyCommunionEntity extends WorshipPropertyBean {
+
+    public final static String NAME_LIST = "nameList";
 
     /**
      * 非会友领餐名单
@@ -17,6 +19,7 @@ public class HolyCommunionEntity {
     }
 
     public void setNameList(List<String> nameList) {
+        firePropertyChange(NAME_LIST, this.nameList, nameList);
         this.nameList = nameList;
     }
 
