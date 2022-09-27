@@ -181,7 +181,7 @@ public class Dict {
      * 圣餐属性
      */
     public static class HolyCommunionKey {
-        public final static String NAME_LIST = "名单";
+        public final static String NAME_LIST = "领餐名单";
     }
 
 }

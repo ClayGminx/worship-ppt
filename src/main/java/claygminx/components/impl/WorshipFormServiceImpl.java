@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeListener;
@@ -41,6 +42,7 @@ public class WorshipFormServiceImpl implements WorshipFormService {
     public final static int POETRY_TABLE_COLUMN_WIDTH_2 = 300;
     public final static int POETRY_TABLE_COLUMN_WIDTH_3 = 130;
     public final static int ROW_INDEX_OFFSET = 2;
+    public final static int V_SCROLL_BAR_SPEED = 20;
 
     private static WorshipFormServiceImpl instance;
     private final JFrame frame;
@@ -59,7 +61,7 @@ public class WorshipFormServiceImpl implements WorshipFormService {
     }
 
     public void showForm() {
-        logger.debug("初始化窗体");;
+        logger.debug("初始化窗体");
         frame.setSize(FRAME_SIZE);
         frame.setMinimumSize(FRAME_MIN_SIZE);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -68,6 +70,7 @@ public class WorshipFormServiceImpl implements WorshipFormService {
         logger.debug("添加根容器");
         Box rootBox = Box.createVerticalBox();
         JScrollPane rootPanel = new JScrollPane(rootBox);// 使窗体有滚动条
+        rootPanel.getVerticalScrollBar().setUnitIncrement(V_SCROLL_BAR_SPEED);
         frame.setContentPane(rootPanel);
 
         logger.debug("添加组件到窗体中");
@@ -77,262 +80,11 @@ public class WorshipFormServiceImpl implements WorshipFormService {
         addScripturePanel(rootBox);
         addDeclarationPanel(rootBox);
         addPreachPanel(rootBox);
-        addHolyCommunion(rootBox);
+        addHolyCommunionPanel(rootBox);
         addSubmitPanel(rootBox);
 
         logger.debug("添加完毕，展示窗体");
         frame.setVisible(true);
-    }
-
-    private void addHolyCommunion(Box rootBox) {
-        Box tableBox = Box.createVerticalBox();
-        addTableTitle(tableBox, "圣餐");
-
-        HolyCommunionEntity holyCommunionEntity = WorshipEntityManager.getHolyCommunionEntity();
-        addRegularTableInputRow(tableBox, "领餐名单", holyCommunionEntity, HolyCommunionEntity.NAME_LIST, new KeyAdapter() {
-            public void keyReleased(KeyEvent e) {
-                JTextField localTextField = (JTextField) e.getSource();
-                String inputText = localTextField.getText();
-                if (inputText == null || inputText.trim().isEmpty()) {
-                    holyCommunionEntity.setNameList(null);
-                } else {
-                    String[] nameArray = inputText.split(",");
-                    List<String> nameList = new ArrayList<>(nameArray.length);
-                    for (String name : nameArray) {
-                        nameList.add(name.trim());
-                    }
-                    holyCommunionEntity.setNameList(nameList);
-                }
-            }
-        });
-
-        JPanel panel = new JPanel();
-        panel.setName("holyCommunion");
-        panel.add(tableBox);
-        rootBox.add(panel);
-    }
-
-    private void addPreachPanel(Box rootBox) {
-        Box tableBox = Box.createVerticalBox();
-        addTableTitle(tableBox, "证道");
-
-        PreachEntity preachEntity = WorshipEntityManager.getPreachEntity();
-        addRegularTableInputRow(tableBox, "主题", preachEntity, PreachEntity.TITLE, new KeyAdapter() {
-            public void keyReleased(KeyEvent e) {
-                JTextField localTextField = (JTextField) e.getSource();
-                preachEntity.setTitle(localTextField.getText());
-            }
-        });
-        addRegularTableInputRow(tableBox, "经文", preachEntity, PreachEntity.SCRIPTURE_NUMBER, new KeyAdapter() {
-            public void keyReleased(KeyEvent e) {
-                JTextField localTextField = (JTextField) e.getSource();
-                preachEntity.setScriptureNumber(localTextField.getText());
-            }
-        });
-
-        JPanel panel = new JPanel();
-        panel.setName("preach");
-        panel.add(tableBox);
-        rootBox.add(panel);
-    }
-
-    private void addDeclarationPanel(Box rootBox) {
-        Box tableBox = Box.createVerticalBox();
-        addTableTitle(tableBox, "宣信");
-
-        DeclarationEntity declarationEntity = WorshipEntityManager.getDeclarationEntity();
-        addRegularTableInputRow(tableBox, "主题", declarationEntity, DeclarationEntity.TITLE, new KeyAdapter() {
-            public void keyReleased(KeyEvent e) {
-                JTextField localTextField = (JTextField) e.getSource();
-                declarationEntity.setTitle(localTextField.getText());
-            }
-        });
-        addRegularTableInputRow(tableBox, "讲员", declarationEntity, DeclarationEntity.SPEAKER, new KeyAdapter() {
-            public void keyReleased(KeyEvent e) {
-                JTextField localTextField = (JTextField) e.getSource();
-                declarationEntity.setSpeaker(localTextField.getText());
-            }
-        });
-
-        JPanel panel = new JPanel();
-        panel.setName("declaration");
-        panel.add(tableBox);
-        rootBox.add(panel);
-    }
-
-    private void addScripturePanel(Box rootBox) {
-        Box tableBox = Box.createVerticalBox();
-        addTableTitle(tableBox, "读经");
-
-        ScriptureContentEntity scriptureContentEntity = WorshipEntityManager.getScriptureContentEntity();
-        addRegularTableInputRow(tableBox, "宣召", scriptureContentEntity, ScriptureContentEntity.SUMMON, new KeyAdapter() {
-            public void keyReleased(KeyEvent e) {
-                JTextField localTextField = (JTextField) e.getSource();
-                scriptureContentEntity.setSummon(localTextField.getText());
-            }
-        });
-        addRegularTableInputRow(tableBox, "公祷", scriptureContentEntity, ScriptureContentEntity.PUBLIC_PRAY, new KeyAdapter() {
-            public void keyReleased(KeyEvent e) {
-                JTextField localTextField = (JTextField) e.getSource();
-                scriptureContentEntity.setPublicPray(localTextField.getText());
-            }
-        });
-        addRegularTableInputRow(tableBox, "认罪", scriptureContentEntity, ScriptureContentEntity.CONFESS, new KeyAdapter() {
-            public void keyReleased(KeyEvent e) {
-                JTextField localTextField = (JTextField) e.getSource();
-                scriptureContentEntity.setConfess(localTextField.getText());
-            }
-        });
-        addRegularTableInputRow(tableBox, "赦罪", scriptureContentEntity, ScriptureContentEntity.FORGIVE_SINS, new KeyAdapter() {
-            public void keyReleased(KeyEvent e) {
-                JTextField localTextField = (JTextField) e.getSource();
-                scriptureContentEntity.setForgiveSins(localTextField.getText());
-            }
-        });
-        addRegularTableInputRow(tableBox, "读经", scriptureContentEntity, ScriptureContentEntity.READING_SCRIPTURE, new KeyAdapter() {
-            public void keyReleased(KeyEvent e) {
-                JTextField localTextField = (JTextField) e.getSource();
-                scriptureContentEntity.setReadingScripture(localTextField.getText());
-            }
-        });
-
-        JPanel panel = new JPanel();
-        panel.setName("scripture");
-        panel.add(tableBox);
-        rootBox.add(panel);
-    }
-
-    /**
-     * 添加提交按钮
-     * @param rootBox 根盒子
-     */
-    private void addSubmitPanel(Box rootBox) {
-        JButton button = new JButton("提交");
-        button.addActionListener((action) -> {
-            final WorshipEntity worshipEntity = WorshipEntityManager.getWorshipEntity();
-            threadPool.execute(() -> {
-                SwingUtilities.invokeLater(() -> {
-                    logger.debug("检查输入数据...");
-                    logger.debug("检查封面信息...");
-                    CoverEntity cover = worshipEntity.getCover();
-                    if (isEmpty(cover.getModel())) {
-                        warn("请先选择敬拜模式");
-                        return;
-                    }
-                    if (isEmpty(cover.getWorshipDate())) {
-                        warn("请输入敬拜日期！");
-                        return;
-                    }
-                    if (isEmpty(cover.getChurchName())) {
-                        logger.warn("未输入教会名称！");
-                    }
-
-                    logger.debug("检查诗歌...");
-                    PoetryContentEntity poetryContent = worshipEntity.getPoetryContent();
-                    PoetryAlbumEntity prayPoetryAlbum = poetryContent.getPrayPoetryAlbum();
-                    PoetryAlbumEntity practisePoetryAlbum = poetryContent.getPractisePoetryAlbum();
-                    PoetryAlbumEntity worshipPoetryAlbum = poetryContent.getWorshipPoetryAlbum();
-                    PoetryAlbumEntity responsePoetryAlbum = poetryContent.getResponsePoetryAlbum();
-                    PoetryAlbumEntity offertoryPoetryAlbum = poetryContent.getOffertoryPoetryAlbum();
-                    String message = checkPoetryInfo("祷告诗歌", prayPoetryAlbum.getPoetryList(), 0);
-                    if (message != null) {
-                        warn(message);
-                        return;
-                    }
-                    message = checkPoetryInfo("练唱诗歌", practisePoetryAlbum.getPoetryList(), 0);
-                    if (message != null) {
-                        warn(message);
-                        return;
-                    }
-                    message = checkPoetryInfo("敬拜诗歌", worshipPoetryAlbum.getPoetryList(), 2);
-                    if (message != null) {
-                        warn(message);
-                        return;
-                    }
-                    message = checkPoetryInfo("回应诗歌", responsePoetryAlbum.getPoetryList(), 1);
-                    if (message != null) {
-                        warn(message);
-                        return;
-                    }
-                    message = checkPoetryInfo("奉献诗歌", offertoryPoetryAlbum.getPoetryList(), 1);
-                    if (message != null) {
-                        warn(message);
-                        return;
-                    }
-                    PoetryAlbumEntity holyCommunionPoetryAlbum = poetryContent.getHolyCommunionPoetryAlbum();
-                    if ("有圣餐".equals(cover.getModel()) || "有入会".equals(cover.getModel())) {
-                        message = checkPoetryInfo("圣餐诗歌", holyCommunionPoetryAlbum.getPoetryList(), 1);
-                        if (message != null) {
-                            warn(message);
-                            return;
-                        }
-                    }
-                    if ("有入会".equals(cover.getModel())) {
-                        PoetryAlbumEntity initiationPoetryAlbum = poetryContent.getInitiationPoetryAlbum();
-                        message = checkPoetryInfo("入会诗歌", initiationPoetryAlbum.getPoetryList(), 1);
-                        if (message != null) {
-                            warn(message);
-                            return;
-                        }
-                    }
-
-                    logger.debug("检查经文...");
-                    ScriptureContentEntity scriptureContent = worshipEntity.getScriptureContent();
-                    if (isEmpty(scriptureContent.getSummon())
-                            || isEmpty(scriptureContent.getConfess())
-                            || isEmpty(scriptureContent.getForgiveSins())
-                            || isEmpty(scriptureContent.getPublicPray())
-                            || isEmpty(scriptureContent.getReadingScripture())) {
-                        warn("经文部分需要全部填写！");
-                        return;
-                    }
-
-                    logger.debug("检查宣信...");
-                    DeclarationEntity declaration = worshipEntity.getDeclaration();
-                    if (isEmpty(declaration.getTitle())) {
-                        warn("需要填写宣信主题！");
-                        return;
-                    }
-                    if (isEmpty(declaration.getSpeaker())) {
-                        logger.warn("未输入讲员！");
-                    }
-
-                    logger.debug("检查证道...");
-                    PreachEntity preach = worshipEntity.getPreach();
-                    if (isEmpty(preach.getTitle())) {
-                        warn("证道主题是什么？");
-                        return;
-                    }
-                    if (isEmpty(preach.getScriptureNumber())) {
-                        logger.warn("未输入证道经文！");
-                    }
-                });
-            });
-        });
-
-        JPanel panel = new JPanel();
-        panel.setName("submit");
-        panel.add(button);
-
-        rootBox.add(panel);
-    }
-
-    private String checkPoetryInfo(String albumName, List<PoetryEntity> poetryList, int minCount) {
-        int count = 0;
-        for (int i = 0; i < poetryList.size(); i++) {
-            PoetryEntity poetryEntity = poetryList.get(i);
-            if (!isEmpty(poetryEntity.getName()) && poetryEntity.getDirectory() == null
-                    || isEmpty(poetryEntity.getName()) && poetryEntity.getDirectory() != null) {
-                return albumName + "中第" + (i + 1) + "行诗歌输入不完整！";
-            }
-            if (!isEmpty(poetryEntity.getName()) && poetryEntity.getDirectory() != null) {
-                count++;
-            }
-        }
-        if (count < minCount) {
-            return albumName + "需要至少" + minCount + "首诗歌！";
-        }
-        return null;
     }
 
     /**
@@ -396,10 +148,10 @@ public class WorshipFormServiceImpl implements WorshipFormService {
     private void addCoverPanel(Box rootBox) {
         logger.debug("创建封面组件...");
         Box tableBox = Box.createVerticalBox();
-        addTableTitle(tableBox, "封面");
+        addTableTitle(tableBox, InputSection.COVER);
 
         CoverEntity coverEntity = WorshipEntityManager.getCoverEntity();
-        JTextField textField = addRegularTableInputRow(tableBox, "敬拜日期", coverEntity, CoverEntity.WORSHIP_DATE, new KeyAdapter() {
+        JTextField textField = addRegularTableInputRow(tableBox, CoverKey.WORSHIP_DATE, coverEntity, CoverEntity.WORSHIP_DATE, new KeyAdapter() {
             public void keyReleased(KeyEvent e) {
                 JTextField localTextField = (JTextField) e.getSource();
                 coverEntity.setWorshipDate(localTextField.getText());
@@ -407,7 +159,7 @@ public class WorshipFormServiceImpl implements WorshipFormService {
         });
         textField.setToolTipText("推荐填写格式：主后某年某月某日");
 
-        addRegularTableInputRow(tableBox, "教会名称", coverEntity, CoverEntity.CHURCH_NAME, new KeyAdapter() {
+        addRegularTableInputRow(tableBox, CoverKey.CHURCH_NAME, coverEntity, CoverEntity.CHURCH_NAME, new KeyAdapter() {
             public void keyReleased(KeyEvent e) {
                 JTextField localTextField = (JTextField) e.getSource();
                 coverEntity.setChurchName(localTextField.getText());
@@ -420,6 +172,10 @@ public class WorshipFormServiceImpl implements WorshipFormService {
         rootBox.add(panel);
     }
 
+    /**
+     * 添加所有的诗歌集面板
+     * @param rootBox 根容器
+     */
     private void addAllPoetryAlbumPanel(Box rootBox) {
         String[] albumNames = new String[] {
                 POETRY_ALBUM_NAME.PRAY_POETRY, POETRY_ALBUM_NAME.PRACTISE_POETRY, POETRY_ALBUM_NAME.WORSHIP_POETRY,
@@ -431,16 +187,16 @@ public class WorshipFormServiceImpl implements WorshipFormService {
         }
     }
 
+    /**
+     * 添加一个指定诗歌集的面板
+     * @param rootBox 根容器
+     * @param name 诗歌集得名称
+     */
     private void addOnePoetryAlbumPanel(Box rootBox, String name) {
         Box tableBox = Box.createVerticalBox();
 
         // 标题
-        Box rowBox = Box.createHorizontalBox();
-        tableBox.add(rowBox);
-        JLabel titleLabel = new JLabel(name);
-        titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        titleLabel.setFont(getBoldFont());
-        rowBox.add(titleLabel);
+        addTableTitle(tableBox, name);
 
         // 表头
         addPoetryTableHeader(tableBox);
@@ -454,36 +210,248 @@ public class WorshipFormServiceImpl implements WorshipFormService {
         rootBox.add(panel);
     }
 
+    /**
+     * 添加经文面板
+     * @param rootBox 根容器
+     */
+    private void addScripturePanel(Box rootBox) {
+        Box tableBox = Box.createVerticalBox();
+        addTableTitle(tableBox, InputSection.SCRIPTURE);
 
+        ScriptureContentEntity scriptureContentEntity = WorshipEntityManager.getScriptureContentEntity();
+        addRegularTableInputRow(tableBox, ScriptureScene.SUMMON, scriptureContentEntity, ScriptureContentEntity.SUMMON, new KeyAdapter() {
+            public void keyReleased(KeyEvent e) {
+                JTextField localTextField = (JTextField) e.getSource();
+                scriptureContentEntity.setSummon(localTextField.getText());
+            }
+        });
+        addRegularTableInputRow(tableBox, ScriptureScene.PUBLIC_PRAY, scriptureContentEntity, ScriptureContentEntity.PUBLIC_PRAY, new KeyAdapter() {
+            public void keyReleased(KeyEvent e) {
+                JTextField localTextField = (JTextField) e.getSource();
+                scriptureContentEntity.setPublicPray(localTextField.getText());
+            }
+        });
+        addRegularTableInputRow(tableBox, ScriptureScene.CONFESS, scriptureContentEntity, ScriptureContentEntity.CONFESS, new KeyAdapter() {
+            public void keyReleased(KeyEvent e) {
+                JTextField localTextField = (JTextField) e.getSource();
+                scriptureContentEntity.setConfess(localTextField.getText());
+            }
+        });
+        addRegularTableInputRow(tableBox, ScriptureScene.FORGIVE_SINS, scriptureContentEntity, ScriptureContentEntity.FORGIVE_SINS, new KeyAdapter() {
+            public void keyReleased(KeyEvent e) {
+                JTextField localTextField = (JTextField) e.getSource();
+                scriptureContentEntity.setForgiveSins(localTextField.getText());
+            }
+        });
+        addRegularTableInputRow(tableBox, ScriptureScene.READING_SCRIPTURE, scriptureContentEntity, ScriptureContentEntity.READING_SCRIPTURE, new KeyAdapter() {
+            public void keyReleased(KeyEvent e) {
+                JTextField localTextField = (JTextField) e.getSource();
+                scriptureContentEntity.setReadingScripture(localTextField.getText());
+            }
+        });
 
-    private JTextField addRegularTableInputRow(Box tableBox, String labelName, WorshipPropertyBean bean, String propertyName,
-                                         KeyAdapter keyAdapter) {
-        Box rowBox = Box.createHorizontalBox();
-        tableBox.add(rowBox);
-
-        JLabel label = addRegularTableInputLabel(rowBox, labelName);
-        JTextField textField = addTableInputTextCell(rowBox, bean, propertyName, REGULAR_TABLE_RIGHT_WIDTH, keyAdapter);
-        label.setLabelFor(textField);
-
-        return textField;
+        JPanel panel = new JPanel();
+        panel.add(tableBox);
+        rootBox.add(panel);
     }
 
-    private JLabel addRegularTableInputLabel(Box rowBox, String labelName) {
-        JPanel cell = new JPanel();
-        rowBox.add(cell);
+    /**
+     * 添加宣信面板
+     * @param rootBox 根容器
+     */
+    private void addDeclarationPanel(Box rootBox) {
+        Box tableBox = Box.createVerticalBox();
+        addTableTitle(tableBox, InputSection.DECLARATION);
 
-        cell.setPreferredSize(new Dimension(REGULAR_TABLE_LEFT_WIDTH, TABLE_ROW_HEIGHT));
-        cell.setLayout(new GridBagLayout());
+        DeclarationEntity declarationEntity = WorshipEntityManager.getDeclarationEntity();
+        addRegularTableInputRow(tableBox, DeclarationKey.TITLE, declarationEntity, DeclarationEntity.TITLE, new KeyAdapter() {
+            public void keyReleased(KeyEvent e) {
+                JTextField localTextField = (JTextField) e.getSource();
+                declarationEntity.setTitle(localTextField.getText());
+            }
+        });
+        addRegularTableInputRow(tableBox, DeclarationKey.SPEAKER, declarationEntity, DeclarationEntity.SPEAKER, new KeyAdapter() {
+            public void keyReleased(KeyEvent e) {
+                JTextField localTextField = (JTextField) e.getSource();
+                declarationEntity.setSpeaker(localTextField.getText());
+            }
+        });
 
-        EmptyBorder border = new EmptyBorder(0, PADDING_LEFT, 0, 0);
-        cell.setBorder(border);
+        JPanel panel = new JPanel();
+        panel.add(tableBox);
+        rootBox.add(panel);
+    }
 
-        JLabel label = new JLabel(labelName);
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.weightx = 1;
-        cell.add(label, gbc);
-        return label;
+    /**
+     * 添加证道面板
+     * @param rootBox 根容器
+     */
+    private void addPreachPanel(Box rootBox) {
+        Box tableBox = Box.createVerticalBox();
+        addTableTitle(tableBox, InputSection.PREACH);
+
+        PreachEntity preachEntity = WorshipEntityManager.getPreachEntity();
+        addRegularTableInputRow(tableBox, PreachKey.TITLE, preachEntity, PreachEntity.TITLE, new KeyAdapter() {
+            public void keyReleased(KeyEvent e) {
+                JTextField localTextField = (JTextField) e.getSource();
+                preachEntity.setTitle(localTextField.getText());
+            }
+        });
+        addRegularTableInputRow(tableBox, PreachKey.SCRIPTURE, preachEntity, PreachEntity.SCRIPTURE_NUMBER, new KeyAdapter() {
+            public void keyReleased(KeyEvent e) {
+                JTextField localTextField = (JTextField) e.getSource();
+                preachEntity.setScriptureNumber(localTextField.getText());
+            }
+        });
+
+        JPanel panel = new JPanel();
+        panel.add(tableBox);
+        rootBox.add(panel);
+    }
+
+    /**
+     * 添加圣餐面板
+     * @param rootBox 根容器
+     */
+    private void addHolyCommunionPanel(Box rootBox) {
+        Box tableBox = Box.createVerticalBox();
+        addTableTitle(tableBox, InputSection.HOLY_COMMUNION);
+
+        HolyCommunionEntity holyCommunionEntity = WorshipEntityManager.getHolyCommunionEntity();
+        addRegularTableInputRow(tableBox, HolyCommunionKey.NAME_LIST, holyCommunionEntity, HolyCommunionEntity.NAME_LIST, new KeyAdapter() {
+            public void keyReleased(KeyEvent e) {
+                JTextField localTextField = (JTextField) e.getSource();
+                String inputText = localTextField.getText();
+                if (inputText == null || inputText.trim().isEmpty()) {
+                    holyCommunionEntity.setNameList(null);
+                } else {
+                    String[] nameArray = inputText.split(",");
+                    List<String> nameList = new ArrayList<>(nameArray.length);
+                    for (String name : nameArray) {
+                        nameList.add(name.trim());
+                    }
+                    holyCommunionEntity.setNameList(nameList);
+                }
+            }
+        });
+
+        JPanel panel = new JPanel();
+        panel.add(tableBox);
+        rootBox.add(panel);
+    }
+
+    /**
+     * 添加提交按钮
+     * @param rootBox 根盒子
+     */
+    private void addSubmitPanel(Box rootBox) {
+        JButton button = new JButton("提交");
+        JPanel panel = new JPanel();
+        panel.add(button);
+        rootBox.add(panel);
+
+        button.addActionListener((action) -> {
+            final WorshipEntity worshipEntity = WorshipEntityManager.getWorshipEntity();
+            run(() -> {
+                logger.debug("检查输入数据...");
+                logger.debug("检查封面信息...");
+                CoverEntity cover = worshipEntity.getCover();
+                if (isEmpty(cover.getModel())) {
+                    warn("请先选择敬拜模式");
+                    return;
+                }
+                if (isEmpty(cover.getWorshipDate())) {
+                    warn("请输入敬拜日期！");
+                    return;
+                }
+                if (isEmpty(cover.getChurchName())) {
+                    logger.warn("未输入教会名称！");
+                }
+
+                logger.debug("检查诗歌...");
+                PoetryContentEntity poetryContent = worshipEntity.getPoetryContent();
+                PoetryAlbumEntity prayPoetryAlbum = poetryContent.getPrayPoetryAlbum();
+                PoetryAlbumEntity practisePoetryAlbum = poetryContent.getPractisePoetryAlbum();
+                PoetryAlbumEntity worshipPoetryAlbum = poetryContent.getWorshipPoetryAlbum();
+                PoetryAlbumEntity responsePoetryAlbum = poetryContent.getResponsePoetryAlbum();
+                PoetryAlbumEntity offertoryPoetryAlbum = poetryContent.getOffertoryPoetryAlbum();
+                String message = checkPoetryInfo(InputSection.PRAY_POETRY, prayPoetryAlbum.getPoetryList(), 0);
+                if (message != null) {
+                    warn(message);
+                    return;
+                }
+                message = checkPoetryInfo(InputSection.PRACTISE_POETRY, practisePoetryAlbum.getPoetryList(), 0);
+                if (message != null) {
+                    warn(message);
+                    return;
+                }
+                message = checkPoetryInfo(InputSection.WORSHIP_POETRY, worshipPoetryAlbum.getPoetryList(), 2);
+                if (message != null) {
+                    warn(message);
+                    return;
+                }
+                message = checkPoetryInfo(InputSection.RESPONSE_POETRY, responsePoetryAlbum.getPoetryList(), 1);
+                if (message != null) {
+                    warn(message);
+                    return;
+                }
+                message = checkPoetryInfo(InputSection.OFFERTORY_POETRY, offertoryPoetryAlbum.getPoetryList(), 1);
+                if (message != null) {
+                    warn(message);
+                    return;
+                }
+                PoetryAlbumEntity holyCommunionPoetryAlbum = poetryContent.getHolyCommunionPoetryAlbum();
+                if (WorshipModel.WITHIN_HOLY_COMMUNION.equals(cover.getModel()) || WorshipModel.WITHIN_INITIATION.equals(cover.getModel())) {
+                    message = checkPoetryInfo(InputSection.HOLY_COMMUNION_POETRY, holyCommunionPoetryAlbum.getPoetryList(), 1);
+                    if (message != null) {
+                        warn(message);
+                        return;
+                    }
+                }
+                if (WorshipModel.WITHIN_INITIATION.equals(cover.getModel())) {
+                    PoetryAlbumEntity initiationPoetryAlbum = poetryContent.getInitiationPoetryAlbum();
+                    message = checkPoetryInfo(InputSection.INITIATION_POETRY, initiationPoetryAlbum.getPoetryList(), 1);
+                    if (message != null) {
+                        warn(message);
+                        return;
+                    }
+                }
+
+                logger.debug("检查经文...");
+                ScriptureContentEntity scriptureContent = worshipEntity.getScriptureContent();
+                if (isEmpty(scriptureContent.getSummon())
+                        || isEmpty(scriptureContent.getConfess())
+                        || isEmpty(scriptureContent.getForgiveSins())
+                        || isEmpty(scriptureContent.getPublicPray())
+                        || isEmpty(scriptureContent.getReadingScripture())) {
+                    warn("经文部分需要全部填写！");
+                    return;
+                }
+
+                logger.debug("检查宣信...");
+                DeclarationEntity declaration = worshipEntity.getDeclaration();
+                if (isEmpty(declaration.getTitle())) {
+                    warn("需要填写宣信主题！");
+                    return;
+                }
+                if (isEmpty(declaration.getSpeaker())) {
+                    logger.warn("未输入讲员！");
+                }
+
+                logger.debug("检查证道...");
+                PreachEntity preach = worshipEntity.getPreach();
+                if (isEmpty(preach.getTitle())) {
+                    warn("证道主题是什么？");
+                    return;
+                }
+                if (isEmpty(preach.getScriptureNumber())) {
+                    logger.warn("未输入证道经文！");
+                }
+
+                // TODO 开始
+                System.out.println(worshipEntity);
+            });
+        });
     }
 
 ///////////////////////////
@@ -570,13 +538,11 @@ public class WorshipFormServiceImpl implements WorshipFormService {
         JTextField textField = addTableInputTextCell(rowBox, poetryEntity, PoetryEntity.NAME, POETRY_TABLE_COLUMN_WIDTH_1, new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
-                threadPool.execute(() -> {
-                    SwingUtilities.invokeLater(() -> {
-                        JTextField localTextField = (JTextField) e.getSource();
-                        String poetryName = localTextField.getText();
-                        logger.debug(poetryName);
-                        poetryEntity.setName(poetryName);
-                    });
+                run(() -> {
+                    JTextField localTextField = (JTextField) e.getSource();
+                    String poetryName = localTextField.getText();
+                    logger.debug(poetryName);
+                    poetryEntity.setName(poetryName);
                 });
             }
         });
@@ -586,17 +552,15 @@ public class WorshipFormServiceImpl implements WorshipFormService {
         textField = addTableInputTextCell(rowBox, poetryEntity, PoetryEntity.DIRECTORY, POETRY_TABLE_COLUMN_WIDTH_2, new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
-                threadPool.execute(() -> {
-                    SwingUtilities.invokeLater(() -> {
-                        JTextField localTextField = (JTextField) e.getSource();
-                        String directory = localTextField.getText();
-                        logger.debug(directory);
-                        if (isEmpty(directory)) {
-                            poetryEntity.setDirectory(null);
-                        } else {
-                            poetryEntity.setDirectory(new File(directory));
-                        }
-                    });
+                run(() -> {
+                    JTextField localTextField = (JTextField) e.getSource();
+                    String directory = localTextField.getText();
+                    logger.debug(directory);
+                    if (isEmpty(directory)) {
+                        poetryEntity.setDirectory(null);
+                    } else {
+                        poetryEntity.setDirectory(new File(directory));
+                    }
                 });
             }
         });
@@ -671,16 +635,12 @@ public class WorshipFormServiceImpl implements WorshipFormService {
         return textField;
     }
 
+    /**
+     * 向诗歌表格中指定行添加一个操作单元格
+     * @param rowBox 表格中的一行
+     * @param poetryEntityList 诗歌列表
+     */
     private void addPoetryTableOperationCell(Box rowBox, List<PoetryEntity> poetryEntityList) {
-        JPanel cell = new JPanel();
-        rowBox.add(cell);
-
-        cell.setPreferredSize(new Dimension(POETRY_TABLE_COLUMN_WIDTH_3, TABLE_ROW_HEIGHT));
-        cell.setLayout(new GridBagLayout());
-
-        EmptyBorder border = new EmptyBorder(0, PADDING_LEFT, 0, 0);
-        cell.setBorder(border);
-
         JButton insertButton = new JButton("插入");
         JButton deleteButton = new JButton("删除");
 
@@ -688,62 +648,128 @@ public class WorshipFormServiceImpl implements WorshipFormService {
         insertButton.setPreferredSize(new Dimension(55, (int) dimension.getHeight()));
         deleteButton.setPreferredSize(new Dimension(55, (int) dimension.getHeight()));
 
+        insertButton.setToolTipText("在这行下面插入一行");
+        deleteButton.setToolTipText("删除当前行");
+
         Box hBox = Box.createHorizontalBox();
         hBox.add(insertButton);
         hBox.add(Box.createHorizontalStrut(PADDING_LEFT));
         hBox.add(deleteButton);
-        cell.add(hBox);
 
-        insertButton.setToolTipText("在这行下面插入一行");
-        deleteButton.setToolTipText("删除当前行");
+        JPanel cell = new JPanel();
+        cell.setPreferredSize(new Dimension(POETRY_TABLE_COLUMN_WIDTH_3, TABLE_ROW_HEIGHT));
+        cell.setLayout(new GridBagLayout());
+        cell.setBorder(new EmptyBorder(0, PADDING_LEFT, 0, 0));
+        cell.add(hBox);
+        rowBox.add(cell);
 
         Box tableBox = (Box) rowBox.getParent();
-        insertButton.addActionListener((action) -> {
-            Component[] rows = tableBox.getComponents();
-            int currentIndex = -1;
-            for (int i = 2; i < rows.length; i++) {
-                Component row = rows[i];
-                if (row == rowBox) {
-                    if (rows[i] == rowBox) {
-                        currentIndex = i - 2;
-                        break;
-                    }
-                }
-            }
+        insertButton.addActionListener(createPoetryInsertButtonActionListener(tableBox, rowBox));
+        deleteButton.addActionListener(createPoetryDeleteButtonActionListener(tableBox, rowBox, poetryEntityList));
+    }
+
+    /**
+     * 向常规表格中添加输入行，此输入行只有两列，左边是标签，右边是文本框
+     * @param tableBox 表格
+     * @param labelName 标签文本
+     * @param bean 于文本框绑定的JavaBean
+     * @param propertyName JavaBean的属性名
+     * @param keyAdapter 键盘适配器
+     * @return 文本框
+     */
+    private JTextField addRegularTableInputRow(Box tableBox, String labelName, WorshipPropertyBean bean,
+                                               String propertyName, KeyAdapter keyAdapter) {
+        Box rowBox = Box.createHorizontalBox();
+        tableBox.add(rowBox);
+
+        JLabel label = addRegularTableInputLabel(rowBox, labelName);
+        JTextField textField = addTableInputTextCell(rowBox, bean, propertyName, REGULAR_TABLE_RIGHT_WIDTH, keyAdapter);
+        label.setLabelFor(textField);
+
+        return textField;
+    }
+
+    /**
+     * 向常规表格中指定行添加输入标签
+     * @param rowBox 表格中的一行
+     * @param labelName 标签文本
+     * @return 标签
+     */
+    private JLabel addRegularTableInputLabel(Box rowBox, String labelName) {
+        JLabel label = new JLabel(labelName);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.weightx = 1;
+
+        JPanel cell = new JPanel();
+        cell.setPreferredSize(new Dimension(REGULAR_TABLE_LEFT_WIDTH, TABLE_ROW_HEIGHT));
+        cell.setLayout(new GridBagLayout());
+        cell.setBorder(new EmptyBorder(0, PADDING_LEFT, 0, 0));
+        cell.add(label, gbc);
+        rowBox.add(cell);
+        return label;
+    }
+
+    /**
+     * 创建诗歌集面板中插入按钮的动作监听器
+     * @param tableBox 表格箱子布局
+     * @param rowBox 水平箱子布局
+     * @return 动作监听器
+     */
+    private ActionListener createPoetryInsertButtonActionListener(Box tableBox, Box rowBox) {
+        return (action) -> run(() -> {
+            int currentIndex = getIndexOfRowBox(tableBox, rowBox);
             if (currentIndex != -1) {
-                int nextIndex = currentIndex + 1;
+                int nextIndex = currentIndex + 1 - ROW_INDEX_OFFSET;
                 String albumName = tableBox.getParent().getName();
                 addPoetryTableRow(tableBox, albumName, nextIndex);
             }
         });
+    }
 
-        deleteButton.addActionListener((action) -> {
-            threadPool.execute(() -> {
-                SwingUtilities.invokeLater(() -> {
-                    if (tableBox.getComponentCount() == 3) {
-                        JOptionPane.showMessageDialog(
-                                tableBox.getRootPane(),
-                                "请保留这一行！",
-                                "提示",
-                                JOptionPane.WARNING_MESSAGE);
-                    } else {
-                        Component[] rows = tableBox.getComponents();
-                        int currentIndex = -1;
-                        for (int i = 0; i < rows.length; i++) {
-                            if (rows[i] == rowBox) {
-                                currentIndex = i;
-                                break;
-                            }
-                        }
-                        if (currentIndex != -1) {
-                            poetryEntityList.remove(currentIndex - 2);
-                            tableBox.remove(rowBox);
-                            tableBox.getRootPane().revalidate();
-                        }
-                    }
-                });
-            });
+    /**
+     * 创建诗歌集面板中删除按钮的动作监听器
+     * @param tableBox 表格箱子布局
+     * @param rowBox 水平箱子布局
+     * @param poetryEntityList 诗歌列表
+     * @return 动作监听器
+     */
+    private ActionListener createPoetryDeleteButtonActionListener(Box tableBox, Box rowBox, List<PoetryEntity> poetryEntityList) {
+        return (action) -> run(() -> {
+            if (tableBox.getComponentCount() == ROW_INDEX_OFFSET + 1) {
+                JOptionPane.showMessageDialog(
+                        tableBox.getRootPane(),
+                        "请保留这一行！",
+                        "提示",
+                        JOptionPane.WARNING_MESSAGE);
+            } else {
+                int currentIndex = getIndexOfRowBox(tableBox, rowBox);
+                if (currentIndex != -1) {
+                    // 是否要删除文本框监听器、按钮监听器？
+                    int index = currentIndex - ROW_INDEX_OFFSET;
+                    logger.debug("删除第{}行诗歌", index + 1);
+                    poetryEntityList.remove(index);
+                    tableBox.remove(rowBox);
+                    tableBox.getRootPane().revalidate();
+                }
+            }
         });
+    }
+
+    /**
+     * 获取{@code rowBox}在{@code tableBox}中的位置
+     * @param tableBox 垂直方向的箱子布局
+     * @param rowBox 水平方向的箱子布局
+     * @return 索引位置，从0开始
+     */
+    private int getIndexOfRowBox(Box tableBox, Box rowBox) {
+        Component[] rows = tableBox.getComponents();
+        for (int i = 0; i < rows.length; i++) {
+            if (rows[i] == rowBox) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     /**
@@ -757,6 +783,31 @@ public class WorshipFormServiceImpl implements WorshipFormService {
                 radio.setSelected(true);
             }
         };
+    }
+
+    /**
+     * 检查诗歌信息
+     * @param albumName 诗歌集名称
+     * @param poetryList 诗歌列表
+     * @param minCount 诗歌集最少要有多少首诗歌
+     * @return 检查结果
+     */
+    private String checkPoetryInfo(String albumName, List<PoetryEntity> poetryList, int minCount) {
+        int count = 0;
+        for (int i = 0; i < poetryList.size(); i++) {
+            PoetryEntity poetryEntity = poetryList.get(i);
+            if (!isEmpty(poetryEntity.getName()) && poetryEntity.getDirectory() == null
+                    || isEmpty(poetryEntity.getName()) && poetryEntity.getDirectory() != null) {
+                return albumName + "中第" + (i + 1) + "行诗歌输入不完整！";
+            }
+            if (!isEmpty(poetryEntity.getName()) && poetryEntity.getDirectory() != null) {
+                count++;
+            }
+        }
+        if (count < minCount) {
+            return albumName + "需要至少" + minCount + "首诗歌！";
+        }
+        return null;
     }
 
 ///////////////////////////
@@ -807,6 +858,14 @@ public class WorshipFormServiceImpl implements WorshipFormService {
         } else {
             return new Font("PingFang SC", Font.BOLD, 16);
         }
+    }
+
+    /**
+     * 异步执行GUI事件，将事件放在EDT中执行
+     * @param runnable 可执行对象
+     */
+    private void run(Runnable runnable) {
+        threadPool.execute(() -> SwingUtilities.invokeLater(runnable));
     }
 
 }
