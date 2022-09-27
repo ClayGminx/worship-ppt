@@ -150,7 +150,7 @@
                     <appendAssemblyId>false</appendAssemblyId>
                     <archive>
                         <manifest>
-                            <mainClass>claygminx.Main</mainClass>
+                            <mainClass>claygminx.worshipppt.Main</mainClass>
                             <addClasspath>true</addClasspath>
                         </manifest>
                     </archive>
