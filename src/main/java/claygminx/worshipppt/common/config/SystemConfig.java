@@ -1,7 +1,10 @@
 package claygminx.worshipppt.common.config;
 
 import claygminx.worshipppt.exception.SystemException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -12,6 +15,8 @@ import java.util.Properties;
  * 系统配置
  */
 public class SystemConfig {
+
+    private final static Logger logger = LoggerFactory.getLogger(SystemConfig.class);
 
     /**
      * 系统属性文件
@@ -40,11 +45,16 @@ public class SystemConfig {
         // 再加载自定义的配置
         String propertyFilePath = System.getProperty(PROPERTY_NAME);
         if (propertyFilePath != null) {
-            try (InputStreamReader reader = new InputStreamReader(
-                    new FileInputStream(propertyFilePath), StandardCharsets.UTF_8)) {
-                properties.load(reader);
-            } catch (Exception e) {
-                throw new SystemException(PROPERTIES_FILE_NAME + "加载失败！", e);
+            File customConfigFile = new File(propertyFilePath);
+            if (customConfigFile.exists()) {
+                try (InputStreamReader reader = new InputStreamReader(
+                        new FileInputStream(propertyFilePath), StandardCharsets.UTF_8)) {
+                    properties.load(reader);
+                } catch (Exception e) {
+                    logger.error(PROPERTIES_FILE_NAME + "加载失败！");
+                }
+            } else {
+                logger.warn("{}不存在！", propertyFilePath);
             }
         }
     }
