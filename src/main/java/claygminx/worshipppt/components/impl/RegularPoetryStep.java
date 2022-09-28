@@ -46,7 +46,9 @@ public class RegularPoetryStep extends AbstractWorshipStep {
             if (files == null || files.length == 0) {
                 return;
             }
-            sortFiles(files);
+            if (files.length > 1) {
+                sortFiles(files);
+            }
 
             // 下面开始一张张地制作幻灯片
             try {
@@ -140,10 +142,13 @@ public class RegularPoetryStep extends AbstractWorshipStep {
      */
     private int getFileIndex(String filename) {
         String[] split = filename.split("_");
-        String last = split[split.length - 1];
-        split = last.split("[.]");
-        String page = split[0];
-        return Integer.parseInt(page.substring(4));
+        if (split.length > 1) {
+            String last = split[split.length - 1];
+            split = last.split("[.]");
+            String page = split[0];
+            return Integer.parseInt(page.substring(4));
+        }
+        return 1;
     }
 
     /**

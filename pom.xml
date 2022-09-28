@@ -6,7 +6,7 @@
 
     <groupId>claygminx</groupId>
     <artifactId>worship-ppt</artifactId>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
 
     <name>Worship PPT Toolkit</name>
     <description>一个用于自动制作敬拜PPT的小工具</description>
@@ -53,13 +53,6 @@
             <groupId>org.xerial</groupId>
             <artifactId>sqlite-jdbc</artifactId>
             <version>3.39.2.0</version>
-        </dependency>
-
-        <!-- 用于输入数据 -->
-        <dependency>
-            <groupId>org.ini4j</groupId>
-            <artifactId>ini4j</artifactId>
-            <version>0.5.4</version>
         </dependency>
 
         <!-- 用于定义经文格式 -->
@@ -112,7 +105,8 @@
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
                 <includes>
-                    <include>icon.jpg</include>
+                    <include>*.*</include>
+                    <include>templates/*.*</include>
                 </includes>
             </resource>
         </resources>

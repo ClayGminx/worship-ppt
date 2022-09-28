@@ -42,7 +42,7 @@ public class UpgradeServiceImpl implements UpgradeService {
     }
 
     @Override
-    public void checkNewRelease() {
+    public String checkNewRelease() {
         try {
             logger.debug("检查升级服务");
             String owner = SystemConfig.getString(Dict.GithubProperty.OWNER);
@@ -84,11 +84,12 @@ public class UpgradeServiceImpl implements UpgradeService {
                 ReleaseEntity thisReleaseEntity = getThisProjectReleaseEntity();
                 if (thisReleaseEntity.compareTo(remoteReleaseEntity) < 0) {
                     // 小于远程发行包版本，所以应提示要升级
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     String downloadUrl = getDownloadUrlFromGitHubBody(remoteReleaseEntity.getBody());
-                    logger.info("温馨提示");
-                    logger.info("有新的版本" + remoteReleaseEntity.getName());
-                    logger.info("发布于" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(remoteReleaseEntity.getPublished_at()));
-                    logger.info("新版本下载地址：" + downloadUrl);
+                    return "有新的版本" + remoteReleaseEntity.getName() + "\n"
+                            + "发布于" + sdf.format(remoteReleaseEntity.getPublished_at()) + "\n"
+                            + "新版本下载地址：\n"
+                            + downloadUrl;
                 } else {
                     logger.debug("该发行包应该是最新的，不用升级");
                 }
@@ -99,6 +100,7 @@ public class UpgradeServiceImpl implements UpgradeService {
             logger.debug("升级服务出现异常！", e);
             logger.error("升级服务出现异常！");
         }
+        return null;
     }
 
     protected ReleaseEntity getThisProjectReleaseEntity() {

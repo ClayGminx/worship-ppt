@@ -1,13 +1,13 @@
 package claygminx.worshipppt.common.entity;
 
+import java.io.Serializable;
+
 /**
  * 封面实体
  */
-public class CoverEntity extends WorshipPropertyBean {
+public class CoverEntity implements Serializable {
 
-    public final static String MODEL = "model";
-    public final static String WORSHIP_DATE = "worshipDate";
-    public final static String CHURCH_NAME = "churchName";
+    private static final long serialVersionUID = 7538889491071987595L;
 
     /**
      * 敬拜模式
@@ -17,19 +17,18 @@ public class CoverEntity extends WorshipPropertyBean {
     /**
      * 敬拜日期
      */
-    private String worshipDate;
+    private String worshipDate = "";
 
     /**
      * 教会名称
      */
-    private String churchName;
+    private String churchName = "";
 
     public String getModel() {
         return model;
     }
 
     public void setModel(String model) {
-        firePropertyChange(MODEL, this.model, model);
         this.model = model;
     }
 
@@ -38,7 +37,6 @@ public class CoverEntity extends WorshipPropertyBean {
     }
 
     public void setWorshipDate(String worshipDate) {
-        firePropertyChange(WORSHIP_DATE, this.worshipDate, worshipDate);
         this.worshipDate = worshipDate;
     }
 
@@ -47,7 +45,6 @@ public class CoverEntity extends WorshipPropertyBean {
     }
 
     public void setChurchName(String churchName) {
-        firePropertyChange(CHURCH_NAME, this.churchName, churchName);
         this.churchName = churchName;
     }
 
@@ -59,4 +56,5 @@ public class CoverEntity extends WorshipPropertyBean {
                 ", churchName='" + churchName + '\'' +
                 '}';
     }
+
 }

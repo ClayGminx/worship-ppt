@@ -7,7 +7,8 @@ public interface UpgradeService {
 
     /**
      * 检查新的发行版
+     * @return 版本提示信息
      */
-    void checkNewRelease();
+    String checkNewRelease();
 
 }

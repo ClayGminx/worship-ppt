@@ -1,14 +1,14 @@
 package claygminx.worshipppt.common.entity;
 
 import java.io.File;
+import java.io.Serializable;
 
 /**
  * 诗歌实体
  */
-public class PoetryEntity extends WorshipPropertyBean {
+public class PoetryEntity implements Serializable {
 
-    public final static String NAME = "name";
-    public final static String DIRECTORY = "directory";
+    private static final long serialVersionUID = 8158226248919803232L;
 
     /**
      * 诗歌名称
@@ -30,7 +30,6 @@ public class PoetryEntity extends WorshipPropertyBean {
     }
 
     public void setName(String name) {
-        firePropertyChange(NAME, this.name, name);
         this.name = name;
     }
 
@@ -39,7 +38,6 @@ public class PoetryEntity extends WorshipPropertyBean {
     }
 
     public void setDirectory(File directory) {
-        firePropertyChange(DIRECTORY, this.directory, directory);
         this.directory = directory;
     }
 
@@ -50,4 +48,5 @@ public class PoetryEntity extends WorshipPropertyBean {
                 ", directory=" + directory +
                 '}';
     }
+
 }

@@ -1,12 +1,13 @@
 package claygminx.worshipppt.common.entity;
 
+import java.io.Serializable;
+
 /**
  * 证道实体
  */
-public class PreachEntity extends WorshipPropertyBean {
+public class PreachEntity implements Serializable {
 
-    public final static String TITLE = "title";
-    public final static String SCRIPTURE_NUMBER = "scriptureNumber";
+    private static final long serialVersionUID = -6185731342799198015L;
 
     /**
      * 证道主题
@@ -23,7 +24,6 @@ public class PreachEntity extends WorshipPropertyBean {
     }
 
     public void setTitle(String title) {
-        firePropertyChange(TITLE, this.title, title);
         this.title = title;
     }
 
@@ -32,7 +32,6 @@ public class PreachEntity extends WorshipPropertyBean {
     }
 
     public void setScriptureNumber(String scriptureNumber) {
-        firePropertyChange(SCRIPTURE_NUMBER, this.scriptureNumber, scriptureNumber);
         this.scriptureNumber = scriptureNumber;
     }
 

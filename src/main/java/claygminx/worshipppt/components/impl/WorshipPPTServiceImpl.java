@@ -4,7 +4,6 @@ import claygminx.worshipppt.common.config.SystemConfig;
 import claygminx.worshipppt.common.entity.WorshipEntity;
 import claygminx.worshipppt.components.*;
 import claygminx.worshipppt.exception.FileServiceException;
-import claygminx.worshipppt.exception.InputServiceException;
 import claygminx.worshipppt.exception.SystemException;
 import claygminx.worshipppt.exception.WorshipStepException;
 import claygminx.worshipppt.common.Dict;
@@ -16,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.poi.xslf.usermodel.XMLSlideShow;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -26,50 +26,34 @@ public class WorshipPPTServiceImpl implements WorshipPPTService {
 
     private final static Logger logger = LoggerFactory.getLogger(WorshipPPTService.class);
 
-    private final String inputFilePath;
-    private InputService inputService;
-    private FileService fileService;
-    private ScriptureService scriptureService;
+    private final FileService fileService;
+    private final ScriptureService scriptureService;
+    private ProgressMonitor progressMonitor;
 
-    /**
-     * 构造器
-     * @param inputFilePath 输入文件的完全路径，现在仅支持ini文件
-     */
-    public WorshipPPTServiceImpl(String inputFilePath) {
-        this.inputFilePath = inputFilePath;
+    private final WorshipEntity worshipEntity;
+    private int progress;
+    private File file;
+
+    public WorshipPPTServiceImpl(WorshipEntity worshipEntity) {
+        fileService = FileServiceImpl.getInstance();
+        scriptureService = ScriptureServiceImpl.getInstance();
+        this.worshipEntity = worshipEntity;
     }
 
     @Override
-    public void make() {
-        // 1.解析输入参数
-        WorshipEntity worshipEntity;
-        try {
-            worshipEntity = inputService.readIni(inputFilePath);
-        } catch (InputServiceException e) {
-            logger.debug("", e);
-            logger.error(e.getMessage());
-            return;
-        } catch (Exception e) {
-            logger.debug("", e);
-            logger.error("出现未知错误！");
-            return;
-        }
-
-        // 2.准备PPT文件
+    public void make() throws FileServiceException, WorshipStepException {
+        // 1.准备PPT文件
         File pptFile;
         try {
             pptFile = fileService.copyTemplate(worshipEntity.getCover());
+            increaseProgress(5, "创建敬拜PPT文件");
         } catch (FileServiceException e) {
-            logger.debug("", e);
-            logger.error(e.getMessage());
-            return;
+            throw e;
         } catch (Exception e) {
-            logger.debug("", e);
-            logger.error("出现未知错误！");
-            return;
+            throw new SystemException("出现未知错误！", e);
         }
 
-        // 3.按照指定模板制作幻灯片
+        // 2.按照指定模板制作幻灯片
         XMLSlideShow ppt;
         try (FileInputStream fis  = new FileInputStream(pptFile)) {
             // 创建PPT对象
@@ -84,57 +68,55 @@ public class WorshipPPTServiceImpl implements WorshipPPTService {
             CTTextParagraphProperties defPPr = defaultTextStyle.getDefPPr();
             CTTextCharacterProperties defRPr = defPPr.getDefRPr();
             defRPr.setLang(lang);
-            defRPr.setAltLang(lang);
             // 敬拜过程服务对象
             WorshipProcedureServiceImpl worshipProcedureService = new WorshipProcedureServiceImpl();
             worshipProcedureService.setFileService(fileService);
             worshipProcedureService.setScriptureService(scriptureService);
             List<WorshipStep> worshipProcedure = worshipProcedureService.generate(ppt, worshipEntity);
+            increaseProgress(1, "读取敬拜流程");
+            int perProgress = (99 - progress) / worshipProcedure.size();
             // 开始一个个阶段地制作幻灯片
             for (WorshipStep worshipStep : worshipProcedure) {
                 worshipStep.execute();
+                increaseProgress(perProgress, "制作敬拜阶段幻灯片");
             }
         } catch (FileServiceException | WorshipStepException e) {
-            logger.debug("", e);
-            logger.error(e.getMessage());
-            return;
+            throw e;
         } catch (Exception e) {
-            logger.debug("", e);
-            logger.error("出现未知错误！");
-            return;
+            throw new SystemException("出现未知错误！", e);
         }
 
         // 4.保存
         try (FileOutputStream fos = new FileOutputStream(pptFile)) {
             ppt.write(fos);
-            logger.info("\n"
-            + "************************************\n"
-            + "  PPT制作完成！\n"
-            + "  文件位于：{}\n"
-            + "  你还需要做一些检查工作：\n"
-            + "  1.看看文本框里的文字是否符合排版规范；\n"
-            + "  2.宣信和证道内容需要手动制作；\n"
-            + "  3.圣餐诗歌需要手动调整以符合圣礼需要；\n"
-            + "  4.还有更多需要细心检查的细节。\n"
-            + "************************************\n", pptFile.getAbsolutePath());
+            logger.info("保存PPT文件");
+            file = pptFile;
+            increaseProgress(100, "完成");
+            progressMonitor.close();
         } catch (IOException e) {
-            logger.debug("", e);
-            logger.error("保存PPT文件时出现错误！");
+            throw new FileServiceException("保存PPT文件时出现错误！", e);
         } catch (Exception e) {
-            logger.debug("", e);
-            logger.error("出现未知错误！");
+            throw new SystemException("出现未知错误！", e);
         }
     }
 
-    public void setInputService(InputService inputService) {
-        this.inputService = inputService;
+    public File getFile() {
+        return file;
     }
 
-    public void setFileService(FileService fileService) {
-        this.fileService = fileService;
+    // 增加进度
+    private void increaseProgress(int n, String note) {
+        progress += n;
+        if (progress > 100) {
+            progress = 100;
+        }
+        progressMonitor.setProgress(progress);
+        if (note != null) {
+            progressMonitor.setNote(note);
+        }
     }
 
-    public void setScriptureService(ScriptureService scriptureService) {
-        this.scriptureService = scriptureService;
+    public void setProgressMonitor(ProgressMonitor progressMonitor) {
+        this.progressMonitor = progressMonitor;
     }
 }

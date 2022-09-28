@@ -1,29 +1,29 @@
 package claygminx.worshipppt.common.entity;
 
+import java.io.Serializable;
+
 /**
  * 宣信实体
  */
-public class DeclarationEntity extends WorshipPropertyBean {
+public class DeclarationEntity implements Serializable {
 
-    public final static String TITLE = "title";
-    public final static String SPEAKER = "speaker";
+    private static final long serialVersionUID = 5066922226672640394L;
 
     /**
      * 宣信主题
      */
-    private String title;
+    private String title = "";
 
     /**
      * 讲员
      */
-    private String speaker;
+    private String speaker = "";
 
     public String getTitle() {
         return title;
     }
 
     public void setTitle(String title) {
-        firePropertyChange(TITLE, this.title, title);
         this.title = title;
     }
 
@@ -32,7 +32,6 @@ public class DeclarationEntity extends WorshipPropertyBean {
     }
 
     public void setSpeaker(String speaker) {
-        firePropertyChange(SPEAKER, this.speaker, speaker);
         this.speaker = speaker;
     }
 

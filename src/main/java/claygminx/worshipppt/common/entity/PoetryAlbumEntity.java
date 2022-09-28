@@ -1,11 +1,14 @@
 package claygminx.worshipppt.common.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * 诗歌集实体
  */
-public class PoetryAlbumEntity {
+public class PoetryAlbumEntity implements Serializable {
+
+    private static final long serialVersionUID = 6481715124505763449L;
 
     /**
      * 专辑名称
@@ -40,4 +43,5 @@ public class PoetryAlbumEntity {
                 ", poetryList=" + poetryList +
                 '}';
     }
+
 }

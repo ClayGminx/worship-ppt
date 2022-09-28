@@ -1,11 +1,14 @@
 package claygminx.worshipppt.common.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * 敬拜参数实体
  */
-public class WorshipEntity {
+public class WorshipEntity implements Serializable {
+
+    private static final long serialVersionUID = 8021242236962436651L;
 
     /**
      * 封面
@@ -110,4 +113,5 @@ public class WorshipEntity {
                 ", holyCommunion=" + holyCommunion +
                 '}';
     }
+
 }

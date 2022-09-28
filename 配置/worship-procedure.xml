@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <worship>
-    <model name="min">
+    <model name="无圣餐">
         <worship-step name="封面" layout="封面" class="claygminx.worshipppt.components.impl.CoverStep" data="cover"/>
         <worship-step name="诗歌清单" layout="诗歌清单" class="claygminx.worshipppt.components.impl.PoetryContentStep" data="poetryContent"/>
         <worship-step name="祷告诗歌" layout="常规诗歌" class="claygminx.worshipppt.components.impl.RegularPoetryStep" data="poetryContent.prayPoetryAlbum.poetryList" if="poetryContent.prayPoetryAlbum != null"/>
@@ -40,7 +40,7 @@
         <worship-step name="家事报告" layout="家事报告" class="claygminx.worshipppt.components.impl.FamilyReportStep" data="familyReports"/>
         <worship-step name="团契学习" layout="团契学习" class="claygminx.worshipppt.components.impl.FixedStep"/>
     </model>
-    <model name="within-holy-communion">
+    <model name="有圣餐">
         <worship-step name="封面" layout="封面" class="claygminx.worshipppt.components.impl.CoverStep" data="cover"/>
         <worship-step name="诗歌清单" layout="诗歌清单" class="claygminx.worshipppt.components.impl.PoetryContentStep" data="poetryContent"/>
         <worship-step name="祷告诗歌" layout="常规诗歌" class="claygminx.worshipppt.components.impl.RegularPoetryStep" data="poetryContent.prayPoetryAlbum.poetryList" if="poetryContent.prayPoetryAlbum != null"/>
@@ -93,7 +93,7 @@
         <worship-step name="家事报告" layout="家事报告" class="claygminx.worshipppt.components.impl.FamilyReportStep" data="familyReports"/>
         <worship-step name="团契学习" layout="团契学习" class="claygminx.worshipppt.components.impl.FixedStep"/>
     </model>
-    <model name="within-initiation">
+    <model name="有入会">
         <worship-step name="封面" layout="封面" class="claygminx.worshipppt.components.impl.CoverStep" data="cover"/>
         <worship-step name="诗歌清单" layout="诗歌清单" class="claygminx.worshipppt.components.impl.PoetryContentStep" data="poetryContent"/>
         <worship-step name="祷告诗歌" layout="常规诗歌" class="claygminx.worshipppt.components.impl.RegularPoetryStep" data="poetryContent.prayPoetryAlbum.poetryList" if="poetryContent.prayPoetryAlbum != null"/>

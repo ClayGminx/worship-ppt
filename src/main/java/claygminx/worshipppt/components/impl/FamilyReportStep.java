@@ -23,15 +23,17 @@ public class FamilyReportStep extends AbstractWorshipStep {
         XSLFSlideLayout layout = ppt.findLayout(getLayout());
         XSLFSlide slide = ppt.createSlide(layout);
 
-        XSLFTextShape placeholder = slide.getPlaceholder(0);
-        placeholder.clearText();
+        if (familyReports.size() > 0) {
+            XSLFTextShape placeholder = slide.getPlaceholder(0);
+            placeholder.clearText();
 
-        logger.debug(familyReports.size() + "项家事报告");
-        for (int i = 0; i < familyReports.size(); i++) {
-            String item = familyReports.get(i);
-            XSLFTextParagraph paragraph = placeholder.addNewTextParagraph();
-            XSLFTextRun textRun = paragraph.addNewTextRun();
-            textRun.setText((i + 1) + "、" + item);
+            logger.debug(familyReports.size() + "项家事报告");
+            for (int i = 0; i < familyReports.size(); i++) {
+                String item = familyReports.get(i);
+                XSLFTextParagraph paragraph = placeholder.addNewTextParagraph();
+                XSLFTextRun textRun = paragraph.addNewTextRun();
+                textRun.setText((i + 1) + "、" + item);
+            }
         }
 
         logger.info("家事报告幻灯片制作完成");

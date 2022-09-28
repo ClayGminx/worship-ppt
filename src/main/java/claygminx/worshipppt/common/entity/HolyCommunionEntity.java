@@ -1,13 +1,14 @@
 package claygminx.worshipppt.common.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * 圣餐实体
  */
-public class HolyCommunionEntity extends WorshipPropertyBean {
+public class HolyCommunionEntity implements Serializable {
 
-    public final static String NAME_LIST = "nameList";
+    private static final long serialVersionUID = -4072834576315140171L;
 
     /**
      * 非会友领餐名单
@@ -19,7 +20,6 @@ public class HolyCommunionEntity extends WorshipPropertyBean {
     }
 
     public void setNameList(List<String> nameList) {
-        firePropertyChange(NAME_LIST, this.nameList, nameList);
         this.nameList = nameList;
     }
 

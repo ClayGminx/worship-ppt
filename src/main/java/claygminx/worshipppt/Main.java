@@ -1,6 +1,5 @@
 package claygminx.worshipppt;
 
-import claygminx.worshipppt.components.WorshipFormService;
 import claygminx.worshipppt.components.impl.WorshipFormServiceImpl;
 import com.formdev.flatlaf.FlatDarkLaf;
 import org.slf4j.Logger;
@@ -10,6 +9,9 @@ import javax.swing.*;
 
 import static javax.swing.JOptionPane.ERROR_MESSAGE;
 
+/**
+ * 主程序
+ */
 public class Main extends JFrame {
 
     private final static Logger logger = LoggerFactory.getLogger(Main.class);
@@ -24,8 +26,7 @@ public class Main extends JFrame {
         }
 
         try {
-            WorshipFormService worshipFormService = WorshipFormServiceImpl.getInstance();
-            worshipFormService.showForm();
+            WorshipFormServiceImpl.getInstance().showForm();
         } catch (Exception e) {
             logger.error("未知的错误！", e);
             JOptionPane.showMessageDialog(null, "未知的错误！", "错误", ERROR_MESSAGE);

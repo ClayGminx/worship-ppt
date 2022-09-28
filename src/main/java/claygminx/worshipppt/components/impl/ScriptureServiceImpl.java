@@ -2,7 +2,6 @@ package claygminx.worshipppt.components.impl;
 
 import claygminx.worshipppt.common.config.FreeMarkerConfig;
 import claygminx.worshipppt.common.config.SystemConfig;
-import claygminx.common.entity.*;
 import claygminx.worshipppt.common.entity.*;
 import claygminx.worshipppt.components.ScriptureService;
 import claygminx.worshipppt.exception.ScriptureNumberException;

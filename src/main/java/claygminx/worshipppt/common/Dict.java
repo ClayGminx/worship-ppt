@@ -13,7 +13,6 @@ public class Dict {
      */
     public static class PPTProperty {
         // 全局制作参数
-        public final static String GENERAL_WORSHIP_MODEL_PREFIX = "worship.model.";
         public final static String GENERAL_PROCEDURE_XML_PATH = "ppt.general.procedurePath";
         public final static String GENERAL_FONT_FAMILY = "ppt.general.fontFamily";
         public final static String GENERAL_PLACEHOLDER = "ppt.general.placeholder";
@@ -92,30 +91,14 @@ public class Dict {
     }
 
     /**
-     * 运行属性
-     */
-    public static class RunningProperty {
-        public final static String SCENE = "running.scene";
-        public final static String SCENE_UPGRADE = "running.scene.upgrade";
-        public final static String SCENE_PPT = "running.scene.ppt";
-    }
-
-    /**
      * 输入参数中的部分
      */
     public static class InputSection {
         public final static String COVER = "封面";
-        public final static String PRAY_POETRY = "祷告诗歌";
-        public final static String PRACTISE_POETRY = "练唱诗歌";
-        public final static String WORSHIP_POETRY = "敬拜诗歌";
-        public final static String RESPONSE_POETRY = "回应诗歌";
-        public final static String OFFERTORY_POETRY = "奉献诗歌";
-        public final static String HOLY_COMMUNION_POETRY = "圣餐诗歌";
-        public final static String INITIATION_POETRY = "入会诗歌";
         public final static String SCRIPTURE = "经文";
         public final static String DECLARATION = "宣信";
         public final static String PREACH = "证道";
-        public final static String FAMILY_REPORT = "家事报告";
+        public final static String FAMILY_REPORTS = "家事报告";
         public final static String HOLY_COMMUNION = "圣餐";
     }
 
@@ -132,7 +115,6 @@ public class Dict {
      * 封面属性
      */
     public static class CoverKey {
-        public final static String MODEL = "敬拜模式";
         public final static String WORSHIP_DATE = "敬拜日期";
         public final static String CHURCH_NAME = "教会名称";
     }
@@ -140,7 +122,7 @@ public class Dict {
     /**
      * 诗歌集的名称
      */
-    public static class POETRY_ALBUM_NAME {
+    public static class PoetryAlbumName {
         public final static String PRAY_POETRY = "祷告诗歌";
         public final static String PRACTISE_POETRY = "练唱诗歌";
         public final static String WORSHIP_POETRY = "敬拜诗歌";
@@ -153,7 +135,7 @@ public class Dict {
     /**
      * 经文使用场景
      */
-    public static class ScriptureScene {
+    public static class ScriptureContentKey {
         public final static String SUMMON = "宣召";
         public final static String PUBLIC_PRAY = "公祷";
         public final static String CONFESS = "认罪";
