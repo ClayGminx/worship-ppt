@@ -74,11 +74,13 @@ public class WorshipPPTServiceImpl implements WorshipPPTService {
             worshipProcedureService.setScriptureService(scriptureService);
             List<WorshipStep> worshipProcedure = worshipProcedureService.generate(ppt, worshipEntity);
             increaseProgress(1, "读取敬拜流程");
-            int perProgress = (99 - progress) / worshipProcedure.size();
+            int perProgress = (int) Math.ceil((99 - progress) / (double) worshipProcedure.size());
             // 开始一个个阶段地制作幻灯片
             for (WorshipStep worshipStep : worshipProcedure) {
                 worshipStep.execute();
-                increaseProgress(perProgress, "制作敬拜阶段幻灯片");
+                if (progress + perProgress < 100) {
+                    increaseProgress(perProgress, "制作敬拜阶段幻灯片");
+                }
             }
         } catch (FileServiceException | WorshipStepException e) {
             throw e;
@@ -110,6 +112,7 @@ public class WorshipPPTServiceImpl implements WorshipPPTService {
         if (progress > 100) {
             progress = 100;
         }
+        logger.debug("进度：{}%", progress);
         progressMonitor.setProgress(progress);
         if (note != null) {
             progressMonitor.setNote(note);

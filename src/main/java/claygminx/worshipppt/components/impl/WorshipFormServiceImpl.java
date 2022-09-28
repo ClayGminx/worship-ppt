@@ -55,10 +55,10 @@ public class WorshipFormServiceImpl implements WorshipFormService {
     public final static int TEXT_FIELD_HEIGHT = 30;
     public final static int POETRY_TABLE_COLUMN_WIDTH_1 = 180;
     public final static int POETRY_TABLE_COLUMN_WIDTH_2 = 300;
-    public final static int POETRY_TABLE_COLUMN_WIDTH_3 = 130;
+    public final static int POETRY_TABLE_COLUMN_WIDTH_3 = 140;
     public final static int ROW_INDEX_OFFSET = 2;
     public final static int V_SCROLL_BAR_SPEED = 20;
-    public final static int BUTTON_WIDTH = 55;
+    public final static int BUTTON_WIDTH = 60;
 
     // 线程数量
     private final static int THREAD_COUNT = 3;
@@ -468,8 +468,8 @@ public class WorshipFormServiceImpl implements WorshipFormService {
      * @return 是否检查通过
      */
     private boolean prepare() {
-        return prepareCover() || preparePoetry() || prepareScriptureContent() || prepareDeclaration()
-                || preparePreach() || prepareFamilyReport() || prepareHolyCommunion();
+        return prepareCover() && preparePoetry() && prepareScriptureContent() && prepareDeclaration()
+                && preparePreach() && prepareFamilyReport() && prepareHolyCommunion();
     }
     
     private boolean prepareCover() {
