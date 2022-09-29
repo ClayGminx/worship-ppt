@@ -8,7 +8,7 @@
     <artifactId>worship-ppt</artifactId>
     <version>1.2.0</version>
 
-    <name>Worship PPT Toolkit</name>
+    <name>Worship PPT Tool</name>
     <description>一个用于自动制作敬拜PPT的小工具</description>
 
     <properties>

@@ -25,7 +25,6 @@ public class WorshipFormServiceImpl implements WorshipFormService {
 
     private final static Logger logger = LoggerFactory.getLogger(WorshipFormService.class);
 
-    // 其它必备的对象
     private static WorshipFormServiceImpl instance;
     private final Executor threadPool;
     private final WorshipEntity worshipEntity;
@@ -49,16 +48,16 @@ public class WorshipFormServiceImpl implements WorshipFormService {
     public final static Dimension FRAME_MIN_SIZE = new Dimension(650, 450);
     public final static int TABLE_HEADER_HEIGHT = 30;
     public final static int TABLE_ROW_HEIGHT = 36;
-    public final static int PADDING_LEFT = 6;
+    public final static int TEXT_FIELD_HEIGHT = 30;
     public final static int REGULAR_TABLE_LEFT_WIDTH = 70;
     public final static int REGULAR_TABLE_RIGHT_WIDTH = 400;
-    public final static int TEXT_FIELD_HEIGHT = 30;
     public final static int POETRY_TABLE_COLUMN_WIDTH_1 = 180;
     public final static int POETRY_TABLE_COLUMN_WIDTH_2 = 300;
     public final static int POETRY_TABLE_COLUMN_WIDTH_3 = 140;
-    public final static int ROW_INDEX_OFFSET = 2;
-    public final static int V_SCROLL_BAR_SPEED = 20;
     public final static int BUTTON_WIDTH = 60;
+    public final static int PADDING_LEFT = 6;
+    public final static int V_SCROLL_BAR_SPEED = 20;
+    public final static int ROW_INDEX_OFFSET = 2;
 
     // 线程数量
     private final static int THREAD_COUNT = 3;
@@ -98,6 +97,7 @@ public class WorshipFormServiceImpl implements WorshipFormService {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setIconImage(getImageIcon().getImage());
 
+        logger.debug("检查新版本");
         checkVersion();
 
         logger.debug("添加根容器");
@@ -253,6 +253,7 @@ public class WorshipFormServiceImpl implements WorshipFormService {
         scriptureContentTextFieldMap = new HashMap<>();
 
         JTextField summonTextField = addRegularTableInputRow(tableBox, ScriptureContentKey.SUMMON);
+        summonTextField.setToolTipText("输入经文编号即可，下面的输入框也一样");
         scriptureContentTextFieldMap.put(ScriptureContentKey.SUMMON, summonTextField);
 
         JTextField publicPrayTextField = addRegularTableInputRow(tableBox, ScriptureContentKey.PUBLIC_PRAY);
@@ -302,6 +303,7 @@ public class WorshipFormServiceImpl implements WorshipFormService {
 
         declarationTextFieldMap = new HashMap<>();
         JTextField titleTextField = addRegularTableInputRow(tableBox, DeclarationKey.TITLE);
+        titleTextField.setToolTipText("不需要用书名号括起来");
         declarationTextFieldMap.put(DeclarationKey.TITLE, titleTextField);
 
         JTextField speakerTextField = addRegularTableInputRow(tableBox, DeclarationKey.SPEAKER);
@@ -362,6 +364,7 @@ public class WorshipFormServiceImpl implements WorshipFormService {
 
         holyCommunionTextFieldMap = new HashMap<>();
         JTextField nameListTextField = addRegularTableInputRow(tableBox, HolyCommunionKey.NAME_LIST);
+        nameListTextField.setToolTipText("用英文逗号分隔姓名");
         holyCommunionTextFieldMap.put(HolyCommunionKey.NAME_LIST, nameListTextField);
 
         HolyCommunionEntity holyCommunion = worshipEntity.getHolyCommunion();
@@ -697,6 +700,7 @@ public class WorshipFormServiceImpl implements WorshipFormService {
         return true;
     }
 
+    // 检查诗歌信息
     private String checkPoetryInfo(String albumName, List<JTextField[]> poetryTextFieldList, int minCount) {
         int count = 0;
         for (int i = 0; i < poetryTextFieldList.size(); i++) {
@@ -716,6 +720,7 @@ public class WorshipFormServiceImpl implements WorshipFormService {
         return null;
     }
 
+    // 读取诗歌集
     private PoetryAlbumEntity readPoetryAlbum(String albumName, List<JTextField[]> textFieldsList) {
         List<PoetryEntity> poetryEntityList = new ArrayList<>();
         for (JTextField[] textFields : textFieldsList) {
@@ -734,6 +739,7 @@ public class WorshipFormServiceImpl implements WorshipFormService {
         return null;
     }
 
+    // 根据名称获取诗歌集
     private PoetryAlbumEntity getPoetryAlbumEntity(String name) {
         PoetryContentEntity content = worshipEntity.getPoetryContent();
         if (content != null) {
@@ -890,7 +896,7 @@ public class WorshipFormServiceImpl implements WorshipFormService {
         JTextField textField = new JTextField();
         textField.setPreferredSize(new Dimension(width - PADDING_LEFT, TEXT_FIELD_HEIGHT));
 
-        westMiddle(rowBox, textField, width);
+        leftMiddle(rowBox, textField, width);
         return textField;
     }
 
@@ -934,7 +940,7 @@ public class WorshipFormServiceImpl implements WorshipFormService {
      */
     private JLabel addRegularTableInputLabel(Box rowBox, String labelName) {
         JLabel label = new JLabel(labelName);
-        westMiddle(rowBox, label, REGULAR_TABLE_LEFT_WIDTH);
+        leftMiddle(rowBox, label, REGULAR_TABLE_LEFT_WIDTH);
         return label;
     }
 
@@ -953,6 +959,7 @@ public class WorshipFormServiceImpl implements WorshipFormService {
         addFamilyReportTableOperationCell(rowBox);
     }
 
+    // 添加家事报告操作单元格
     private void addFamilyReportTableOperationCell(Box rowBox) {
         JButton[] buttons = addOperationButtons(rowBox);
         JButton insertButton = buttons[0];
@@ -985,6 +992,7 @@ public class WorshipFormServiceImpl implements WorshipFormService {
         }));
     }
 
+    // 添加操作按钮
     private JButton[] addOperationButtons(Box rowBox) {
         JButton insertButton = new JButton("插入");
         JButton deleteButton = new JButton("删除");
@@ -1001,12 +1009,13 @@ public class WorshipFormServiceImpl implements WorshipFormService {
         hBox.add(Box.createHorizontalStrut(PADDING_LEFT));
         hBox.add(deleteButton);
 
-        westMiddle(rowBox, hBox, POETRY_TABLE_COLUMN_WIDTH_3);
+        leftMiddle(rowBox, hBox, POETRY_TABLE_COLUMN_WIDTH_3);
 
         return new JButton[] {insertButton, deleteButton};
     }
 
-    private void westMiddle(Container container, Component component, int width) {
+    // 水平居左，垂直居中
+    private void leftMiddle(Container container, Component component, int width) {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.anchor = GridBagConstraints.WEST;
         gbc.weightx = 1;
@@ -1055,11 +1064,10 @@ public class WorshipFormServiceImpl implements WorshipFormService {
             } else {
                 int currentIndex = getIndexOfRowBox(tableBox, rowBox);
                 if (currentIndex != -1) {
-                    // 是否要删除文本框监听器、按钮监听器？
                     int index = currentIndex - ROW_INDEX_OFFSET;
                     logger.debug("删除第{}行诗歌", index + 1);
                     textFieldsList.remove(index);
-                    tableBox.remove(rowBox);
+                    tableBox.remove(currentIndex);
                     tableBox.getRootPane().revalidate();
                 }
             }
@@ -1082,6 +1090,11 @@ public class WorshipFormServiceImpl implements WorshipFormService {
         return -1;
     }
 
+    /**
+     * 创建一个可以选择复制的文本域
+     * @param text 字符串
+     * @return 文本域
+     */
     private JTextPane createTextPane(String text) {
         JTextPane f = new JTextPane();
         f.setContentType("text/html");
@@ -1155,11 +1168,11 @@ public class WorshipFormServiceImpl implements WorshipFormService {
      * @param worshipEntity 敬拜实体
      */
     private void saveWorshipEntity(WorshipEntity worshipEntity) {
+        // TODO Mac系统从哪里读取？
         File file = new File(WorshipEntity.class.getSimpleName());
         if (file.exists()) {
             logger.debug("本地磁盘已经存在敬拜实体");
-            boolean r = file.delete();
-            if (r) {
+            if (file.delete()) {
                 logger.debug("已经删除了");
             }
         }

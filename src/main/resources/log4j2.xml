@@ -12,12 +12,10 @@
             <PatternLayout pattern="%d{HH:mm:ss:SSS} %msg%n"/>
         </Console>
 
-        <!-- 将日志输出到文件-->
-        <RollingFile name="FILE-APPENDER"
+        <!--<RollingFile name="FILE-APPENDER"
                      immediateFlush="true"
                      fileName="${LOG_HOME}/WorshipPPT.log"
                      filePattern="${LOG_HOME}/WorshipPPT-%d{yyyy-MM-dd}-%i.log.zip">
-            <!--设置日志格式-->
             <PatternLayout>
                 <pattern>[%d{HH:mm:ss:SSS}] - [%t] [%p] - %logger{36} - %m%n</pattern>
             </PatternLayout>
@@ -31,14 +29,14 @@
                     <IfLastModified age="168H"/>
                 </Delete>
             </DefaultRolloverStrategy>
-        </RollingFile>
+        </RollingFile>-->
     </Appenders>
 
     <Loggers>
         <!-- 根日志设置 -->
         <Root level="DEBUG">
             <AppenderRef ref="CONSOLE" level="INFO"/>
-            <AppenderRef ref="FILE-APPENDER" level="DEBUG"/>
+<!--            <AppenderRef ref="FILE-APPENDER" level="DEBUG"/>-->
         </Root>
 
         <!--spring日志-->
