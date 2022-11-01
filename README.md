@@ -4,7 +4,7 @@
 
 由马克约瑟弟兄制作。
 
-![Version](https://img.shields.io/badge/version-1.2.0-blue)
+![Version](https://img.shields.io/badge/version-1.2.1-blue)
 [![GitHub license](https://img.shields.io/github/license/ClayGminx/worship-ppt)](https://github.com/ClayGminx/worship-ppt/blob/master/LICENSE)
 ![poi-ooxml dependency](https://img.shields.io/badge/poi--ooxml-v5.2.2-9cf)
 ![sqlite-jdbc dependency](https://img.shields.io/badge/sqlite--jdbc-3.39.2.0-9cf)
@@ -50,7 +50,7 @@
 
 ### 配置文件
 
-敬拜PPT文件工具支持自定义配置。配置文件`worship-ppt.properties`位于“配置”文件夹里。
+敬拜PPT文件工具支持自定义配置。配置文件`worship-ppt.properties`位于“config”文件夹里。
 
 `worship-ppt.properties`有大量的配置选项。你可以修改制作PPT文件的参数、更换圣经数据，以及更多配置选项。
 `worship-ppt.properties`有大量注释教你怎么修改，相信你看得懂。
@@ -59,7 +59,7 @@
 
 三种敬拜模式都有自己的流程，它们的流程定义在`worship-procedure.xml`。
 
-`worship-ppt.properties`可以配置`worship-procedure.xml`的位置，默认放在“配置”文件夹里。
+`worship-ppt.properties`可以配置`worship-procedure.xml`的位置，默认放在“config”文件夹里。
 
 在该文件里，`model`定义了敬拜模式，而`worship-step`定义了敬拜阶段，你可以在该文件删除一个`worship-step`，
 但是若要增加一个worship-ppt尚未支持的新阶段，就会因不被支持而出错。
