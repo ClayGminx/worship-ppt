@@ -153,7 +153,7 @@ public class RegularPoetryStep extends AbstractWorshipStep {
 
     /**
      * 调整图片地尺寸
-     * <p>预设图片宽度是24.3厘米，但是程序的长度单位是像素，转换公式是 1px=0.035275</p>
+     * <p>预设图片宽度是24.3厘米，但是程序的长度单位是磅，转换公式是 1磅=0.035275</p>
      * @param picture 简谱图片
      */
     private void resizePicture(XSLFPictureShape picture) {

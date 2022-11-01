@@ -49,6 +49,7 @@ public class SystemConfig {
             if (customConfigFile.exists()) {
                 try (InputStreamReader reader = new InputStreamReader(
                         new FileInputStream(propertyFilePath), StandardCharsets.UTF_8)) {
+                    logger.debug("加载自定义配置文件" + propertyFilePath);
                     properties.load(reader);
                 } catch (Exception e) {
                     logger.error(PROPERTIES_FILE_NAME + "加载失败！");
@@ -56,6 +57,8 @@ public class SystemConfig {
             } else {
                 logger.warn("{}不存在！", propertyFilePath);
             }
+        } else {
+            logger.debug("无自定义配置文件");
         }
     }
 

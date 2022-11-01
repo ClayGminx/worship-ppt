@@ -14,9 +14,9 @@ public class SizeUtil {
     }
 
     /**
-     * 将厘米长度值转换为{@code point}数
+     * 将厘米长度值转换为磅
      * @param centimetre 厘米长度
-     * @return point数
+     * @return 磅
      */
     public static double convertToPoints(double centimetre) {
         double points = centimetre / 0.035275;

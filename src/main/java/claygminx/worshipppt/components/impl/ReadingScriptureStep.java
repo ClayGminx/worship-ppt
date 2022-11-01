@@ -6,7 +6,6 @@ import claygminx.worshipppt.components.ScriptureService;
 import claygminx.worshipppt.exception.ScriptureNumberException;
 import claygminx.worshipppt.exception.WorshipStepException;
 import claygminx.worshipppt.common.Dict;
-import org.apache.poi.sl.usermodel.TextShape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.poi.xslf.usermodel.*;
@@ -67,7 +66,6 @@ public class ReadingScriptureStep extends AbstractWorshipStep {
 
                 placeholder = slide.getPlaceholder(1);
                 placeholder.clearText();
-                placeholder.setTextAutofit(TextShape.TextAutofit.SHAPE);
                 logger.info("开始第{}张读经幻灯片...", slideCount);
             }
 
