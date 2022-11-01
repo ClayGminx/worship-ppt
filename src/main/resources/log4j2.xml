@@ -39,8 +39,6 @@
 <!--            <AppenderRef ref="FILE-APPENDER" level="DEBUG"/>-->
         </Root>
 
-        <!--spring日志-->
-        <Logger name="org.springframework" level="WARN"/>
         <!-- apache -->
         <Logger name="org.apache" level="WARN"/>
     </Loggers>
