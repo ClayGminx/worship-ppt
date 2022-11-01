@@ -11,6 +11,6 @@ workDir=$0
 cd ${workDir%/*}
 chmod u+w .
 chmod u+x ./lib/jre/Contents/Home/bin/java
-./lib/jre/Contents/Home/bin/java -DconfigFile=配置/worship-ppt.properties -Dfile.encoding=UTF-8 -jar ./lib/worship-ppt.jar
+./lib/jre/Contents/Home/bin/java -DconfigFile=config/worship-ppt.properties -Dfile.encoding=UTF-8 -jar ./lib/worship-ppt.jar
 
 echo "辛苦了 φ(゜▽゜*)?"
