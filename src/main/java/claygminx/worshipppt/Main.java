@@ -10,7 +10,7 @@ import javax.swing.*;
 import static javax.swing.JOptionPane.ERROR_MESSAGE;
 
 /**
- * 主程序
+ * 主程序11
  */
 public class Main extends JFrame {
 
