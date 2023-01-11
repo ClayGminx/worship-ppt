@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * 图片工具
+ * 图片工具111111111111111111111
  */
 public class PictureUtil {
 
