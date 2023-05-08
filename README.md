@@ -4,7 +4,7 @@
 
 由马克约瑟弟兄制作。
 
-![Version](https://img.shields.io/badge/version-1.2.1-blue)
+![Version](https://img.shields.io/badge/version-1.3.0-blue)
 [![GitHub license](https://img.shields.io/github/license/ClayGminx/worship-ppt)](https://github.com/ClayGminx/worship-ppt/blob/master/LICENSE)
 ![poi-ooxml dependency](https://img.shields.io/badge/poi--ooxml-v5.2.2-9cf)
 ![sqlite-jdbc dependency](https://img.shields.io/badge/sqlite--jdbc-3.39.2.0-9cf)

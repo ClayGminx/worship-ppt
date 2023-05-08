@@ -1,5 +1,7 @@
 package claygminx.worshipppt;
 
+import claygminx.worshipppt.common.Dict;
+import claygminx.worshipppt.common.config.SystemConfig;
 import claygminx.worshipppt.components.impl.WorshipFormServiceImpl;
 import com.formdev.flatlaf.FlatDarkLaf;
 import org.slf4j.Logger;
@@ -17,6 +19,8 @@ public class Main extends JFrame {
     private final static Logger logger = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) {
+        System.out.println(SystemConfig.getString(Dict.PPTProperty.GENERAL_LANGUAGE));
+
         try {
             FlatDarkLaf.setup();
         } catch (Exception e) {

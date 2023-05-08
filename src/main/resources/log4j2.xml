@@ -2,7 +2,7 @@
 <configuration>
     <properties>
         <!--日志输出位置-->
-        <property name="LOG_HOME">logs</property>
+        <property name="LOG_HOME">${sys:user.home}/.worship-ppt</property>
     </properties>
 
     <Appenders>
@@ -12,7 +12,7 @@
             <PatternLayout pattern="%d{HH:mm:ss:SSS} %msg%n"/>
         </Console>
 
-        <!--<RollingFile name="FILE-APPENDER"
+        <RollingFile name="FILE-APPENDER"
                      immediateFlush="true"
                      fileName="${LOG_HOME}/WorshipPPT.log"
                      filePattern="${LOG_HOME}/WorshipPPT-%d{yyyy-MM-dd}-%i.log.zip">
@@ -25,18 +25,18 @@
             </Policies>
             <DefaultRolloverStrategy max="20">
                 <Delete basePath="${LOG_HOME}" maxDepth="2">
-                    <IfFileName glob="debug_*.zip"/>
+                    <IfFileName glob="info_*.zip"/>
                     <IfLastModified age="168H"/>
                 </Delete>
             </DefaultRolloverStrategy>
-        </RollingFile>-->
+        </RollingFile>
     </Appenders>
 
     <Loggers>
         <!-- 根日志设置 -->
-        <Root level="DEBUG">
+        <Root level="INFO">
             <AppenderRef ref="CONSOLE" level="INFO"/>
-<!--            <AppenderRef ref="FILE-APPENDER" level="DEBUG"/>-->
+            <AppenderRef ref="FILE-APPENDER" level="INFO"/>
         </Root>
 
         <!-- apache -->

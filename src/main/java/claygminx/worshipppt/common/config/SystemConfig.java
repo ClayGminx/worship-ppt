@@ -2,29 +2,31 @@ package claygminx.worshipppt.common.config;
 
 import claygminx.worshipppt.exception.SystemException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.Objects;
 import java.util.Properties;
 
 /**
  * 系统配置
+ * <p>使用用户目录。此软件的配置文件夹的名称是.worship-ppt，在里面放配置数据。</p>
  */
 @Slf4j
 public class SystemConfig {
 
     /**
-     * 系统属性文件
+     * 应用配置文件夹
      */
-    public final static String PROPERTIES_FILE_NAME = "worship-ppt.properties";
+    public final static String APP_CONFIG_DIR_PATH = ".worship-ppt";
 
     /**
-     * 自定义属性文件的系统属性名称
+     * 配置文件的名称
      */
-    public final static String PROPERTY_NAME = "configFile";
+    public final static String APP_CONFIG_NAME = "system.config";
 
     /**
      * 系统属性实例对象
@@ -32,31 +34,55 @@ public class SystemConfig {
     public final static Properties properties = new Properties();
 
     static {
-        // 先加载系统内置的配置
-        ClassLoader classLoader = SystemConfig.class.getClassLoader();
-        try (InputStreamReader reader = new InputStreamReader(
-                Objects.requireNonNull(classLoader.getResourceAsStream(PROPERTIES_FILE_NAME)), StandardCharsets.UTF_8)) {
-            properties.load(reader);
-        } catch (Exception e) {
-            throw new SystemException(PROPERTIES_FILE_NAME + "加载失败！", e);
-        }
-        // 再加载自定义的配置
-        String propertyFilePath = System.getProperty(PROPERTY_NAME);
-        if (propertyFilePath != null) {
-            File customConfigFile = new File(propertyFilePath);
-            if (customConfigFile.exists()) {
-                try (InputStreamReader reader = new InputStreamReader(
-                        new FileInputStream(propertyFilePath), StandardCharsets.UTF_8)) {
-                    logger.debug("加载自定义配置文件" + propertyFilePath);
-                    properties.load(reader);
-                } catch (Exception e) {
-                    logger.error(PROPERTIES_FILE_NAME + "加载失败！");
-                }
-            } else {
-                logger.warn("{}不存在！", propertyFilePath);
+        // 1.先去用户目录看是否已经有配置
+        File appDir = new File(System.getProperty("user.home"), APP_CONFIG_DIR_PATH);
+        if (!appDir.exists()) {
+            logger.info("创建目录{}", APP_CONFIG_DIR_PATH);
+            boolean flag = appDir.mkdirs();
+            if (!flag) {
+                logger.error("目录{}创建失败，系统退出！", appDir.getAbsolutePath());
+                System.exit(1);
             }
+        }
+
+        File systemConfigFile = new File(appDir, APP_CONFIG_NAME);
+        ClassLoader classLoader = SystemConfig.class.getClassLoader();
+        if (systemConfigFile.exists()) {
+            logger.info("配置文件已经存在，直接使用。");
         } else {
-            logger.debug("无自定义配置文件");
+            logger.info("用户目录不存在配置文件，拷贝一份过去。");
+            try (InputStream inputStream = classLoader.getResourceAsStream(APP_CONFIG_NAME)) {
+                if (inputStream != null) {
+                    FileUtils.copyToFile(inputStream, systemConfigFile);
+                } else {
+                    logger.error("配置文件初始化失败，系统退出！");
+                    System.exit(1);
+                }
+            } catch (Exception e) {
+                logger.error("配置文件初始化失败，系统退出！", e);
+                System.exit(1);
+            }
+        }
+
+        // 2.读取配置文件的路径
+        String systemPropertiesPath = null;
+        try (InputStreamReader reader = new InputStreamReader(new FileInputStream(systemConfigFile), StandardCharsets.UTF_8)) {
+            Properties cacheSystemConfig = new Properties();
+            cacheSystemConfig.load(reader);
+            systemPropertiesPath = cacheSystemConfig.getProperty("SystemConfigPath");
+            logger.info("SystemConfigPath={}", systemPropertiesPath);
+        } catch (Exception e) {
+            logger.error("读取SystemConfigPath失败！", e);
+            System.exit(1);
+        }
+
+        // 3.加载系统配置
+        try (InputStreamReader reader = new InputStreamReader(new FileInputStream(systemPropertiesPath), StandardCharsets.UTF_8)) {
+            properties.load(reader);
+            logger.info("系统配置加载成功");
+        } catch (Exception e) {
+            logger.error("{}加载失败！", systemPropertiesPath, e);
+            System.exit(1);
         }
     }
 
