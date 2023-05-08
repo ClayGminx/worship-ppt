@@ -5,8 +5,7 @@ import claygminx.worshipppt.exception.FileServiceException;
 import claygminx.worshipppt.exception.SystemException;
 import claygminx.worshipppt.common.entity.*;
 import claygminx.worshipppt.exception.WorshipStepException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -14,6 +13,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -21,9 +21,8 @@ import java.util.concurrent.Executors;
 
 import static claygminx.worshipppt.common.Dict.*;
 
+@Slf4j
 public class WorshipFormServiceImpl implements WorshipFormService {
-
-    private final static Logger logger = LoggerFactory.getLogger(WorshipFormService.class);
 
     private static WorshipFormServiceImpl instance;
     private final Executor threadPool;
@@ -107,6 +106,7 @@ public class WorshipFormServiceImpl implements WorshipFormService {
         frame.setContentPane(rootPanel);
 
         logger.debug("添加组件到窗体中");
+        addMenus();
         addWorshipModelPanel(rootBox);
         addCoverPanel(rootBox);
         addAllPoetryAlbumPanel(rootBox);
@@ -119,6 +119,49 @@ public class WorshipFormServiceImpl implements WorshipFormService {
 
         logger.debug("添加完毕，展示窗体");
         frame.setVisible(true);
+    }
+
+    /**
+     * 添加菜单
+     */
+    private void addMenus() {
+        JMenuItem menuItem = new JMenuItem("自定义配置");
+        menuItem.addActionListener(actionEvent -> {
+            String customConfigPath = JOptionPane.showInputDialog(frame,
+                    "请输入系统配置文件的完全路径：",
+                    "自定义系统配置",
+                    JOptionPane.INFORMATION_MESSAGE);
+            logger.info("自定义系统配置文件路径：" + customConfigPath);
+
+            if (customConfigPath == null || customConfigPath.trim().isEmpty()) {
+                return;
+            }
+
+            File file = new File(customConfigPath.trim());
+            if (file.exists() && file.isFile() && file.canRead()) {
+                logger.debug("继续检查是否合法的配置文件");
+                try (InputStreamReader reader = new InputStreamReader(
+                        new FileInputStream(file), StandardCharsets.UTF_8)) {
+                    new Properties().load(reader);
+                    logger.info("文件加载成功！");
+                    JOptionPane.showMessageDialog(frame, "文件加载成功，请重启该软件使其生效。", "提示", JOptionPane.INFORMATION_MESSAGE);
+                } catch (Exception e) {
+                    logger.error("自定义配置文件加载失败！");
+                    JOptionPane.showMessageDialog(frame, "文件加载失败！", "错误提示", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                logger.warn("文件错误！");
+                JOptionPane.showMessageDialog(frame, "文件错误！", "错误提示", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
+        JMenu menu = new JMenu("选项");
+        menu.add(menuItem);
+
+        JMenuBar menuBar = new JMenuBar();
+        menuBar.add(menu);
+
+        frame.setJMenuBar(menuBar);
     }
 
     /**

@@ -1,8 +1,7 @@
 package claygminx.worshipppt.common.config;
 
 import claygminx.worshipppt.exception.SystemException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,9 +13,8 @@ import java.util.Properties;
 /**
  * 系统配置
  */
+@Slf4j
 public class SystemConfig {
-
-    private final static Logger logger = LoggerFactory.getLogger(SystemConfig.class);
 
     /**
      * 系统属性文件
