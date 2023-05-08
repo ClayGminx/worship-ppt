@@ -67,7 +67,7 @@ public class SummonStep extends AbstractWorshipStep {
         span = paragraph.addNewTextRun();
         span.setText("　　");
         span = paragraph.addNewTextRun();
-        span.setText("我们当赞美耶和华");
+        span.setText("我们当赞美耶和华！");
         span.setBold(true);
         span.setUnderlined(true);
         span.setFontColor(Color.BLUE);
