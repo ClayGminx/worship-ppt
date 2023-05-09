@@ -7,12 +7,11 @@ import claygminx.worshipppt.exception.FileServiceException;
 import claygminx.worshipppt.exception.SystemException;
 import claygminx.worshipppt.exception.WorshipStepException;
 import claygminx.worshipppt.common.Dict;
+import lombok.extern.slf4j.Slf4j;
 import org.openxmlformats.schemas.drawingml.x2006.main.CTTextCharacterProperties;
 import org.openxmlformats.schemas.drawingml.x2006.main.CTTextListStyle;
 import org.openxmlformats.schemas.drawingml.x2006.main.CTTextParagraphProperties;
 import org.openxmlformats.schemas.presentationml.x2006.main.CTPresentation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.poi.xslf.usermodel.XMLSlideShow;
 
 import javax.swing.*;
@@ -22,9 +21,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
+@Slf4j
 public class WorshipPPTServiceImpl implements WorshipPPTService {
-
-    private final static Logger logger = LoggerFactory.getLogger(WorshipPPTService.class);
 
     private final FileService fileService;
     private final ScriptureService scriptureService;
@@ -32,20 +30,20 @@ public class WorshipPPTServiceImpl implements WorshipPPTService {
 
     private final WorshipEntity worshipEntity;
     private int progress;
-    private File file;
+    private final File file;
 
-    public WorshipPPTServiceImpl(WorshipEntity worshipEntity) {
+    public WorshipPPTServiceImpl(WorshipEntity worshipEntity, File outputFile) {
         fileService = FileServiceImpl.getInstance();
         scriptureService = ScriptureServiceImpl.getInstance();
         this.worshipEntity = worshipEntity;
+        this.file = outputFile;
     }
 
     @Override
     public void make() throws FileServiceException, WorshipStepException {
         // 1.准备PPT文件
-        File pptFile;
         try {
-            pptFile = fileService.copyTemplate(worshipEntity.getCover());
+            fileService.copyTemplate(file);
             increaseProgress(5, "创建敬拜PPT文件");
         } catch (FileServiceException e) {
             throw e;
@@ -55,7 +53,7 @@ public class WorshipPPTServiceImpl implements WorshipPPTService {
 
         // 2.按照指定模板制作幻灯片
         XMLSlideShow ppt;
-        try (FileInputStream fis  = new FileInputStream(pptFile)) {
+        try (FileInputStream fis  = new FileInputStream(file)) {
             // 创建PPT对象
             ppt = new XMLSlideShow(fis);
             // 使用自定义语言
@@ -89,10 +87,9 @@ public class WorshipPPTServiceImpl implements WorshipPPTService {
         }
 
         // 4.保存
-        try (FileOutputStream fos = new FileOutputStream(pptFile)) {
+        try (FileOutputStream fos = new FileOutputStream(file)) {
             ppt.write(fos);
             logger.info("保存PPT文件");
-            file = pptFile;
             increaseProgress(100, "完成");
             progressMonitor.close();
         } catch (IOException e) {

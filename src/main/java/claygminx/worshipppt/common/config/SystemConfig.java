@@ -4,10 +4,7 @@ import claygminx.worshipppt.exception.SystemException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
@@ -124,6 +121,13 @@ public class SystemConfig {
         } catch (Exception e) {
             throw new SystemException("根据" + key + "获取double值失败！", e);
         }
+    }
+
+    public static void update(String propFilePath) throws IOException {
+        String conf = "SystemConfigPath=" + propFilePath;
+        File appDir = new File(System.getProperty("user.home"), APP_CONFIG_DIR_PATH);
+        File systemConfigFile = new File(appDir, APP_CONFIG_NAME);
+        FileUtils.writeStringToFile(systemConfigFile, conf, StandardCharsets.UTF_8);
     }
 
 }

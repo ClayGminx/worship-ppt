@@ -100,6 +100,7 @@ public class Dict {
         public final static String PREACH = "证道";
         public final static String FAMILY_REPORTS = "家事报告";
         public final static String HOLY_COMMUNION = "圣餐";
+        public final static String OUTPUT_PATH = "输出文件";
     }
 
     /**

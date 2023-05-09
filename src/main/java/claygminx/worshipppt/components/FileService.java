@@ -19,6 +19,13 @@ public interface FileService {
     File copyTemplate(CoverEntity coverEntity) throws FileServiceException;
 
     /**
+     * 将发行包内的模板文件复制到目标位置
+     * @param targetFile 目标文件。注意，若目标文件已经存在，则会被覆盖。
+     * @throws FileServiceException 复制文件时抛出的异常
+     */
+    void copyTemplate(File targetFile) throws FileServiceException;
+
+    /**
      * 读取敬拜流程XML文件内容
      * @return XML内容
      */

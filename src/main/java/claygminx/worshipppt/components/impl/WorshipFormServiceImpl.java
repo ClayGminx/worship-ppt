@@ -1,5 +1,6 @@
 package claygminx.worshipppt.components.impl;
 
+import claygminx.worshipppt.common.config.SystemConfig;
 import claygminx.worshipppt.components.*;
 import claygminx.worshipppt.exception.FileServiceException;
 import claygminx.worshipppt.exception.SystemException;
@@ -9,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
@@ -144,14 +146,20 @@ public class WorshipFormServiceImpl implements WorshipFormService {
                         new FileInputStream(file), StandardCharsets.UTF_8)) {
                     new Properties().load(reader);
                     logger.info("文件加载成功！");
-                    JOptionPane.showMessageDialog(frame, "文件加载成功，请重启该软件使其生效。", "提示", JOptionPane.INFORMATION_MESSAGE);
+                    try {
+                        SystemConfig.update(file.getAbsolutePath());
+                        JOptionPane.showMessageDialog(frame, "文件加载成功，请重启该软件使其生效。", "提示", JOptionPane.INFORMATION_MESSAGE);
+                    } catch (Exception e) {
+                        logger.error("更新失败！", e);
+                        JOptionPane.showMessageDialog(frame, "更新失败！", "错误提示", JOptionPane.ERROR_MESSAGE);
+                    }
                 } catch (Exception e) {
                     logger.error("自定义配置文件加载失败！");
                     JOptionPane.showMessageDialog(frame, "文件加载失败！", "错误提示", JOptionPane.ERROR_MESSAGE);
                 }
             } else {
                 logger.warn("文件错误！");
-                JOptionPane.showMessageDialog(frame, "文件错误！", "错误提示", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(frame, "文件不存在，或不是文件！", "错误提示", JOptionPane.ERROR_MESSAGE);
             }
         });
 
@@ -469,38 +477,65 @@ public class WorshipFormServiceImpl implements WorshipFormService {
         rootBox.add(panel);
 
         submitButton.addActionListener((action) -> run(() -> {
-            boolean prepareResult = prepare();
-            saveWorshipEntity(worshipEntity);
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("保存敬拜PPT文件");
+            fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
+            fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+            fileChooser.setFileFilter(new FileFilter() {
+                @Override
+                public boolean accept(File f) {
+                    return f.isDirectory() || f.getName().toLowerCase().endsWith(".ppt") || f.getName().toLowerCase().endsWith(".pptx");
+                }
 
-            if (prepareResult) {
-                ProgressMonitor pm = new ProgressMonitor(frame, "制作敬拜PPT", "准备制作", 0, 100);
-                threadPool.execute(() -> {
-                    WorshipPPTServiceImpl worshipPPTService = new WorshipPPTServiceImpl(worshipEntity);
-                    worshipPPTService.setProgressMonitor(pm);
-                    try {
-                        worshipPPTService.make();
-                        File pptFile = worshipPPTService.getFile();
-                        String message = "<html>" +
-                                "<p>PPT制作完成！</p>" +
-                                "<p>文件位于：" +
-                                pptFile.getAbsolutePath() +
-                                "</p>" +
-                                "<p>你还需要做一些检查工作：</p>" +
-                                "<ol><li><b>宣信和证道内容需要手动制作；</b></li>" +
-                                "<li>圣餐诗歌需要手动调整以符合圣礼需要；</li>" +
-                                "<li>还有更多需要细心检查的细节。</li></ol></html>";
-                        JTextPane f = createTextPane(message);
-                        JOptionPane.showMessageDialog(frame, f, "提示", JOptionPane.INFORMATION_MESSAGE);
-                    } catch (FileServiceException | WorshipStepException | SystemException e) {
-                        pm.close();
-                        logger.error("制作PPT时出现错误！", e);
-                        JOptionPane.showMessageDialog(frame, e.getMessage(), "提示", JOptionPane.ERROR_MESSAGE);
-                    } catch (Exception e) {
-                        pm.close();
-                        logger.error("未捕获的错误！！！", e);
-                        JOptionPane.showMessageDialog(frame, "系统错误！", "提示", JOptionPane.ERROR_MESSAGE);
-                    }
-                });
+                @Override
+                public String getDescription() {
+                    return "*.pptx（幻灯片文件）";
+                }
+            });
+            int result = fileChooser.showSaveDialog(frame);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                File outputFile = fileChooser.getSelectedFile();
+                logger.info(outputFile.getAbsolutePath());
+                String simpleFileName = outputFile.getName().toLowerCase();
+                if (!simpleFileName.endsWith(".ppt") && !simpleFileName.endsWith(".pptx")) {
+                    logger.info("自动添加文件扩展名.pptx");
+                    outputFile = new File(outputFile.getParent(), outputFile.getName() + ".pptx");
+                }
+
+                boolean prepareResult = prepare();
+                saveWorshipEntity(worshipEntity);
+
+                if (prepareResult) {
+                    ProgressMonitor pm = new ProgressMonitor(frame, "制作敬拜PPT", "准备制作", 0, 100);
+                    File finalOutputFile = outputFile;
+                    threadPool.execute(() -> {
+                        WorshipPPTServiceImpl worshipPPTService = new WorshipPPTServiceImpl(worshipEntity, finalOutputFile);
+                        worshipPPTService.setProgressMonitor(pm);
+                        try {
+                            worshipPPTService.make();
+                            File pptFile = worshipPPTService.getFile();
+                            String message = "<html>" +
+                                    "<p>PPT制作完成！</p>" +
+                                    "<p>文件位于：" +
+                                    pptFile.getAbsolutePath() +
+                                    "</p>" +
+                                    "<p>你还需要做一些检查工作：</p>" +
+                                    "<ol><li><b>宣信和证道内容需要手动制作；</b></li>" +
+                                    "<li>圣餐诗歌需要手动调整以符合圣礼需要；</li>" +
+                                    "<li>还有更多需要细心检查的细节。</li></ol></html>";
+                            JTextPane f = createTextPane(message);
+                            JOptionPane.showMessageDialog(frame, f, "提示", JOptionPane.INFORMATION_MESSAGE);
+                        } catch (FileServiceException | WorshipStepException | SystemException e) {
+                            pm.close();
+                            logger.error("制作PPT时出现错误！", e);
+                            JOptionPane.showMessageDialog(frame, e.getMessage(), "提示", JOptionPane.ERROR_MESSAGE);
+                        } catch (Exception e) {
+                            pm.close();
+                            logger.error("未捕获的错误！！！", e);
+                            JOptionPane.showMessageDialog(frame, "系统错误！", "提示", JOptionPane.ERROR_MESSAGE);
+                        }
+                    });
+                }
             }
         }));
     }
