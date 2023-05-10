@@ -175,9 +175,12 @@ public class UpgradeServiceImpl implements UpgradeService {
         }
 
         if (downloadUrlPattern != null) {
-            Matcher matcher = downloadUrlPattern.matcher(body);
-            if (matcher.find()) {
-                return matcher.group("url");
+            String[] bodyLineArray = body.split("\n");
+            for (String line : bodyLineArray) {
+                Matcher matcher = downloadUrlPattern.matcher(line);
+                if (matcher.find()) {
+                    return matcher.group("url");
+                }
             }
         }
 

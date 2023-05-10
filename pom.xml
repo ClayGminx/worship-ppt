@@ -6,7 +6,7 @@
 
     <groupId>claygminx</groupId>
     <artifactId>worship-ppt</artifactId>
-    <version>v1.3.0</version>
+    <version>v1.1.0</version>
 
     <name>Worship PPT Tool</name>
     <description>一个用于自动制作敬拜PPT的小工具</description>
