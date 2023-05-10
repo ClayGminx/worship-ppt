@@ -44,13 +44,13 @@ public class UpgradeServiceImpl implements UpgradeService {
     @Override
     public String checkNewRelease() {
         try (CloseableHttpClient client = HttpClients.createDefault()) {
-            logger.debug("检查升级服务");
+            logger.info("检查升级服务");
             int connectTimeout = SystemConfig.getInt(Dict.GiteeProperty.CONNECT_TIMEOUT);
             int connectRequestTimeout = SystemConfig.getInt(Dict.GiteeProperty.CONNECT_REQUEST_TIMEOUT);
             int responseTimeout = SystemConfig.getInt(Dict.GiteeProperty.RESPONSE_TIMEOUT);
 
             String url = SystemConfig.getString(Dict.GiteeProperty.URL);
-            logger.debug("GET " + url);
+            logger.info("GET " + url);
             HttpGet httpGet = new HttpGet(url);
             httpGet.addHeader("Content-Type", "application/json;charset=UTF-8");
             httpGet.addHeader("Accept", "application/json;charset=UTF-8");
@@ -61,11 +61,12 @@ public class UpgradeServiceImpl implements UpgradeService {
                     .build();
             httpGet.setConfig(requestConfig);
             CloseableHttpResponse response = client.execute(httpGet);
-            logger.debug("请求成功");
+            logger.info("请求成功");
+
             if (HttpStatus.SC_NOT_FOUND == response.getCode()) {
                 logger.warn("{} 返回404！", url);
             } else if (HttpStatus.SC_OK == response.getCode()) {
-                logger.debug("{} 返回200！", url);
+                logger.info("{} 返回200！", url);
                 StringBuilder responseBuilder = new StringBuilder();
 
                 try (Scanner scanner = new Scanner(response.getEntity().getContent(), StandardCharsets.UTF_8.name())) {
@@ -76,7 +77,7 @@ public class UpgradeServiceImpl implements UpgradeService {
                 String responseString = responseBuilder.toString();
                 // 转码
                 responseString = new String(responseString.getBytes(), System.getProperty("file.encoding"));
-                logger.debug(responseString);
+                logger.info(responseString);
 
                 GiteeReleaseEntity remoteReleaseEntity = new Gson().fromJson(responseString, GiteeReleaseEntity.class);
                 GiteeReleaseEntity thisReleaseEntity = getThisProjectReleaseEntity();
@@ -92,7 +93,7 @@ public class UpgradeServiceImpl implements UpgradeService {
                     }
                     logger.warn("远程发行包缺失下载地址！");
                 } else {
-                    logger.debug("该发行包应该是最新的，不用升级");
+                    logger.info("该发行包应该是最新的，不用升级");
                 }
             } else {
                 logger.warn("{} 返回{}", url, response.getCode());
@@ -124,6 +125,7 @@ public class UpgradeServiceImpl implements UpgradeService {
         String otherTagName = otherEntity.tag_name();
         int[] thisVersion = parseVersion(thisTagName);
         int[] otherVersion = parseVersion(otherTagName);
+        logger.info("当前版本号：{}，远程版本号：{}", thisTagName, otherTagName);
 
         for (int i = 0; i < thisVersion.length; i++) {
             int r = thisVersion[i] - otherVersion[i];
@@ -133,6 +135,7 @@ public class UpgradeServiceImpl implements UpgradeService {
         }
 
         // 版本号相等，那么比较发布时间
+        logger.info("当前版本构建时间：{}，远程版本构建时间：{}", thisEntity.created_at(), otherEntity.created_at());
         long r = thisEntity.created_at().getTime() - otherEntity.created_at().getTime();
         if (r > 0) {
             return 1;

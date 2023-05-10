@@ -127,12 +127,15 @@ public class WorshipFormServiceImpl implements WorshipFormService {
      * 添加菜单
      */
     private void addMenus() {
-        JMenuItem menuItem = new JMenuItem("自定义配置");
-        menuItem.addActionListener(actionEvent -> {
-            String customConfigPath = JOptionPane.showInputDialog(frame,
+        JMenuItem customConfigMenuItem = new JMenuItem("自定义配置");
+        customConfigMenuItem.addActionListener(actionEvent -> {
+            String customConfigPath = (String) JOptionPane.showInputDialog(frame,
                     "请输入系统配置文件的完全路径：",
                     "自定义系统配置",
-                    JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.INFORMATION_MESSAGE,
+                    null,
+                    null,
+                    SystemConfig.USER_CONFIG_FILE_PATH);
             logger.info("自定义系统配置文件路径：" + customConfigPath);
 
             if (customConfigPath == null || customConfigPath.trim().isEmpty()) {
@@ -163,8 +166,40 @@ public class WorshipFormServiceImpl implements WorshipFormService {
             }
         });
 
+        JMenuItem displayConfigMenuItem = new JMenuItem("查看配置信息");
+        displayConfigMenuItem.addActionListener(actionEvent -> {
+            StringBuilder msgBuilder = new StringBuilder("<html><ul style=\"font-family: Consolas, PingFang SC, Microsoft YaHei; list-style-type: none\">");
+            msgBuilder.append("<li>")
+                    .append("配置文件路径:")
+                    .append(SystemConfig.USER_CONFIG_FILE_PATH)
+                    .append("</li>");
+            Set<Object> keySet = SystemConfig.properties.keySet();
+            for (Object keyObj : keySet) {
+                msgBuilder.append("<li>")
+                        .append(keyObj)
+                        .append(":")
+                        .append(SystemConfig.properties.get(keyObj))
+                        .append("</li>");
+            }
+            msgBuilder.append("</ul></html>");
+
+            JTextPane msg = createTextPane(msgBuilder.toString());
+            JScrollPane scrollMsg = new JScrollPane(
+                    msg,
+                    JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+                    JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            scrollMsg.setMaximumSize(new Dimension(600, 400));
+            scrollMsg.setPreferredSize(new Dimension(600, 400));
+            JOptionPane.showMessageDialog(
+                    frame,
+                    scrollMsg,
+                    "配置信息",
+                    JOptionPane.INFORMATION_MESSAGE);
+        });
+
         JMenu menu = new JMenu("选项");
-        menu.add(menuItem);
+        menu.add(customConfigMenuItem);
+        menu.add(displayConfigMenuItem);
 
         JMenuBar menuBar = new JMenuBar();
         menuBar.add(menu);
@@ -849,11 +884,11 @@ public class WorshipFormServiceImpl implements WorshipFormService {
             String info = upgradeService.checkNewRelease();
             if (info != null) {
                 String[] infos = info.split("\n");
-                StringBuilder msgBuilder = new StringBuilder("<html>");
+                StringBuilder msgBuilder = new StringBuilder("<html><div style=\"padding: 0 20px; font-family: Consolas, PingFang SC, Microsoft YaHei\">");
                 for (String s : infos) {
                     msgBuilder.append("<p>").append(s).append("</p>");
                 }
-                msgBuilder.append("</html>");
+                msgBuilder.append("</div></html>");
 
                 JTextPane f = createTextPane(msgBuilder.toString());
 

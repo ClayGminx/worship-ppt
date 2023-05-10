@@ -32,6 +32,8 @@ public class SystemConfig {
      */
     public final static String CORE_PROPERTIES = "core.properties";
 
+    public static String USER_CONFIG_FILE_PATH = "";
+
     /**
      * 禁止用户自定义，只能是jar包内定义的配置参数
      */
@@ -56,15 +58,15 @@ public class SystemConfig {
             }
         }
 
-        File systemConfigFile = new File(appDir, APP_CONFIG_NAME);
+        File userConfigFile = new File(appDir, APP_CONFIG_NAME);
         ClassLoader classLoader = SystemConfig.class.getClassLoader();
-        if (systemConfigFile.exists()) {
+        if (userConfigFile.exists()) {
             logger.info("配置文件已经存在，直接使用。");
         } else {
             logger.info("用户目录不存在配置文件，拷贝一份过去。");
             try (InputStream inputStream = classLoader.getResourceAsStream(APP_CONFIG_NAME)) {
                 if (inputStream != null) {
-                    FileUtils.copyToFile(inputStream, systemConfigFile);
+                    FileUtils.copyToFile(inputStream, userConfigFile);
                 } else {
                     logger.error("配置文件初始化失败，系统退出！");
                     System.exit(1);
@@ -76,12 +78,12 @@ public class SystemConfig {
         }
 
         // 2.读取配置文件的路径
-        String systemPropertiesPath = null;
-        try (InputStreamReader reader = new InputStreamReader(new FileInputStream(systemConfigFile), StandardCharsets.UTF_8)) {
+        String userPropertiesPath = null;
+        try (InputStreamReader reader = new InputStreamReader(new FileInputStream(userConfigFile), StandardCharsets.UTF_8)) {
             Properties cacheSystemConfig = new Properties();
             cacheSystemConfig.load(reader);
-            systemPropertiesPath = cacheSystemConfig.getProperty("SystemConfigPath");
-            logger.info("SystemConfigPath={}", systemPropertiesPath);
+            userPropertiesPath = cacheSystemConfig.getProperty("SystemConfigPath");
+            logger.info("SystemConfigPath={}", userPropertiesPath);
         } catch (Exception e) {
             logger.error("读取SystemConfigPath失败！", e);
             System.exit(1);
@@ -90,7 +92,7 @@ public class SystemConfig {
         // 3.加载用户配置
         Properties userProperties = null;
         try {
-            userProperties = loadUserProperties(systemPropertiesPath);
+            userProperties = loadUserProperties(userPropertiesPath);
         } catch (Exception e) {
             logger.error("用户配置加载失败！", e);
             System.exit(1);
@@ -119,6 +121,8 @@ public class SystemConfig {
             logger.info("合并了核心配置");
 
             mergeUserProperties(userProperties);
+
+            USER_CONFIG_FILE_PATH = userPropertiesPath;
         } catch (Exception e) {
             logger.error("合并配置失败！", e);
             System.exit(1);
@@ -172,6 +176,7 @@ public class SystemConfig {
         FileUtils.writeStringToFile(systemConfigFile, conf, StandardCharsets.UTF_8);
         Properties userProperties = loadUserProperties(propFilePath);
         mergeUserProperties(userProperties);
+        USER_CONFIG_FILE_PATH = propFilePath;
     }
 
     private static Properties loadUserProperties(String propFilePath) throws IOException {
