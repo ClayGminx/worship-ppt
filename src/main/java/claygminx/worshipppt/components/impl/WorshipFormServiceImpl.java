@@ -528,6 +528,7 @@ public class WorshipFormServiceImpl implements WorshipFormService {
                 }
             });
             int result = fileChooser.showSaveDialog(frame);
+            logger.info("选择{}", result);
             if (result == JFileChooser.APPROVE_OPTION) {
                 File outputFile = fileChooser.getSelectedFile();
                 logger.info(outputFile.getAbsolutePath());
@@ -538,7 +539,7 @@ public class WorshipFormServiceImpl implements WorshipFormService {
                 }
 
                 boolean prepareResult = prepare();
-                saveWorshipEntity(worshipEntity);
+//                saveWorshipEntity(worshipEntity);
 
                 if (prepareResult) {
                     ProgressMonitor pm = new ProgressMonitor(frame, "制作敬拜PPT", "准备制作", 0, 100);
