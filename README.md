@@ -1,4 +1,4 @@
-<h1 align="center"><img src="logo.jpg" alt="主日敬拜"/></h1>
+<h1 style="text-align: center"><img src="logo.jpg" alt="主日敬拜"/></h1>
 
 一个用于自动制作敬拜 PPT 文件的 Java 应用程序。
 

@@ -6,7 +6,9 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 import java.util.Properties;
+import java.util.Set;
 
 /**
  * 系统配置
@@ -24,6 +26,18 @@ public class SystemConfig {
      * 配置文件的名称
      */
     public final static String APP_CONFIG_NAME = "system.config";
+
+    /**
+     * 核心配置
+     */
+    public final static String CORE_PROPERTIES = "core.properties";
+
+    /**
+     * 禁止用户自定义，只能是jar包内定义的配置参数
+     */
+    private final static String[] EXCLUDE_NAMESPACE = new String[] {
+            "github", "gitee", "project"
+    };
 
     /**
      * 系统属性实例对象
@@ -73,12 +87,40 @@ public class SystemConfig {
             System.exit(1);
         }
 
-        // 3.加载系统配置
-        try (InputStreamReader reader = new InputStreamReader(new FileInputStream(systemPropertiesPath), StandardCharsets.UTF_8)) {
-            properties.load(reader);
-            logger.info("系统配置加载成功");
+        // 3.加载用户配置
+        Properties userProperties = null;
+        try {
+            userProperties = loadUserProperties(systemPropertiesPath);
         } catch (Exception e) {
-            logger.error("{}加载失败！", systemPropertiesPath, e);
+            logger.error("用户配置加载失败！", e);
+            System.exit(1);
+        }
+
+        // 4.加载核心配置
+        Properties coreProperties = new Properties();
+        try (InputStreamReader reader = new InputStreamReader(
+                Objects.requireNonNull(classLoader.getResourceAsStream(CORE_PROPERTIES)),
+                StandardCharsets.UTF_8)) {
+            coreProperties.load(reader);
+            logger.info("核心配置加载成功");
+
+            Set<Object> keySet = coreProperties.keySet();
+            for (Object key : keySet) {
+                logger.info("{}={}", key, coreProperties.get(key));
+            }
+        } catch (Exception e) {
+            logger.error("{}加载失败！", CORE_PROPERTIES, e);
+            System.exit(1);
+        }
+
+        // 5.合并配置
+        try {
+            properties.putAll(coreProperties);
+            logger.info("合并了核心配置");
+
+            mergeUserProperties(userProperties);
+        } catch (Exception e) {
+            logger.error("合并配置失败！", e);
             System.exit(1);
         }
     }
@@ -128,6 +170,44 @@ public class SystemConfig {
         File appDir = new File(System.getProperty("user.home"), APP_CONFIG_DIR_PATH);
         File systemConfigFile = new File(appDir, APP_CONFIG_NAME);
         FileUtils.writeStringToFile(systemConfigFile, conf, StandardCharsets.UTF_8);
+        Properties userProperties = loadUserProperties(propFilePath);
+        mergeUserProperties(userProperties);
+    }
+
+    private static Properties loadUserProperties(String propFilePath) throws IOException {
+        Properties userProperties = new Properties();
+        try (InputStreamReader reader = new InputStreamReader(new FileInputStream(propFilePath), StandardCharsets.UTF_8)) {
+            userProperties.load(reader);
+            logger.info("用户配置加载成功");
+
+            Set<Object> keySet = userProperties.keySet();
+            for (Object key : keySet) {
+                logger.info("{}={}", key, userProperties.get(key));
+            }
+        }
+        return userProperties;
+    }
+
+    private static void mergeUserProperties(Properties userProperties) {
+        Set<Object> keySet = userProperties.keySet();
+        for (Object keyObj : keySet) {
+            String key = (String) keyObj;
+            String[] split = key.split("[.]");
+            String ns = split[0];
+            boolean found = false;
+            for (int i = 0; i < EXCLUDE_NAMESPACE.length; i++) {
+                if (EXCLUDE_NAMESPACE[i].equals(ns)) {
+                    found = true;
+                    break;
+                }
+            }
+            if (found) {
+                logger.info("跳过{}", key);
+            } else {
+                properties.put(key, userProperties.get(key));
+            }
+        }
+        logger.info("合并了用户配置");
     }
 
 }

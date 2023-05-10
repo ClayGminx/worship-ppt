@@ -91,6 +91,18 @@ public class Dict {
     }
 
     /**
+     * Gitee属性
+     */
+    public interface GiteeProperty {
+        String URL = "gitee.url";
+        String CONNECT_TIMEOUT = "gitee.connectTimeout";
+        String CONNECT_REQUEST_TIMEOUT = "gitee.connectRequestTimeout";
+        String RESPONSE_TIMEOUT = "gitee.responseTimeout";
+        String WIN_REGX = "gitee.winRegx";
+        String MAC_REGX = "gitee.macRegx";
+    }
+
+    /**
      * 输入参数中的部分
      */
     public static class InputSection {
