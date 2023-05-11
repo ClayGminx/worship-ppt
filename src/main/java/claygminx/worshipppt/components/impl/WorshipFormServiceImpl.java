@@ -12,6 +12,8 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileFilter;
 import java.awt.*;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.*;
 import java.io.*;
 import java.net.URL;
@@ -44,7 +46,7 @@ public class WorshipFormServiceImpl implements WorshipFormService {
     private List<JTextField> familyReportsTextFieldList;
 
     // 布局用的常量
-    public final static String APP_TITLE = "敬拜PPT文件工具";
+    public final static String APP_TITLE = "Worship PPT";
     public final static Dimension FRAME_SIZE = new Dimension(750, 600);
     public final static Dimension FRAME_MIN_SIZE = new Dimension(650, 450);
     public final static int TABLE_HEADER_HEIGHT = 30;
@@ -539,7 +541,7 @@ public class WorshipFormServiceImpl implements WorshipFormService {
                 }
 
                 boolean prepareResult = prepare();
-//                saveWorshipEntity(worshipEntity);
+                saveWorshipEntity(worshipEntity);
 
                 if (prepareResult) {
                     ProgressMonitor pm = new ProgressMonitor(frame, "制作敬拜PPT", "准备制作", 0, 100);
@@ -967,6 +969,44 @@ public class WorshipFormServiceImpl implements WorshipFormService {
         // 歌谱图的路径
         JTextField poetryDirectoryTextField = addTableInputTextCell(rowBox, POETRY_TABLE_COLUMN_WIDTH_2);
         poetryDirectoryTextField.setToolTipText("该路径文件夹必须只包含此诗歌的歌谱图，歌谱图是用JP-WORD制作的");
+        poetryDirectoryTextField.setTransferHandler(new TransferHandler() {
+            @Override
+            public boolean importData(JComponent comp, Transferable t) {
+                try {
+                    Object o = t.getTransferData(DataFlavor.javaFileListFlavor);
+                    String filePath = o.toString();
+                    logger.info(filePath);
+
+                    if (filePath.startsWith("[")) {
+                        filePath = filePath.substring(1);
+                    }
+                    if (filePath.endsWith("]")) {
+                        filePath = filePath.substring(0, filePath.length() - 1);
+                    }
+                    logger.info(filePath);
+
+                    File file = new File(filePath);
+                    String fileName = file.getName();
+
+                    poetryNameTextField.setText(fileName);
+                    poetryDirectoryTextField.setText(filePath);
+                } catch (Exception e) {
+                    logger.error("拖拽失败！", e);
+                    JOptionPane.showMessageDialog(
+                            frame,
+                            "拖拽文件失败，无法显示文件路径！",
+                            "错误提示",
+                            JOptionPane.ERROR_MESSAGE
+                    );
+                }
+                return false;
+            }
+
+            @Override
+            public boolean canImport(JComponent comp, DataFlavor[] flavors) {
+                return Arrays.stream(flavors).anyMatch(DataFlavor.javaFileListFlavor::equals);
+            }
+        });
 
         JTextField[] textFieldArray = new JTextField[] {poetryNameTextField, poetryDirectoryTextField};
         textFieldsList.add(poetryIndex, textFieldArray);
@@ -1282,12 +1322,15 @@ public class WorshipFormServiceImpl implements WorshipFormService {
      * @param worshipEntity 敬拜实体
      */
     private void saveWorshipEntity(WorshipEntity worshipEntity) {
-        // TODO Mac系统从哪里读取？
-        File file = new File(WorshipEntity.class.getSimpleName());
+        String appDirPath = System.getProperty("user.home") + File.separator + SystemConfig.APP_CONFIG_DIR_PATH;
+        File file = new File(appDirPath, WorshipEntity.class.getSimpleName());
         if (file.exists()) {
             logger.debug("本地磁盘已经存在敬拜实体");
             if (file.delete()) {
                 logger.debug("已经删除了");
+            } else {
+                logger.warn("缓存敬拜实体文件删除失败！");
+                return;
             }
         }
 
@@ -1304,7 +1347,8 @@ public class WorshipFormServiceImpl implements WorshipFormService {
      * @return 敬拜实体
      */
     private WorshipEntity readWorshipEntity() {
-        File file = new File(WorshipEntity.class.getSimpleName());
+        String appDirPath = System.getProperty("user.home") + File.separator + SystemConfig.APP_CONFIG_DIR_PATH;
+        File file = new File(appDirPath, WorshipEntity.class.getSimpleName());
         if (!file.exists()) {
             return null;
         }
