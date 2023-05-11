@@ -139,7 +139,7 @@ public class ScriptureServiceImpl implements ScriptureService {
                 List<Integer> verses = scriptureSection.getVerses();
                 if (verses == null || verses.isEmpty()) {
                     logger.debug("没有写节，那么直接按章来查询经文");
-                    PreparedStatement preparedStatement = connection.prepareStatement("SELECT Verse,Scripture FROM Bible WHERE Book=? AND Chapter=?");
+                    PreparedStatement preparedStatement = connection.prepareStatement("SELECT Verse,Scripture FROM Bible WHERE Book=? AND Chapter=? AND Scripture!='-' ORDER BY Id");
                     preparedStatement.setInt(1, scriptureNumber.getBookId());
                     preparedStatement.setInt(2, scriptureSection.getChapter());
                     ResultSet resultSet = preparedStatement.executeQuery();
@@ -156,7 +156,7 @@ public class ScriptureServiceImpl implements ScriptureService {
                 } else {
                     for (int i = 0; i < verses.size(); i++) {
                         int verseNumber = verses.get(i);
-                        PreparedStatement preparedStatement = connection.prepareStatement("SELECT Scripture FROM Bible WHERE Book=? AND Chapter=? AND Verse=?");
+                        PreparedStatement preparedStatement = connection.prepareStatement("SELECT Scripture FROM Bible WHERE Book=? AND Chapter=? AND Verse=? AND Scripture!='-'");
                         preparedStatement.setInt(1, scriptureNumber.getBookId());
                         preparedStatement.setInt(2, scriptureSection.getChapter());
                         preparedStatement.setInt(3, verseNumber);
