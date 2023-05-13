@@ -201,7 +201,7 @@
                             <jdkPath>C:\Program Files\Java\jdk1.8.0_351</jdkPath>
                             <jrePath>jre</jrePath>
                             <winConfig>
-                                <description>A worship PPT Tool</description>
+                                <fileDescription>A worship PPT Tool</fileDescription>
                                 <copyright>Joseph Mark</copyright>
                             </winConfig>
                         </configuration>
