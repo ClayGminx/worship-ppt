@@ -91,6 +91,18 @@ public class Dict {
     }
 
     /**
+     * Gitee属性
+     */
+    public interface GiteeProperty {
+        String URL = "gitee.url";
+        String CONNECT_TIMEOUT = "gitee.connectTimeout";
+        String CONNECT_REQUEST_TIMEOUT = "gitee.connectRequestTimeout";
+        String RESPONSE_TIMEOUT = "gitee.responseTimeout";
+        String WIN_REGX = "gitee.winRegx";
+        String MAC_REGX = "gitee.macRegx";
+    }
+
+    /**
      * 输入参数中的部分
      */
     public static class InputSection {
@@ -100,6 +112,7 @@ public class Dict {
         public final static String PREACH = "证道";
         public final static String FAMILY_REPORTS = "家事报告";
         public final static String HOLY_COMMUNION = "圣餐";
+        public final static String OUTPUT_PATH = "输出文件";
     }
 
     /**

@@ -52,6 +52,19 @@ public class FileServiceImpl implements FileService {
         return targetFile;
     }
 
+    public void copyTemplate(File targetFile) throws FileServiceException {
+        logger.info("开始根据模板创建PPT文件");
+
+        String templateFilePath = SystemConfig.getString(Dict.PPTProperty.MASTER_WORSHIP_FILE_PATH);
+        try (InputStream inputStream = new FileInputStream(templateFilePath)) {
+            logger.debug("开始复制...");
+            Files.copy(inputStream, targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            logger.info("PPT文件创建完成，位于：" + targetFile.getAbsolutePath());
+        } catch (IOException | NullPointerException e) {
+            throw new FileServiceException("PPT文件创建失败！", e);
+        }
+    }
+
     @Override
     public String readWorshipProcedureXml() throws FileServiceException {
         String xmlPath = SystemConfig.getString(Dict.PPTProperty.GENERAL_PROCEDURE_XML_PATH);

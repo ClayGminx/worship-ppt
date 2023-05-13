@@ -1,19 +1,23 @@
 package claygminx.worshipppt.components.impl;
 
+import claygminx.worshipppt.common.config.SystemConfig;
 import claygminx.worshipppt.components.*;
 import claygminx.worshipppt.exception.FileServiceException;
 import claygminx.worshipppt.exception.SystemException;
 import claygminx.worshipppt.common.entity.*;
 import claygminx.worshipppt.exception.WorshipStepException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileFilter;
 import java.awt.*;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.*;
 import java.io.*;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -21,9 +25,8 @@ import java.util.concurrent.Executors;
 
 import static claygminx.worshipppt.common.Dict.*;
 
+@Slf4j
 public class WorshipFormServiceImpl implements WorshipFormService {
-
-    private final static Logger logger = LoggerFactory.getLogger(WorshipFormService.class);
 
     private static WorshipFormServiceImpl instance;
     private final Executor threadPool;
@@ -43,7 +46,7 @@ public class WorshipFormServiceImpl implements WorshipFormService {
     private List<JTextField> familyReportsTextFieldList;
 
     // 布局用的常量
-    public final static String APP_TITLE = "敬拜PPT文件工具";
+    public final static String APP_TITLE = "Worship PPT";
     public final static Dimension FRAME_SIZE = new Dimension(750, 600);
     public final static Dimension FRAME_MIN_SIZE = new Dimension(650, 450);
     public final static int TABLE_HEADER_HEIGHT = 30;
@@ -107,6 +110,7 @@ public class WorshipFormServiceImpl implements WorshipFormService {
         frame.setContentPane(rootPanel);
 
         logger.debug("添加组件到窗体中");
+        addMenus();
         addWorshipModelPanel(rootBox);
         addCoverPanel(rootBox);
         addAllPoetryAlbumPanel(rootBox);
@@ -119,6 +123,90 @@ public class WorshipFormServiceImpl implements WorshipFormService {
 
         logger.debug("添加完毕，展示窗体");
         frame.setVisible(true);
+    }
+
+    /**
+     * 添加菜单
+     */
+    private void addMenus() {
+        JMenuItem customConfigMenuItem = new JMenuItem("自定义配置");
+        customConfigMenuItem.addActionListener(actionEvent -> {
+            String customConfigPath = (String) JOptionPane.showInputDialog(frame,
+                    "请输入系统配置文件的完全路径：",
+                    "自定义系统配置",
+                    JOptionPane.INFORMATION_MESSAGE,
+                    null,
+                    null,
+                    SystemConfig.USER_CONFIG_FILE_PATH);
+            logger.info("自定义系统配置文件路径：" + customConfigPath);
+
+            if (customConfigPath == null || customConfigPath.trim().isEmpty()) {
+                return;
+            }
+
+            File file = new File(customConfigPath.trim());
+            if (file.exists() && file.isFile() && file.canRead()) {
+                logger.debug("继续检查是否合法的配置文件");
+                try (InputStreamReader reader = new InputStreamReader(
+                        new FileInputStream(file), StandardCharsets.UTF_8)) {
+                    new Properties().load(reader);
+                    logger.info("文件加载成功！");
+                    try {
+                        SystemConfig.update(file.getAbsolutePath());
+                        JOptionPane.showMessageDialog(frame, "文件加载成功，请重启该软件使其生效。", "提示", JOptionPane.INFORMATION_MESSAGE);
+                    } catch (Exception e) {
+                        logger.error("更新失败！", e);
+                        JOptionPane.showMessageDialog(frame, "更新失败！", "错误提示", JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (Exception e) {
+                    logger.error("自定义配置文件加载失败！");
+                    JOptionPane.showMessageDialog(frame, "文件加载失败！", "错误提示", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                logger.warn("文件错误！");
+                JOptionPane.showMessageDialog(frame, "文件不存在，或不是文件！", "错误提示", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
+        JMenuItem displayConfigMenuItem = new JMenuItem("查看配置信息");
+        displayConfigMenuItem.addActionListener(actionEvent -> {
+            StringBuilder msgBuilder = new StringBuilder("<html><ul style=\"font-family: Consolas, PingFang SC, Microsoft YaHei; list-style-type: none\">");
+            msgBuilder.append("<li>")
+                    .append("配置文件路径:")
+                    .append(SystemConfig.USER_CONFIG_FILE_PATH)
+                    .append("</li>");
+            Set<Object> keySet = SystemConfig.properties.keySet();
+            for (Object keyObj : keySet) {
+                msgBuilder.append("<li>")
+                        .append(keyObj)
+                        .append(":")
+                        .append(SystemConfig.properties.get(keyObj))
+                        .append("</li>");
+            }
+            msgBuilder.append("</ul></html>");
+
+            JTextPane msg = createTextPane(msgBuilder.toString());
+            JScrollPane scrollMsg = new JScrollPane(
+                    msg,
+                    JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+                    JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            scrollMsg.setMaximumSize(new Dimension(600, 400));
+            scrollMsg.setPreferredSize(new Dimension(600, 400));
+            JOptionPane.showMessageDialog(
+                    frame,
+                    scrollMsg,
+                    "配置信息",
+                    JOptionPane.INFORMATION_MESSAGE);
+        });
+
+        JMenu menu = new JMenu("选项");
+        menu.add(customConfigMenuItem);
+        menu.add(displayConfigMenuItem);
+
+        JMenuBar menuBar = new JMenuBar();
+        menuBar.add(menu);
+
+        frame.setJMenuBar(menuBar);
     }
 
     /**
@@ -426,38 +514,66 @@ public class WorshipFormServiceImpl implements WorshipFormService {
         rootBox.add(panel);
 
         submitButton.addActionListener((action) -> run(() -> {
-            boolean prepareResult = prepare();
-            saveWorshipEntity(worshipEntity);
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("保存敬拜PPT文件");
+            fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
+            fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+            fileChooser.setFileFilter(new FileFilter() {
+                @Override
+                public boolean accept(File f) {
+                    return f.isDirectory() || f.getName().toLowerCase().endsWith(".ppt") || f.getName().toLowerCase().endsWith(".pptx");
+                }
 
-            if (prepareResult) {
-                ProgressMonitor pm = new ProgressMonitor(frame, "制作敬拜PPT", "准备制作", 0, 100);
-                threadPool.execute(() -> {
-                    WorshipPPTServiceImpl worshipPPTService = new WorshipPPTServiceImpl(worshipEntity);
-                    worshipPPTService.setProgressMonitor(pm);
-                    try {
-                        worshipPPTService.make();
-                        File pptFile = worshipPPTService.getFile();
-                        String message = "<html>" +
-                                "<p>PPT制作完成！</p>" +
-                                "<p>文件位于：" +
-                                pptFile.getAbsolutePath() +
-                                "</p>" +
-                                "<p>你还需要做一些检查工作：</p>" +
-                                "<ol><li><b>宣信和证道内容需要手动制作；</b></li>" +
-                                "<li>圣餐诗歌需要手动调整以符合圣礼需要；</li>" +
-                                "<li>还有更多需要细心检查的细节。</li></ol></html>";
-                        JTextPane f = createTextPane(message);
-                        JOptionPane.showMessageDialog(frame, f, "提示", JOptionPane.INFORMATION_MESSAGE);
-                    } catch (FileServiceException | WorshipStepException | SystemException e) {
-                        pm.close();
-                        logger.error("制作PPT时出现错误！", e);
-                        JOptionPane.showMessageDialog(frame, e.getMessage(), "提示", JOptionPane.ERROR_MESSAGE);
-                    } catch (Exception e) {
-                        pm.close();
-                        logger.error("未捕获的错误！！！", e);
-                        JOptionPane.showMessageDialog(frame, "系统错误！", "提示", JOptionPane.ERROR_MESSAGE);
-                    }
-                });
+                @Override
+                public String getDescription() {
+                    return "*.pptx（幻灯片文件）";
+                }
+            });
+            int result = fileChooser.showSaveDialog(frame);
+            logger.info("选择{}", result);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                File outputFile = fileChooser.getSelectedFile();
+                logger.info(outputFile.getAbsolutePath());
+                String simpleFileName = outputFile.getName().toLowerCase();
+                if (!simpleFileName.endsWith(".ppt") && !simpleFileName.endsWith(".pptx")) {
+                    logger.info("自动添加文件扩展名.pptx");
+                    outputFile = new File(outputFile.getParent(), outputFile.getName() + ".pptx");
+                }
+
+                boolean prepareResult = prepare();
+                saveWorshipEntity(worshipEntity);
+
+                if (prepareResult) {
+                    ProgressMonitor pm = new ProgressMonitor(frame, "制作敬拜PPT", "准备制作", 0, 100);
+                    File finalOutputFile = outputFile;
+                    threadPool.execute(() -> {
+                        WorshipPPTServiceImpl worshipPPTService = new WorshipPPTServiceImpl(worshipEntity, finalOutputFile);
+                        worshipPPTService.setProgressMonitor(pm);
+                        try {
+                            worshipPPTService.make();
+                            File pptFile = worshipPPTService.getFile();
+                            String message = "<html>" +
+                                    "<p>PPT制作完成！</p>" +
+                                    "<p>文件位于：" +
+                                    pptFile.getAbsolutePath() +
+                                    "</p>" +
+                                    "<p>你还需要做一些检查工作：</p>" +
+                                    "<ol><li><b>宣信和证道内容需要手动制作；</b></li>" +
+                                    "<li>圣餐诗歌需要手动调整以符合圣礼需要；</li>" +
+                                    "<li>还有更多需要细心检查的细节。</li></ol></html>";
+                            JTextPane f = createTextPane(message);
+                            JOptionPane.showMessageDialog(frame, f, "提示", JOptionPane.INFORMATION_MESSAGE);
+                        } catch (FileServiceException | WorshipStepException | SystemException e) {
+                            pm.close();
+                            logger.error("制作PPT时出现错误！", e);
+                            JOptionPane.showMessageDialog(frame, e.getMessage(), "提示", JOptionPane.ERROR_MESSAGE);
+                        } catch (Exception e) {
+                            pm.close();
+                            logger.error("未捕获的错误！！！", e);
+                            JOptionPane.showMessageDialog(frame, "系统错误！", "提示", JOptionPane.ERROR_MESSAGE);
+                        }
+                    });
+                }
             }
         }));
     }
@@ -771,11 +887,11 @@ public class WorshipFormServiceImpl implements WorshipFormService {
             String info = upgradeService.checkNewRelease();
             if (info != null) {
                 String[] infos = info.split("\n");
-                StringBuilder msgBuilder = new StringBuilder("<html>");
+                StringBuilder msgBuilder = new StringBuilder("<html><div style=\"padding: 0 20px; font-family: Consolas, PingFang SC, Microsoft YaHei\">");
                 for (String s : infos) {
                     msgBuilder.append("<p>").append(s).append("</p>");
                 }
-                msgBuilder.append("</html>");
+                msgBuilder.append("</div></html>");
 
                 JTextPane f = createTextPane(msgBuilder.toString());
 
@@ -853,6 +969,44 @@ public class WorshipFormServiceImpl implements WorshipFormService {
         // 歌谱图的路径
         JTextField poetryDirectoryTextField = addTableInputTextCell(rowBox, POETRY_TABLE_COLUMN_WIDTH_2);
         poetryDirectoryTextField.setToolTipText("该路径文件夹必须只包含此诗歌的歌谱图，歌谱图是用JP-WORD制作的");
+        poetryDirectoryTextField.setTransferHandler(new TransferHandler() {
+            @Override
+            public boolean importData(JComponent comp, Transferable t) {
+                try {
+                    Object o = t.getTransferData(DataFlavor.javaFileListFlavor);
+                    String filePath = o.toString();
+                    logger.info(filePath);
+
+                    if (filePath.startsWith("[")) {
+                        filePath = filePath.substring(1);
+                    }
+                    if (filePath.endsWith("]")) {
+                        filePath = filePath.substring(0, filePath.length() - 1);
+                    }
+                    logger.info(filePath);
+
+                    File file = new File(filePath);
+                    String fileName = file.getName();
+
+                    poetryNameTextField.setText(fileName);
+                    poetryDirectoryTextField.setText(filePath);
+                } catch (Exception e) {
+                    logger.error("拖拽失败！", e);
+                    JOptionPane.showMessageDialog(
+                            frame,
+                            "拖拽文件失败，无法显示文件路径！",
+                            "错误提示",
+                            JOptionPane.ERROR_MESSAGE
+                    );
+                }
+                return false;
+            }
+
+            @Override
+            public boolean canImport(JComponent comp, DataFlavor[] flavors) {
+                return Arrays.stream(flavors).anyMatch(DataFlavor.javaFileListFlavor::equals);
+            }
+        });
 
         JTextField[] textFieldArray = new JTextField[] {poetryNameTextField, poetryDirectoryTextField};
         textFieldsList.add(poetryIndex, textFieldArray);
@@ -1168,12 +1322,15 @@ public class WorshipFormServiceImpl implements WorshipFormService {
      * @param worshipEntity 敬拜实体
      */
     private void saveWorshipEntity(WorshipEntity worshipEntity) {
-        // TODO Mac系统从哪里读取？
-        File file = new File(WorshipEntity.class.getSimpleName());
+        String appDirPath = System.getProperty("user.home") + File.separator + SystemConfig.APP_CONFIG_DIR_PATH;
+        File file = new File(appDirPath, WorshipEntity.class.getSimpleName());
         if (file.exists()) {
             logger.debug("本地磁盘已经存在敬拜实体");
             if (file.delete()) {
                 logger.debug("已经删除了");
+            } else {
+                logger.warn("缓存敬拜实体文件删除失败！");
+                return;
             }
         }
 
@@ -1190,7 +1347,8 @@ public class WorshipFormServiceImpl implements WorshipFormService {
      * @return 敬拜实体
      */
     private WorshipEntity readWorshipEntity() {
-        File file = new File(WorshipEntity.class.getSimpleName());
+        String appDirPath = System.getProperty("user.home") + File.separator + SystemConfig.APP_CONFIG_DIR_PATH;
+        File file = new File(appDirPath, WorshipEntity.class.getSimpleName());
         if (!file.exists()) {
             return null;
         }

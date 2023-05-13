@@ -1,7 +1,7 @@
 package claygminx.worshipppt.components.impl;
 
 import claygminx.worshipppt.common.config.SystemConfig;
-import claygminx.worshipppt.common.entity.ReleaseEntity;
+import claygminx.worshipppt.common.entity.GiteeReleaseEntity;
 import claygminx.worshipppt.components.UpgradeService;
 import claygminx.worshipppt.exception.SystemException;
 import claygminx.worshipppt.common.Dict;
@@ -43,19 +43,17 @@ public class UpgradeServiceImpl implements UpgradeService {
 
     @Override
     public String checkNewRelease() {
-        try {
-            logger.debug("检查升级服务");
-            String owner = SystemConfig.getString(Dict.GithubProperty.OWNER);
-            String repo = SystemConfig.getString(Dict.GithubProperty.REPO);
-            int connectTimeout = SystemConfig.getInt(Dict.GithubProperty.CONNECT_TIMEOUT);
-            int connectRequestTimeout = SystemConfig.getInt(Dict.GithubProperty.CONNECT_REQUEST_TIMEOUT);
-            int responseTimeout = SystemConfig.getInt(Dict.GithubProperty.RESPONSE_TIMEOUT);
+        try (CloseableHttpClient client = HttpClients.createDefault()) {
+            logger.info("检查升级服务");
+            int connectTimeout = SystemConfig.getInt(Dict.GiteeProperty.CONNECT_TIMEOUT);
+            int connectRequestTimeout = SystemConfig.getInt(Dict.GiteeProperty.CONNECT_REQUEST_TIMEOUT);
+            int responseTimeout = SystemConfig.getInt(Dict.GiteeProperty.RESPONSE_TIMEOUT);
 
-            CloseableHttpClient client = HttpClients.createDefault();
-            String url = String.format("https://api.github.com/repos/%s/%s/releases/latest", owner, repo);
-            logger.debug("GET " + url);
+            String url = SystemConfig.getString(Dict.GiteeProperty.URL);
+            logger.info("GET " + url);
             HttpGet httpGet = new HttpGet(url);
-            httpGet.setHeader("Accept", "application/vnd.github+json");
+            httpGet.addHeader("Content-Type", "application/json;charset=UTF-8");
+            httpGet.addHeader("Accept", "application/json;charset=UTF-8");
             RequestConfig requestConfig = RequestConfig.custom()
                     .setConnectTimeout(connectTimeout, TimeUnit.SECONDS)
                     .setConnectionRequestTimeout(connectRequestTimeout, TimeUnit.SECONDS)
@@ -63,11 +61,12 @@ public class UpgradeServiceImpl implements UpgradeService {
                     .build();
             httpGet.setConfig(requestConfig);
             CloseableHttpResponse response = client.execute(httpGet);
-            logger.debug("请求成功");
+            logger.info("请求成功");
+
             if (HttpStatus.SC_NOT_FOUND == response.getCode()) {
                 logger.warn("{} 返回404！", url);
             } else if (HttpStatus.SC_OK == response.getCode()) {
-                logger.debug("{} 返回200！", url);
+                logger.info("{} 返回200！", url);
                 StringBuilder responseBuilder = new StringBuilder();
 
                 try (Scanner scanner = new Scanner(response.getEntity().getContent(), StandardCharsets.UTF_8.name())) {
@@ -78,45 +77,86 @@ public class UpgradeServiceImpl implements UpgradeService {
                 String responseString = responseBuilder.toString();
                 // 转码
                 responseString = new String(responseString.getBytes(), System.getProperty("file.encoding"));
-                logger.debug(responseString);
+                logger.info(responseString);
 
-                ReleaseEntity remoteReleaseEntity = new Gson().fromJson(responseString, ReleaseEntity.class);
-                ReleaseEntity thisReleaseEntity = getThisProjectReleaseEntity();
-                if (thisReleaseEntity.compareTo(remoteReleaseEntity) < 0) {
+                GiteeReleaseEntity remoteReleaseEntity = new Gson().fromJson(responseString, GiteeReleaseEntity.class);
+                GiteeReleaseEntity thisReleaseEntity = getThisProjectReleaseEntity();
+                if (compareVersion(thisReleaseEntity, remoteReleaseEntity) < 0) {
                     // 小于远程发行包版本，所以应提示要升级
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    String downloadUrl = getDownloadUrlFromGitHubBody(remoteReleaseEntity.getBody());
-                    return "有新的版本" + remoteReleaseEntity.getName() + "\n"
-                            + "发布于" + sdf.format(remoteReleaseEntity.getPublished_at()) + "\n"
-                            + "新版本下载地址：\n"
-                            + downloadUrl;
+                    String downloadUrl = getDownloadUrlFromGitHubBody(remoteReleaseEntity.body());
+                    if (downloadUrl != null) {
+                        return "有新的版本" + remoteReleaseEntity.tag_name() + "\n"
+                                + "发布于" + sdf.format(remoteReleaseEntity.created_at()) + "\n"
+                                + "新版本下载地址：\n"
+                                + downloadUrl;
+                    }
+                    logger.warn("远程发行包缺失下载地址！");
                 } else {
-                    logger.debug("该发行包应该是最新的，不用升级");
+                    logger.info("该发行包应该是最新的，不用升级");
                 }
             } else {
                 logger.warn("{} 返回{}", url, response.getCode());
             }
         } catch (Exception e) {
-            logger.debug("升级服务出现异常！", e);
-            logger.error("升级服务出现异常！");
+            logger.error("升级服务出现异常！", e);
         }
         return null;
     }
 
-    protected ReleaseEntity getThisProjectReleaseEntity() {
+    protected GiteeReleaseEntity getThisProjectReleaseEntity() {
         String projectVersion = SystemConfig.getString(Dict.ProjectProperty.VERSION);
         String sProjectTime = SystemConfig.getString(Dict.ProjectProperty.TIME);
         String projectTimeFormat = SystemConfig.getString(Dict.ProjectProperty.TIME_FORMAT);
         try {
             Date oProjectTime = new SimpleDateFormat(projectTimeFormat).parse(sProjectTime);
-            ReleaseEntity releaseEntity = new ReleaseEntity();
-            releaseEntity.setPublished_at(oProjectTime);
-            releaseEntity.setName(projectVersion);
-            return releaseEntity;
+            return new GiteeReleaseEntity()
+                    .created_at(oProjectTime)
+                    .name(projectVersion)
+                    .tag_name(projectVersion);
         } catch (ParseException e) {
             String message = String.format("格式化发行包的构建时间时出错，构建时间是%s，时间格式是%s", sProjectTime, projectTimeFormat);
             throw new SystemException(message, e);
         }
+    }
+
+    protected int compareVersion(GiteeReleaseEntity thisEntity, GiteeReleaseEntity otherEntity) {
+        String thisTagName = thisEntity.tag_name();
+        String otherTagName = otherEntity.tag_name();
+        int[] thisVersion = parseVersion(thisTagName);
+        int[] otherVersion = parseVersion(otherTagName);
+        logger.info("当前版本号：{}，远程版本号：{}", thisTagName, otherTagName);
+
+        for (int i = 0; i < thisVersion.length; i++) {
+            int r = thisVersion[i] - otherVersion[i];
+            if (r != 0) {
+                return r;
+            }
+        }
+
+        // 版本号相等，那么比较发布时间
+        logger.info("当前版本构建时间：{}，远程版本构建时间：{}", thisEntity.created_at(), otherEntity.created_at());
+        long r = thisEntity.created_at().getTime() - otherEntity.created_at().getTime();
+        if (r > 0) {
+            return 1;
+        } else if (r < 0) {
+            return -1;
+        } else {
+            return 0;
+        }
+    }
+
+    private int[] parseVersion(String version) {
+        int[] result = new int[3];
+        if ("v".equalsIgnoreCase(version.substring(0, 1))) {
+            version = version.substring(1);
+        }
+        String[] versionPartArray = version.split("[.]");
+        for (int i = 0; i < versionPartArray.length; i++) {
+            int n = Integer.parseInt(versionPartArray[i]);
+            result[i] = n;
+        }
+        return result;
     }
 
     /**
@@ -128,39 +168,25 @@ public class UpgradeServiceImpl implements UpgradeService {
         if (body == null) {
             return "";
         }
-        String downloadTitle = SystemConfig.getString(Dict.GithubProperty.DOWNLOAD_TITLE);
-        String titleLevel = downloadTitle.split(" ")[0];
-        Pattern titlePattern = Pattern.compile("^[#]+");
 
-        String[] strArray = body.split("\r\n");
-        StringBuilder returnBuilder = new StringBuilder();
-        int j = strArray.length;
-        for (int i = 0; i < strArray.length; i++) {
-            String str = strArray[i];
-            if (str.trim().isEmpty()) {
-                continue;
-            }
-            if (i >= j) {// 在“下载地址”的上下文中
-                Matcher matcher = titlePattern.matcher(str);
-                if (matcher.find()) {// 是个标题，那么再判断是不是“下载地址”的子标题
-                    String group = matcher.group();
-                    if (group.length() > titleLevel.length()) {// 子标题
-                        returnBuilder.append(str).append('\n');
-                    } else {
-                        break;
-                    }
-                } else {
-                    returnBuilder.append(str).append('\n');
+        Pattern downloadUrlPattern = null;
+        String osName = System.getProperty("os.name");
+        if (osName.startsWith("Mac")) {
+            downloadUrlPattern = Pattern.compile(SystemConfig.getString(Dict.GiteeProperty.MAC_REGX));
+        } else if (osName.startsWith("Windows")) {
+            downloadUrlPattern = Pattern.compile(SystemConfig.getString(Dict.GiteeProperty.WIN_REGX));
+        }
+
+        if (downloadUrlPattern != null) {
+            String[] bodyLineArray = body.split("\n");
+            for (String line : bodyLineArray) {
+                Matcher matcher = downloadUrlPattern.matcher(line);
+                if (matcher.find()) {
+                    return matcher.group("url");
                 }
-            } else if (downloadTitle.equals(str)) {// 开始“下载地址”
-                j = i + 1;
             }
         }
 
-        String result = returnBuilder.toString();
-        if (result.length() > 0 && result.endsWith("\n")) {
-            result = result.substring(0, result.length() - 1);
-        }
-        return result;
+        return null;
     }
 }

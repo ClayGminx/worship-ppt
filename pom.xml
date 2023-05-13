@@ -6,10 +6,9 @@
 
     <groupId>claygminx</groupId>
     <artifactId>worship-ppt</artifactId>
-    <version>1.2.2</version>
-    <!-- fix bug -->
+    <version>v1.3.0</version>
 
-    <name>Worship PPT Tool</name>
+    <name>Worship PPT</name>
     <description>一个用于自动制作敬拜PPT的小工具</description>
 
     <properties>
@@ -65,9 +64,9 @@
 
         <!-- 用于解析敬拜流程 -->
         <dependency>
-            <groupId>dom4j</groupId>
+            <groupId>org.dom4j</groupId>
             <artifactId>dom4j</artifactId>
-            <version>1.6.1</version>
+            <version>2.1.4</version>
         </dependency>
 
         <!-- 用于解析敬拜流程 -->
@@ -96,6 +95,36 @@
             <groupId>com.formdev</groupId>
             <artifactId>flatlaf</artifactId>
             <version>2.4</version>
+        </dependency>
+
+        <!-- lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.26</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- 单元测试 -->
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-suite-api</artifactId>
+            <version>1.9.3</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-suite-engine</artifactId>
+            <version>1.9.3</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.9.2</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -131,32 +160,69 @@
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>1.18.26</version>
+                        </path>
+                    </annotationProcessorPaths>
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.2.0</version>
+                <groupId>io.github.fvarrui</groupId>
+                <artifactId>javapackager</artifactId>
+                <version>1.7.2</version>
                 <configuration>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                    <finalName>worship-ppt</finalName>
-                    <appendAssemblyId>false</appendAssemblyId>
-                    <archive>
-                        <manifest>
-                            <mainClass>claygminx.worshipppt.Main</mainClass>
-                            <addClasspath>true</addClasspath>
-                        </manifest>
-                    </archive>
+                    <mainClass>claygminx.worshipppt.Main</mainClass>
+                    <bundleJre>true</bundleJre>
+                    <customizedJre>true</customizedJre>
+                    <url>https://github.com/ClayGminx/worship-ppt</url>
+                    <generateInstaller>false</generateInstaller>
+                    <administratorRequired>false</administratorRequired>
+                    <additionalResources>
+                        <additionalResource>config</additionalResource>
+                        <additionalResource>PPT模板</additionalResource>
+                        <additionalResource>数据库</additionalResource>
+                        <additionalResource>README.md</additionalResource>
+                    </additionalResources>
                 </configuration>
                 <executions>
                     <execution>
-                        <id>make-assembly</id>
+                        <id>bundling-for-windows</id>
                         <phase>package</phase>
                         <goals>
-                            <goal>single</goal>
+                            <goal>package</goal>
                         </goals>
+                        <configuration>
+                            <platform>windows</platform>
+                            <createZipball>true</createZipball>
+                            <createTarball>false</createTarball>
+                            <jdkPath>C:\Program Files\Java\jdk1.8.0_351</jdkPath>
+                            <jrePath>jre</jrePath>
+                            <winConfig>
+                                <fileDescription>A worship PPT Tool</fileDescription>
+                                <copyright>Joseph Mark</copyright>
+                            </winConfig>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>bundling-for-mac</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>package</goal>
+                        </goals>
+                        <configuration>
+                            <platform>mac</platform>
+                            <createZipball>false</createZipball>
+                            <createTarball>false</createTarball>
+                            <jdkPath>/Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home</jdkPath>
+                            <jrePath>/Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home/jre</jrePath>
+                            <macConfig>
+                                <generateDmg>false</generateDmg>
+                                <generatePkg>false</generatePkg>
+                            </macConfig>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
