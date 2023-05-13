@@ -173,34 +173,55 @@
                 <groupId>io.github.fvarrui</groupId>
                 <artifactId>javapackager</artifactId>
                 <version>1.7.2</version>
+                <configuration>
+                    <mainClass>claygminx.worshipppt.Main</mainClass>
+                    <bundleJre>true</bundleJre>
+                    <customizedJre>true</customizedJre>
+                    <url>https://github.com/ClayGminx/worship-ppt</url>
+                    <generateInstaller>false</generateInstaller>
+                    <administratorRequired>false</administratorRequired>
+                    <additionalResources>
+                        <additionalResource>config</additionalResource>
+                        <additionalResource>PPT模板</additionalResource>
+                        <additionalResource>数据库</additionalResource>
+                        <additionalResource>README.md</additionalResource>
+                    </additionalResources>
+                </configuration>
                 <executions>
                     <execution>
+                        <id>bundling-for-windows</id>
                         <phase>package</phase>
                         <goals>
                             <goal>package</goal>
                         </goals>
                         <configuration>
-                            <mainClass>claygminx.worshipppt.Main</mainClass>
-                            <bundleJre>true</bundleJre>
-                            <customizedJre>true</customizedJre>
+                            <platform>windows</platform>
+                            <createZipball>true</createZipball>
+                            <createTarball>false</createTarball>
                             <jdkPath>C:\Program Files\Java\jdk1.8.0_351</jdkPath>
                             <jrePath>jre</jrePath>
-                            <generateInstaller>false</generateInstaller>
-                            <administratorRequired>false</administratorRequired>
-                            <platform>auto</platform>
-                            <createZipball>true</createZipball>
-                            <createTarball>true</createTarball>
-                            <url>https://github.com/ClayGminx/worship-ppt</url>
-                            <additionalResources>
-                                <additionalResource>config</additionalResource>
-                                <additionalResource>PPT模板</additionalResource>
-                                <additionalResource>数据库</additionalResource>
-                                <additionalResource>README.md</additionalResource>
-                            </additionalResources>
-
                             <winConfig>
+                                <description>A worship PPT Tool</description>
                                 <copyright>Joseph Mark</copyright>
                             </winConfig>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>bundling-for-mac</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>package</goal>
+                        </goals>
+                        <configuration>
+                            <platform>mac</platform>
+                            <createZipball>false</createZipball>
+                            <createTarball>false</createTarball>
+                            <jdkPath>/Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home</jdkPath>
+                            <jrePath>/Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home/jre</jrePath>
+                            <macConfig>
+                                <generateDmg>false</generateDmg>
+                                <generatePkg>false</generatePkg>
+                            </macConfig>
                         </configuration>
                     </execution>
                 </executions>
