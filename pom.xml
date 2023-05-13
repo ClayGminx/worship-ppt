@@ -8,7 +8,7 @@
     <artifactId>worship-ppt</artifactId>
     <version>v1.3.0</version>
 
-    <name>Worship PPT Tool</name>
+    <name>Worship PPT</name>
     <description>一个用于自动制作敬拜PPT的小工具</description>
 
     <properties>
@@ -170,29 +170,38 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.2.0</version>
-                <configuration>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                    <finalName>worship-ppt</finalName>
-                    <appendAssemblyId>false</appendAssemblyId>
-                    <archive>
-                        <manifest>
-                            <mainClass>claygminx.worshipppt.Main</mainClass>
-                            <addClasspath>true</addClasspath>
-                        </manifest>
-                    </archive>
-                </configuration>
+                <groupId>io.github.fvarrui</groupId>
+                <artifactId>javapackager</artifactId>
+                <version>1.7.2</version>
                 <executions>
                     <execution>
-                        <id>make-assembly</id>
                         <phase>package</phase>
                         <goals>
-                            <goal>single</goal>
+                            <goal>package</goal>
                         </goals>
+                        <configuration>
+                            <mainClass>claygminx.worshipppt.Main</mainClass>
+                            <bundleJre>true</bundleJre>
+                            <customizedJre>true</customizedJre>
+                            <jdkPath>C:\Program Files\Java\jdk1.8.0_351</jdkPath>
+                            <jrePath>jre</jrePath>
+                            <generateInstaller>false</generateInstaller>
+                            <administratorRequired>false</administratorRequired>
+                            <platform>auto</platform>
+                            <createZipball>true</createZipball>
+                            <createTarball>true</createTarball>
+                            <url>https://github.com/ClayGminx/worship-ppt</url>
+                            <additionalResources>
+                                <additionalResource>config</additionalResource>
+                                <additionalResource>PPT模板</additionalResource>
+                                <additionalResource>数据库</additionalResource>
+                                <additionalResource>README.md</additionalResource>
+                            </additionalResources>
+
+                            <winConfig>
+                                <copyright>Joseph Mark</copyright>
+                            </winConfig>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
