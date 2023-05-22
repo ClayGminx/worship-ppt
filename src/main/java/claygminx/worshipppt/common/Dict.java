@@ -64,7 +64,7 @@ public class Dict {
         public final static String PATH = "scripture.path";
         public final static String FORMAT1 = "scripture.format1";
 //        public final static String FORMAT2 = "scripture.format2";
-//        public final static String FORMAT3 = "scripture.format3";
+        public final static String FORMAT3 = "scripture.format3";
         public final static String FORMAT4 = "scripture.format4";
         public final static String REGEX = "scripture.regex";
     }

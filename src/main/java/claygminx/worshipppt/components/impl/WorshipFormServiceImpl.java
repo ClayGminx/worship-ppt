@@ -3,9 +3,11 @@ package claygminx.worshipppt.components.impl;
 import claygminx.worshipppt.common.config.SystemConfig;
 import claygminx.worshipppt.components.*;
 import claygminx.worshipppt.exception.FileServiceException;
+import claygminx.worshipppt.exception.ScriptureNumberException;
 import claygminx.worshipppt.exception.SystemException;
 import claygminx.worshipppt.common.entity.*;
 import claygminx.worshipppt.exception.WorshipStepException;
+import claygminx.worshipppt.util.ScriptureUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
@@ -32,6 +34,7 @@ public class WorshipFormServiceImpl implements WorshipFormService {
     private final Executor threadPool;
     private final WorshipEntity worshipEntity;
     private final UpgradeService upgradeService;
+    private final ScriptureService scriptureService;
 
     // 组件
     private final JFrame frame;
@@ -80,6 +83,7 @@ public class WorshipFormServiceImpl implements WorshipFormService {
         }
 
         upgradeService = UpgradeServiceImpl.getInstance();
+        scriptureService = ScriptureServiceImpl.getInstance();
     }
 
     /**
@@ -129,6 +133,76 @@ public class WorshipFormServiceImpl implements WorshipFormService {
      * 添加菜单
      */
     private void addMenus() {
+        JMenuItem searchScripturesMenuItem = new JMenuItem("找经文");
+        ImageIcon searchIcon = getImageIcon("search.png");
+        searchScripturesMenuItem.addActionListener(actionEvent -> {
+            JTextPane inputMessage = createTextPane("<html>"
+                    + "<div>请输入经文编号：</div>"
+                    + "<div>经文编号规则：</div>"
+                    + "<ol style=\"font-family: Consolas, PingFang SC, Microsoft YaHei\">"
+                    + "<li>有且仅有一个书卷，书卷名可以是全称，也可以是简称；</li>"
+                    + "<li>书卷名称后面跟着章或节，可以只有章，但不可以只有节；</li>"
+                    + "<li>如果后面仅跟着章，章和章用英文逗号隔开，若章和章是连续的，可以用英文短横线连接；</li>"
+                    + "<li>章和节开始用英文冒号隔开；</li>"
+                    + "<li>节和节的分隔符，跟章和章一样，用英文逗号连接连续节，或者用英文逗号分隔节和节。</li>"
+                    + "</ol>"
+                    + "</html>");
+            String inputText = (String) JOptionPane.showInputDialog(
+                    frame,
+                    inputMessage,
+                    "找经文",
+                    JOptionPane.PLAIN_MESSAGE,
+                    searchIcon,
+                    null,
+                    null);
+            if (inputText != null) {
+                logger.info(inputText);
+                if (!inputText.trim().isEmpty()) {
+                    inputText = inputText.trim();
+
+                    try {
+                        logger.info("解析经文编号");
+                        ScriptureNumberEntity scriptureNumberEntity = ScriptureUtil.parseNumber(inputText);
+                        logger.info("解析成功");
+
+                        int bookId = scriptureService.getIdFromBookName(
+                                scriptureNumberEntity.getBookFullName(),
+                                scriptureNumberEntity.getBookShortName());
+                        scriptureNumberEntity.setBookId(bookId);
+
+                        ScriptureEntity scriptureEntity = scriptureService.getScriptureWithFormat(
+                                scriptureNumberEntity,
+                                SystemConfig.getString(ScriptureProperty.FORMAT3));
+
+                        JTextPane textPane = createTextPane(String.format("<html><pre>%s</pre></html>", scriptureEntity.getScripture()));
+                        JScrollPane scrollMsg = new JScrollPane(
+                                textPane,
+                                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+                                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+                        scrollMsg.setMaximumSize(new Dimension(600, 400));
+                        scrollMsg.setPreferredSize(new Dimension(600, 400));
+                        JOptionPane.showMessageDialog(frame, scrollMsg);
+                    } catch (ScriptureNumberException | SystemException e) {
+                        logger.error("", e);
+                        JOptionPane.showMessageDialog(
+                                frame,
+                                e.getMessage(),
+                                "错误提示",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(
+                            frame,
+                            "经文编号不可为空！",
+                            "错误提示",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+        JMenu toolsMenu = new JMenu("工具");
+        toolsMenu.add(searchScripturesMenuItem);
+
         JMenuItem customConfigMenuItem = new JMenuItem("自定义配置");
         customConfigMenuItem.addActionListener(actionEvent -> {
             String customConfigPath = (String) JOptionPane.showInputDialog(frame,
@@ -199,12 +273,13 @@ public class WorshipFormServiceImpl implements WorshipFormService {
                     JOptionPane.INFORMATION_MESSAGE);
         });
 
-        JMenu menu = new JMenu("选项");
-        menu.add(customConfigMenuItem);
-        menu.add(displayConfigMenuItem);
+        JMenu optionsMenu = new JMenu("选项");
+        optionsMenu.add(customConfigMenuItem);
+        optionsMenu.add(displayConfigMenuItem);
 
         JMenuBar menuBar = new JMenuBar();
-        menuBar.add(menu);
+        menuBar.add(toolsMenu);
+        menuBar.add(optionsMenu);
 
         frame.setJMenuBar(menuBar);
     }
@@ -1291,6 +1366,15 @@ public class WorshipFormServiceImpl implements WorshipFormService {
     private ImageIcon getImageIcon() {
         ClassLoader classLoader = getClass().getClassLoader();
         URL url = classLoader.getResource("icon.jpg");
+        if (url == null) {
+            throw new SystemException("找不到图标！");
+        }
+        return new ImageIcon(url);
+    }
+
+    private ImageIcon getImageIcon(String path) {
+        ClassLoader classLoader = getClass().getClassLoader();
+        URL url = classLoader.getResource(path);
         if (url == null) {
             throw new SystemException("找不到图标！");
         }

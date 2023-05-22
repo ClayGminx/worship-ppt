@@ -134,16 +134,7 @@ public class UpgradeServiceImpl implements UpgradeService {
             }
         }
 
-        // 版本号相等，那么比较发布时间
-        logger.info("当前版本构建时间：{}，远程版本构建时间：{}", thisEntity.created_at(), otherEntity.created_at());
-        long r = thisEntity.created_at().getTime() - otherEntity.created_at().getTime();
-        if (r > 0) {
-            return 1;
-        } else if (r < 0) {
-            return -1;
-        } else {
-            return 0;
-        }
+        return 0;
     }
 
     private int[] parseVersion(String version) {

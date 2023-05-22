@@ -189,6 +189,7 @@ public class ScriptureServiceImpl implements ScriptureService {
                 Template template = configuration.getTemplate(format);
                 try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                      Writer out = new OutputStreamWriter(byteArrayOutputStream)) {
+
                     template.process(scriptureBookEntity, out);
                     byte[] bytes = byteArrayOutputStream.toByteArray();
                     String scripture = new String(bytes);
