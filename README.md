@@ -1,10 +1,10 @@
-<h1 style="text-align: center"><img src="logo.jpg" alt="主日敬拜"/></h1>
+# ![主日敬拜](logo.jpg#pic_center)
 
 一个用于自动制作敬拜 PPT 文件的 Java 应用程序。
 
 由马克约瑟弟兄制作。
 
-![Version](https://img.shields.io/badge/version-v1.3.0-blue)
+![Version](https://img.shields.io/badge/version-v1.4.0-blue)
 [![GitHub license](https://img.shields.io/github/license/ClayGminx/worship-ppt)](https://github.com/ClayGminx/worship-ppt/blob/master/LICENSE)
 ![poi-ooxml dependency](https://img.shields.io/badge/poi--ooxml-v5.2.2-9cf)
 ![sqlite-jdbc dependency](https://img.shields.io/badge/sqlite--jdbc-3.39.2.0-9cf)
