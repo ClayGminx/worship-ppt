@@ -1,4 +1,4 @@
-# ![主日敬拜](logo.jpg#pic_center)
+<h1><img src="logo.jpg" alt="主日敬拜" style="position: relative; left: 50%; transform: translateX(-50%)"/></h1>
 
 一个用于自动制作敬拜 PPT 文件的 Java 应用程序。
 
