@@ -9,6 +9,7 @@ import claygminx.worshipppt.common.entity.*;
 import claygminx.worshipppt.exception.WorshipStepException;
 import claygminx.worshipppt.util.ScriptureUtil;
 import lombok.extern.slf4j.Slf4j;
+import sun.awt.datatransfer.ClipboardTransferable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -1047,33 +1048,51 @@ public class WorshipFormServiceImpl implements WorshipFormService {
         poetryDirectoryTextField.setTransferHandler(new TransferHandler() {
             @Override
             public boolean importData(JComponent comp, Transferable t) {
-                try {
-                    Object o = t.getTransferData(DataFlavor.javaFileListFlavor);
-                    String filePath = o.toString();
-                    logger.info(filePath);
+                DataFlavor[] flavors = t.getTransferDataFlavors();
+                for (int i = 0; i < flavors.length; i++) {
+                    DataFlavor flavor = flavors[i];
+                    if (DataFlavor.javaFileListFlavor.equals(flavor)) {
+                        try {
+                            Object o = t.getTransferData(DataFlavor.javaFileListFlavor);
+                            String filePath = o.toString();
+                            logger.info(filePath);
 
-                    if (filePath.startsWith("[")) {
-                        filePath = filePath.substring(1);
+                            if (filePath.startsWith("[")) {
+                                filePath = filePath.substring(1);
+                            }
+                            if (filePath.endsWith("]")) {
+                                filePath = filePath.substring(0, filePath.length() - 1);
+                            }
+                            logger.info(filePath);
+
+                            File file = new File(filePath);
+                            String fileName = file.getName();
+
+                            poetryNameTextField.setText(fileName);
+                            poetryDirectoryTextField.setText(filePath);
+                        } catch (Exception e) {
+                            logger.error("拖拽失败！", e);
+                            JOptionPane.showMessageDialog(
+                                    frame,
+                                    "拖拽文件失败，无法显示文件路径！",
+                                    "错误提示",
+                                    JOptionPane.ERROR_MESSAGE
+                            );
+                        }
+                        return false;
+                    } else if (DataFlavor.stringFlavor.equals(flavor)) {
+                        try {
+                            Object o = t.getTransferData(DataFlavor.stringFlavor);
+                            poetryDirectoryTextField.setText(o.toString());
+                        } catch (Exception e) {
+                            logger.error("操作失败！", e);
+                            JOptionPane.showMessageDialog(frame, "操作失败！", "错误提示", JOptionPane.ERROR_MESSAGE);
+                        }
+                        return false;
                     }
-                    if (filePath.endsWith("]")) {
-                        filePath = filePath.substring(0, filePath.length() - 1);
-                    }
-                    logger.info(filePath);
-
-                    File file = new File(filePath);
-                    String fileName = file.getName();
-
-                    poetryNameTextField.setText(fileName);
-                    poetryDirectoryTextField.setText(filePath);
-                } catch (Exception e) {
-                    logger.error("拖拽失败！", e);
-                    JOptionPane.showMessageDialog(
-                            frame,
-                            "拖拽文件失败，无法显示文件路径！",
-                            "错误提示",
-                            JOptionPane.ERROR_MESSAGE
-                    );
                 }
+
+                JOptionPane.showMessageDialog(frame, "不支持的操作！", "错误提示", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
 
