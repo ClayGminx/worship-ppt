@@ -198,32 +198,32 @@
                             <platform>windows</platform>
                             <createZipball>true</createZipball>
                             <createTarball>false</createTarball>
-                            <jdkPath>C:\Program Files\Java\jdk1.8.0_351</jdkPath>
-                            <jrePath>jre</jrePath>
+                            <jdkPath>${JAVA_HOME}</jdkPath>
+                            <jrePath>${java.home}</jrePath>
                             <winConfig>
                                 <fileDescription>A worship PPT Tool</fileDescription>
                                 <copyright>Joseph Mark</copyright>
                             </winConfig>
                         </configuration>
                     </execution>
-                    <execution>
-                        <id>bundling-for-mac</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>package</goal>
-                        </goals>
-                        <configuration>
-                            <platform>mac</platform>
-                            <createZipball>false</createZipball>
-                            <createTarball>false</createTarball>
-                            <jdkPath>/Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home</jdkPath>
-                            <jrePath>/Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home/jre</jrePath>
-                            <macConfig>
-                                <generateDmg>false</generateDmg>
-                                <generatePkg>false</generatePkg>
-                            </macConfig>
-                        </configuration>
-                    </execution>
+<!--                    <execution>-->
+<!--                        <id>bundling-for-mac</id>-->
+<!--                        <phase>package</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>package</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <platform>mac</platform>-->
+<!--                            <createZipball>false</createZipball>-->
+<!--                            <createTarball>false</createTarball>-->
+<!--                            <jdkPath>/Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home</jdkPath>-->
+<!--                            <jrePath>/Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home/jre</jrePath>-->
+<!--                            <macConfig>-->
+<!--                                <generateDmg>false</generateDmg>-->
+<!--                                <generatePkg>false</generatePkg>-->
+<!--                            </macConfig>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
                 </executions>
             </plugin>
         </plugins>

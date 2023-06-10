@@ -4,6 +4,7 @@ import claygminx.worshipppt.exception.SystemException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 
+import javax.swing.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
@@ -54,6 +55,12 @@ public class SystemConfig {
             boolean flag = appDir.mkdirs();
             if (!flag) {
                 logger.error("目录{}创建失败，系统退出！", appDir.getAbsolutePath());
+                JOptionPane.showMessageDialog(
+                        null,
+                        "目录" + appDir.getAbsolutePath() + "创建失败，系统退出！",
+                        "错误提示",
+                        JOptionPane.ERROR_MESSAGE
+                );
                 System.exit(1);
             }
         }
@@ -69,23 +76,43 @@ public class SystemConfig {
                     FileUtils.copyToFile(inputStream, userConfigFile);
                 } else {
                     logger.error("配置文件初始化失败，系统退出！");
+                    JOptionPane.showMessageDialog(
+                            null,
+                            "配置文件初始化失败，系统退出！",
+                            "错误提示",
+                            JOptionPane.ERROR_MESSAGE
+                    );
                     System.exit(1);
                 }
             } catch (Exception e) {
                 logger.error("配置文件初始化失败，系统退出！", e);
+                JOptionPane.showMessageDialog(
+                        null,
+                        "配置文件初始化失败，系统退出！",
+                        "错误提示",
+                        JOptionPane.ERROR_MESSAGE
+                );
                 System.exit(1);
             }
         }
 
         // 2.读取配置文件的路径
         String userPropertiesPath = null;
-        try (InputStreamReader reader = new InputStreamReader(new FileInputStream(userConfigFile), StandardCharsets.UTF_8)) {
+        try (InputStreamReader reader = new InputStreamReader(
+                new FileInputStream(userConfigFile), StandardCharsets.UTF_8)
+        ) {
             Properties cacheSystemConfig = new Properties();
             cacheSystemConfig.load(reader);
             userPropertiesPath = cacheSystemConfig.getProperty("SystemConfigPath");
             logger.info("SystemConfigPath={}", userPropertiesPath);
         } catch (Exception e) {
             logger.error("读取SystemConfigPath失败！", e);
+            JOptionPane.showMessageDialog(
+                    null,
+                    "读取SystemConfigPath失败！",
+                    "错误提示",
+                    JOptionPane.ERROR_MESSAGE
+            );
             System.exit(1);
         }
 
@@ -95,7 +122,26 @@ public class SystemConfig {
             userProperties = loadUserProperties(userPropertiesPath);
         } catch (Exception e) {
             logger.error("用户配置加载失败！", e);
-            System.exit(1);
+            JOptionPane.showMessageDialog(
+                    null,
+                    "用户配置加载失败！",
+                    "错误提示",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            String retryUserPropertyFilePath = JOptionPane.showInputDialog("你可以输入正确的配置文件的路径，再重新启动:)");
+            try {
+                update(retryUserPropertyFilePath);
+                userProperties = loadUserProperties(retryUserPropertyFilePath);
+            } catch (IOException e2) {
+                logger.error("用户配置加载失败！", e2);
+                JOptionPane.showMessageDialog(
+                        null,
+                        "用户配置再次尝试加载失败！",
+                        "错误提示",
+                        JOptionPane.ERROR_MESSAGE
+                );
+                System.exit(1);
+            }
         }
 
         // 4.加载核心配置
@@ -112,6 +158,12 @@ public class SystemConfig {
             }
         } catch (Exception e) {
             logger.error("{}加载失败！", CORE_PROPERTIES, e);
+            JOptionPane.showMessageDialog(
+                    null,
+                    CORE_PROPERTIES + "加载失败！",
+                    "错误提示",
+                    JOptionPane.ERROR_MESSAGE
+            );
             System.exit(1);
         }
 
@@ -125,6 +177,12 @@ public class SystemConfig {
             USER_CONFIG_FILE_PATH = userPropertiesPath;
         } catch (Exception e) {
             logger.error("合并配置失败！", e);
+            JOptionPane.showMessageDialog(
+                    null,
+                    "合并配置失败！",
+                    "错误提示",
+                    JOptionPane.ERROR_MESSAGE
+            );
             System.exit(1);
         }
     }

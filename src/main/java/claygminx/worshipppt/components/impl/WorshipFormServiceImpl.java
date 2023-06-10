@@ -9,7 +9,6 @@ import claygminx.worshipppt.common.entity.*;
 import claygminx.worshipppt.exception.WorshipStepException;
 import claygminx.worshipppt.util.ScriptureUtil;
 import lombok.extern.slf4j.Slf4j;
-import sun.awt.datatransfer.ClipboardTransferable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -227,7 +226,7 @@ public class WorshipFormServiceImpl implements WorshipFormService {
                     new Properties().load(reader);
                     logger.info("文件加载成功！");
                     try {
-                        SystemConfig.update(file.getAbsolutePath());
+                        SystemConfig.update(file.getAbsolutePath().replaceAll("\\\\", "\\\\\\\\"));
                         JOptionPane.showMessageDialog(frame, "文件加载成功，请重启该软件使其生效。", "提示", JOptionPane.INFORMATION_MESSAGE);
                     } catch (Exception e) {
                         logger.error("更新失败！", e);
