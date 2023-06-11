@@ -199,7 +199,7 @@
                             <createZipball>true</createZipball>
                             <createTarball>false</createTarball>
                             <jdkPath>${JAVA_HOME}</jdkPath>
-                            <jrePath>${java.home}</jrePath>
+                            <jrePath>jre</jrePath>
                             <winConfig>
                                 <fileDescription>A worship PPT Tool</fileDescription>
                                 <copyright>Joseph Mark</copyright>
@@ -218,7 +218,7 @@
                             <createZipball>false</createZipball>
                             <createTarball>false</createTarball>
                             <jdkPath>${JAVA_HOME}</jdkPath>
-                            <jrePath>${java.home}</jrePath>
+                            <jrePath>jre</jrePath>
                             <macConfig>
                                 <generateDmg>false</generateDmg>
                                 <generatePkg>false</generatePkg>
