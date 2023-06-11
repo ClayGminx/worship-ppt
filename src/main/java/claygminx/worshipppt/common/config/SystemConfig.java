@@ -128,10 +128,10 @@ public class SystemConfig {
                     "错误提示",
                     JOptionPane.ERROR_MESSAGE
             );
-            String retryUserPropertyFilePath = JOptionPane.showInputDialog("你可以输入正确的配置文件的路径，再重新启动:)");
+            userPropertiesPath = JOptionPane.showInputDialog("你可以输入正确的配置文件的路径，再重新启动:)");
             try {
-                update(retryUserPropertyFilePath);
-                userProperties = loadUserProperties(retryUserPropertyFilePath);
+                update(userPropertiesPath);
+                userProperties = loadUserProperties(userPropertiesPath);
             } catch (IOException e2) {
                 logger.error("用户配置加载失败！", e2);
                 JOptionPane.showMessageDialog(

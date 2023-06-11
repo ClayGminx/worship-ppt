@@ -861,9 +861,7 @@ public class WorshipFormServiceImpl implements WorshipFormService {
             }
         }
         
-        if (!familyReports.isEmpty()) {
-            worshipEntity.setFamilyReports(familyReports);
-        }
+        worshipEntity.setFamilyReports(familyReports);
         
         return true;
     }
@@ -1067,8 +1065,10 @@ public class WorshipFormServiceImpl implements WorshipFormService {
                             File file = new File(filePath);
                             String fileName = file.getName();
 
-                            poetryNameTextField.setText(fileName);
                             poetryDirectoryTextField.setText(filePath);
+                            if (poetryNameTextField.getText() == null || poetryNameTextField.getText().trim().isEmpty()) {
+                                poetryNameTextField.setText(fileName);
+                            }
                         } catch (Exception e) {
                             logger.error("拖拽失败！", e);
                             JOptionPane.showMessageDialog(

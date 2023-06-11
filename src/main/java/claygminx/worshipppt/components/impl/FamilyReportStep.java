@@ -23,7 +23,7 @@ public class FamilyReportStep extends AbstractWorshipStep {
         XSLFSlideLayout layout = ppt.findLayout(getLayout());
         XSLFSlide slide = ppt.createSlide(layout);
 
-        if (familyReports.size() > 0) {
+        if (familyReports != null && familyReports.size() > 0) {
             XSLFTextShape placeholder = slide.getPlaceholder(0);
             placeholder.clearText();
 
