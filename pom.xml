@@ -218,7 +218,7 @@
                             <createZipball>false</createZipball>
                             <createTarball>false</createTarball>
                             <jdkPath>${JAVA_HOME}</jdkPath>
-                            <jrePath>jre</jrePath>
+                            <jrePath>${java.home}</jrePath>
                             <macConfig>
                                 <generateDmg>false</generateDmg>
                                 <generatePkg>false</generatePkg>
